@@ -1,2 +1,2 @@
-# NotificationReporter
+# NotificationReporter(仮)
 ロック画面を乗っ取って通知バーを表示したり画面表示し続けたりするやつ
