@@ -2,6 +2,7 @@ package com.suihan74.notificationreporter
 
 import android.content.Intent
 import android.content.IntentFilter
+import com.jakewharton.threetenabp.AndroidThreeTen
 import com.suihan74.notificationreporter.receivers.ScreenReceiver
 import com.suihan74.notificationreporter.repositories.BatteryRepository
 import com.suihan74.notificationreporter.repositories.NotificationRepository
@@ -39,6 +40,9 @@ class Application : android.app.Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
+
+        // initialize the timezone information
+        AndroidThreeTen.init(this)
 
         // 画面消灯を監視する
         registerReceiver(screenReceiver, IntentFilter(Intent.ACTION_SCREEN_OFF))
