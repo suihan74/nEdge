@@ -50,8 +50,8 @@ class LockScreenViewModel(
                 val now = LocalDateTime.now()
                 _currentTime.value = now
 
-                viewModelScope.launch(Dispatchers.Default) {
-                    if (_lightOff.value != true) {
+                if (_lightOff.value != true) {
+                    viewModelScope.launch(Dispatchers.Default) {
                         val interval = lightOffInterval.value ?: 0
                         val duration =
                             now.toEpochSecond(ZoneOffset.UTC) - waitStartTime.toEpochSecond(
