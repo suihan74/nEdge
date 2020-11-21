@@ -3,6 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.suihan74.notificationreporter">
 
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+
     <application
         android:allowBackup="true"
         android:name=".Application"
@@ -34,11 +37,19 @@
 
         <!-- activities -->
 
+        <!-- ロック画面 -->
         <activity
             android:name=".scenes.lockScreen.LockScreenActivity"
             android:showOnLockScreen="true"
             android:screenOrientation="sensorPortrait"
-            android:noHistory="true">
+            android:lockTaskMode="if_whitelisted"
+            android:excludeFromRecents="true">
+        </activity>
+
+        <!-- 設定画面 -->
+        <activity
+            android:name=".scenes.preferences.PreferencesActivity"
+            android:launchMode="singleTask">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
