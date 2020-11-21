@@ -17,10 +17,13 @@ import com.suihan74.notificationreporter.databinding.ActivityLockScreenBinding
 import com.suihan74.utilities.provideViewModel
 
 class LockScreenActivity : AppCompatActivity() {
-    val viewModel by lazy {
+    private val viewModel by lazy {
         provideViewModel(this) {
             val app = Application.instance
-            LockScreenViewModel(app.batteryRepository)
+            LockScreenViewModel(
+                batteryRepo = app.batteryRepository,
+                notificationRepo = app.notificationRepository
+            )
         }
     }
 

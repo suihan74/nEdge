@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import com.suihan74.notificationreporter.receivers.ScreenReceiver
 import com.suihan74.notificationreporter.repositories.BatteryRepository
+import com.suihan74.notificationreporter.repositories.NotificationRepository
 
 /**
  * アプリ情報
@@ -21,6 +22,11 @@ class Application : android.app.Application() {
         BatteryRepository().also {
             it.setBatterLevel(this)
         }
+    }
+
+    /** 通知を扱うリポジトリ */
+    val notificationRepository by lazy {
+        NotificationRepository()
     }
 
     /** 画面消灯を監視するレシーバ */

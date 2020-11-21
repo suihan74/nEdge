@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.suihan74.notificationreporter.repositories.BatteryRepository
+import com.suihan74.notificationreporter.repositories.NotificationRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -13,7 +14,8 @@ import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneOffset
 
 class LockScreenViewModel(
-    val batteryRepository: BatteryRepository
+    batteryRepo : BatteryRepository,
+    notificationRepo : NotificationRepository
 ) : ViewModel() {
 
     /** 現在時刻 */
@@ -32,14 +34,13 @@ class LockScreenViewModel(
     private var waitStartTime = LocalDateTime.now()
 
     /** 通知発生 */
-    val existNotifications : LiveData<Boolean> by lazy { _existNotifications }
-    private val _existNotifications = MutableLiveData<Boolean>()
+    val existNotifications : LiveData<Boolean> = notificationRepo.existUnreadNotifications
 
     /** バッテリーレベル */
-    val batteryLevel : LiveData<Int> = batteryRepository.batteryLevel
+    val batteryLevel : LiveData<Int> = batteryRepo.batteryLevel
 
     /** 充電状態 */
-    val batteryCharging : LiveData<Boolean> = batteryRepository.batteryCharging
+    val batteryCharging : LiveData<Boolean> = batteryRepo.batteryCharging
 
     // ------ //
 
