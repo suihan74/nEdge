@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="vm"
+            type="com.suihan74.notificationreporter.scenes.lockScreen.LockScreenViewModel" />
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.motion.widget.MotionLayout
+            android:id="@+id/motionLayout"
+            app:layoutDescription="@xml/motion_lock_screen"
+            android:theme="@style/LockScreenActivity"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/mainLayout"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/clockTextView"
+                    style="@style/ClockTextView"
+                    dateTime="@{vm.currentTime}"
+                    format="@{`HH:mm`}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    tools:text="12:45"/>
+
+                <TextView
+                    android:id="@+id/dateTextView"
+                    style="@style/DateTextView"
+                    dateTime="@{vm.currentTime}"
+                    format="@{`uuuu/MM/dd (E)`}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    tools:text="2020/11/21 (SAT)"/>
+
+                <TextView
+                    android:id="@+id/batteryTextView"
+                    style="@style/DateTextView"
+                    batteryLevel="@{vm.batteryLevel}"
+                    charging="@{vm.batteryCharging}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"/>
+
+            </LinearLayout>
+
+        </androidx.constraintlayout.motion.widget.MotionLayout>
+
+        <View
+            android:id="@+id/shadowView"
+            android:background="#dd000000"
+            android:visibility="@{vm.lightOff}"
+            android:onClick="@{()-> vm.onClickScreen()}"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <View
+            android:id="@+id/notificationBar"
+            android:background="#ff00ff00"
+            android:visibility="@{vm.existNotifications}"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"/>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>
