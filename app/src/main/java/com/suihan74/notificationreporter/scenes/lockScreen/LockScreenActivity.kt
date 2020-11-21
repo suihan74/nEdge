@@ -111,4 +111,10 @@ class LockScreenActivity : AppCompatActivity() {
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         return true
     }
+
+    override fun finish() {
+        Application.instance.notificationRepository.existUnreadNotifications.value = false
+
+        super.finish()
+    }
 }
