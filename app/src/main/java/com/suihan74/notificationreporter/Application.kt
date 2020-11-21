@@ -1,5 +1,8 @@
 package com.suihan74.notificationreporter
 
+import android.content.Intent
+import android.content.IntentFilter
+import com.suihan74.notificationreporter.receivers.WakeLockReceiver
 import com.suihan74.notificationreporter.repositories.BatteryRepository
 
 /**
@@ -20,10 +23,16 @@ class Application : android.app.Application() {
         }
     }
 
+    /** 画面消灯を監視するレシーバ */
+    private val wakeLockReceiver = WakeLockReceiver()
+
     // ------ //
 
     override fun onCreate() {
         super.onCreate()
         instance = this
+
+        // 画面消灯を監視する
+        registerReceiver(wakeLockReceiver, IntentFilter(Intent.ACTION_SCREEN_OFF))
     }
 }

@@ -1,7 +1,12 @@
 package com.suihan74.notificationreporter.scenes.lockScreen
 
+import android.annotation.SuppressLint
+import android.app.KeyguardManager
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import android.view.KeyEvent
+import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.motion.widget.MotionLayout
@@ -21,6 +26,7 @@ class LockScreenActivity : AppCompatActivity() {
 
     // ------ //
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         overlapLockScreenAndKeepScreenOn()
@@ -55,18 +61,51 @@ class LockScreenActivity : AppCompatActivity() {
                 ) {}
             })
         }
+
+        binding.shadowView.setOnTouchListener { view, motionEvent ->
+            viewModel.onClickScreen()
+            true
+        }
     }
 
     /**
-     * 常にロック画面より上に表示し，画面を消灯しない
+     * 常にフルスクリーンでロック画面より上に表示し，画面を消灯しない
      */
     private fun overlapLockScreenAndKeepScreenOn() {
-        if (Build.VERSION.SDK_INT >= 27) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
             setShowWhenLocked(true)
+            setTurnScreenOn(true)
+            val keyguardManager = getSystemService(Context.KEYGUARD_SERVICE) as? KeyguardManager
+            keyguardManager?.requestDismissKeyguard(this, null)
         }
         else {
+            @Suppress("deprecation")
             window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED)
         }
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+
+        window.decorView.let { decorView ->
+            val flags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+                    View.SYSTEM_UI_FLAG_FULLSCREEN or
+                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
+                    View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
+                    View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
+                    View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+
+            decorView.systemUiVisibility = flags
+
+            decorView.setOnSystemUiVisibilityChangeListener {
+                decorView.systemUiVisibility = flags
+            }
+        }
+    }
+
+    /** 戻るボタンを無効化する */
+    override fun onBackPressed() {
+        // do nothing
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        return true
     }
 }
