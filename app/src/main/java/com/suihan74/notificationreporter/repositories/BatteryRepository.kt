@@ -11,7 +11,7 @@ import androidx.lifecycle.MutableLiveData
  * バッテリに関する情報を扱うリポジトリ
  */
 class BatteryRepository {
-    /** 充電器が繋がっている */
+    /** 充電中かどうか */
     var batteryCharging = MutableLiveData<Boolean>()
 
     /** バッテリー残量(%) */
@@ -39,6 +39,13 @@ class BatteryRepository {
 
         batteryStatus?.let {
             setBatteryLevel(it)
+
+            // 充電状態
+            val chargePlug = it.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1)
+            batteryCharging.value =
+                chargePlug == BatteryManager.BATTERY_PLUGGED_AC or
+                        BatteryManager.BATTERY_PLUGGED_USB or
+                        BatteryManager.BATTERY_PLUGGED_WIRELESS
         }
     }
 }
