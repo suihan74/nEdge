@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.scenes.lockScreen.LockScreenActivity
 
 /**
@@ -13,12 +14,17 @@ class ScreenReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         if (context == null) return
 
+        val app = Application.instance
+
         when (intent?.action) {
             Intent.ACTION_SCREEN_OFF -> {
-                val lockScreenIntent = Intent(context, LockScreenActivity::class.java).also {
-                    it.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                // 未読通知があったらActivityを開始する
+                if (app.notificationRepository.existUnreadNotifications.value == true) {
+                    val lockScreenIntent = Intent(context, LockScreenActivity::class.java).also {
+                        it.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    }
+                    context.startActivity(lockScreenIntent)
                 }
-                context.startActivity(lockScreenIntent)
                 Log.i("WakeLock", "detected screen off")
             }
 
