@@ -21,12 +21,16 @@ class ViewModelFactory<ViewModelT : ViewModel>(
         else ViewModelProvider(owner, this)[key, kClass.java]
 }
 
+// ------ //
+
 /**
  * ViewModel作成時に用いるNewInstanceFactoryを生成する
  */
 inline fun <reified ViewModelT : ViewModel> createViewModelFactory(
     noinline creator: ()->ViewModelT
 ) = ViewModelFactory(creator, ViewModelT::class)
+
+// ------ //
 
 /**
  * ViewModelを作成・取得する
@@ -44,3 +48,22 @@ inline fun <reified ViewModelT : ViewModel> provideViewModel(
     key: String?,
     noinline creator: ()->ViewModelT
 ) = createViewModelFactory(creator).provide(owner, key)
+
+// ------ //
+
+/**
+ * ViewModelを作成・取得する(lazy版)
+ */
+inline fun <reified ViewModelT : ViewModel> lazyProvideViewModel(
+    owner: ViewModelStoreOwner,
+    noinline creator: ()->ViewModelT
+) = lazy { provideViewModel(owner, creator) }
+
+/**
+ * ViewModelを作成・取得する(lazy版)
+ */
+inline fun <reified ViewModelT : ViewModel> lazyProvideViewModel(
+    owner: ViewModelStoreOwner,
+    key: String?,
+    noinline creator: ()->ViewModelT
+) = lazy { provideViewModel(owner, key, creator) }
