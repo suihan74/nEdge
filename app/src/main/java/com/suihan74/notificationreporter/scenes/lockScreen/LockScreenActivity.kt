@@ -11,21 +11,19 @@ import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.R
 import com.suihan74.notificationreporter.databinding.ActivityLockScreenBinding
-import com.suihan74.utilities.provideViewModel
+import com.suihan74.utilities.lazyProvideViewModel
 
 class LockScreenActivity : AppCompatActivity() {
-    private val viewModel by lazy {
-        provideViewModel(this) {
-            val app = Application.instance
-            LockScreenViewModel(
-                batteryRepo = app.batteryRepository,
-                notificationRepo = app.notificationRepository
-            )
-        }
+    private val viewModel by lazyProvideViewModel(this) {
+        val app = Application.instance
+        LockScreenViewModel(
+            batteryRepo = app.batteryRepository,
+            notificationRepo = app.notificationRepository,
+            prefRepo = app.preferencesRepository
+        )
     }
 
     // ------ //
@@ -43,6 +41,7 @@ class LockScreenActivity : AppCompatActivity() {
             it.lifecycleOwner = this
         }
 
+        // 画面上部にスワイプして画面を終了する
         binding.motionLayout.also {
             it.setTransitionListener(object : MotionLayout.TransitionListener {
                 override fun onTransitionChange(p0: MotionLayout?, p1: Int, p2: Int, p3: Float) {

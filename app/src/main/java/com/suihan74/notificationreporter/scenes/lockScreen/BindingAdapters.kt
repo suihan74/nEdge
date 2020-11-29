@@ -1,7 +1,6 @@
 package com.suihan74.notificationreporter.scenes.lockScreen
 
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.view.View
 import android.widget.TextView
 import androidx.annotation.FloatRange

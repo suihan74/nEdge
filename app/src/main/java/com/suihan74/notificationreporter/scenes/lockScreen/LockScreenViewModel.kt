@@ -3,22 +3,22 @@ package com.suihan74.notificationreporter.scenes.lockScreen
 import android.service.notification.StatusBarNotification
 import android.view.MotionEvent
 import android.view.View
-import androidx.annotation.MainThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.suihan74.notificationreporter.repositories.BatteryRepository
 import com.suihan74.notificationreporter.repositories.NotificationRepository
+import com.suihan74.notificationreporter.repositories.PreferencesRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDateTime
-import org.threeten.bp.ZoneOffset
 
 class LockScreenViewModel(
     batteryRepo : BatteryRepository,
-    notificationRepo : NotificationRepository
+    notificationRepo : NotificationRepository,
+    prefRepo : PreferencesRepository
 ) : ViewModel() {
 
     /** 現在時刻 */
@@ -39,16 +39,10 @@ class LockScreenViewModel(
     }
 
     /** 画面消灯までの待機時間(ミリ秒) */
-    val lightOffInterval : LiveData<Long> by lazy { _lightOffInterval }
-    private val _lightOffInterval = MutableLiveData(5_000L)
+    val lightOffInterval : LiveData<Long> = prefRepo.lightOffInterval
 
-    /**
-     * バックライト消灯後の画面をさらに暗くする度合い
-     *
-     * 0.0f ~ 1.0f
-     */
-    val lightLevel : LiveData<Float> by lazy { _lightLevel }
-    private val _lightLevel = MutableLiveData(0.5f)
+    /** バックライト消灯後の画面をさらに暗くする度合い */
+    val lightLevel : LiveData<Float> = prefRepo.lightLevel
 
     /** バッテリーレベル */
     val batteryLevel : LiveData<Int> = batteryRepo.batteryLevel
