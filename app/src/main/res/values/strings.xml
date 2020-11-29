@@ -3,4 +3,6 @@
 
     <!-- PreferencesActivity -->
     <string name="prefs_preview_button_text">プレビュー</string>
+    <string name="prefs_notify_button_text">5秒後に通知する</string>
+
 </resources>
