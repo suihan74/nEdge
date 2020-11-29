@@ -11,9 +11,11 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
+import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.R
 import com.suihan74.notificationreporter.databinding.ActivityPreferencesBinding
 import com.suihan74.notificationreporter.scenes.lockScreen.LockScreenActivity
+import com.suihan74.utilities.lazyProvideViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -22,13 +24,24 @@ import kotlinx.coroutines.launch
  * 設定画面
  */
 class PreferencesActivity : AppCompatActivity() {
+
+    private val viewModel by lazyProvideViewModel(this) {
+        val app = Application.instance
+        PreferencesViewModel(app.preferencesRepository)
+    }
+
+    // ------ //
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val binding = DataBindingUtil.setContentView<ActivityPreferencesBinding>(
             this,
             R.layout.activity_preferences
-        )
+        ).also {
+            it.vm = viewModel
+            it.lifecycleOwner = this
+        }
 
         binding.previewButton.setOnClickListener {
             val intent = Intent(this, LockScreenActivity::class.java)
