@@ -2,6 +2,7 @@
 
 package com.suihan74.utilities.extensions
 
+import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
 
@@ -50,8 +51,8 @@ inline fun <T> T.onNot(
 // ------ //
 
 /** 与えられた型のときだけ実行するlet */
+@ExperimentalContracts
 @Suppress("UNCHECKED_CAST")
-@OptIn(kotlin.contracts.ExperimentalContracts::class)
 inline fun <reified T, R> Any?.letAs(crossinline block: (T) -> R) : R? {
     contract {
         callsInPlace(block, InvocationKind.EXACTLY_ONCE)
@@ -62,7 +63,7 @@ inline fun <reified T, R> Any?.letAs(crossinline block: (T) -> R) : R? {
 }
 
 /** 与えられた型のときだけ実行するalso */
-@OptIn(kotlin.contracts.ExperimentalContracts::class)
+@ExperimentalContracts
 inline fun <reified T> Any?.alsoAs(crossinline block: (T) -> Unit) : T? {
     contract {
         callsInPlace(block, InvocationKind.EXACTLY_ONCE)
