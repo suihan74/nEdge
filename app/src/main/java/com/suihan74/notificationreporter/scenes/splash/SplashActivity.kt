@@ -5,26 +5,22 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationManagerCompat
 import com.suihan74.notificationreporter.scenes.preferences.PreferencesActivity
+import com.suihan74.utilities.extensions.onNot
+import com.suihan74.utilities.extensions.whenFalse
 
 class SplashActivity : AppCompatActivity() {
-    companion object {
-        private const val OVERLAY_PERMISSION_REQUEST_CODE = 1
+    enum class RequestCode {
+        OVERLAY_PERMISSION,
+        NOTIFICATION_LISTENER
     }
 
     // ------ //
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        if (!Settings.canDrawOverlays(this)) {
-            val intent = Intent(
-                Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                Uri.parse("package:$packageName")
-            )
-            startActivityForResult(intent, OVERLAY_PERMISSION_REQUEST_CODE)
-        }
-        else {
+        if (requestNotificationListenerPermission() && requestManageOverlayPermission()) {
             launchContentsActivity()
         }
     }
@@ -33,14 +29,28 @@ class SplashActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         when (requestCode) {
-            OVERLAY_PERMISSION_REQUEST_CODE -> {
-                if (Settings.canDrawOverlays(this)) {
-                    launchContentsActivity()
-                }
-                else {
-                    finish()
-                }
-            }
+            RequestCode.OVERLAY_PERMISSION.ordinal -> requestManageOverlayPermission()
+
+            RequestCode.NOTIFICATION_LISTENER.ordinal -> requestNotificationListenerPermission()
+        }
+    }
+
+    // ------ //
+
+    private fun requestManageOverlayPermission() : Boolean {
+        return Settings.canDrawOverlays(this).whenFalse {
+            val intent = Intent(
+                Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                Uri.parse("package:$packageName")
+            )
+            startActivityForResult(intent, RequestCode.OVERLAY_PERMISSION.ordinal)
+        }
+    }
+
+    private fun requestNotificationListenerPermission() : Boolean {
+        return NotificationManagerCompat.getEnabledListenerPackages(this).contains(packageName).whenFalse {
+            val intent = Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS")
+            startActivityForResult(intent, RequestCode.NOTIFICATION_LISTENER.ordinal)
         }
     }
 
