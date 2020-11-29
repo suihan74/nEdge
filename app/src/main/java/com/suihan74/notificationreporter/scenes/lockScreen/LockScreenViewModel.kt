@@ -51,6 +51,9 @@ class LockScreenViewModel(
     /** 充電状態 */
     val batteryCharging : LiveData<Boolean> = batteryRepo.batteryCharging
 
+    /** 発生した通知リスト */
+    val statusBarNotifications : LiveData<List<StatusBarNotification>> = notificationRepo.statusBarNotifications
+
     // ------ //
 
     init {

@@ -23,7 +23,7 @@ class ScreenReceiver : BroadcastReceiver() {
                 app.screenRepository.screenOn.value = false
 
                 // 未読通知があったらActivityを開始する
-                if (app.notificationRepository.existUnreadNotifications.value == true) {
+                if (app.notificationRepository.existNotifications) {
                     val lockScreenIntent = Intent(context, LockScreenActivity::class.java).also {
                         it.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                     }

@@ -18,7 +18,7 @@ class NotificationService : NotificationListenerService() {
 
         val app = Application.instance
 
-        app.notificationRepository.existUnreadNotifications.value = sbn != null
+        app.notificationRepository.pushNotification(sbn)
 
         if (app.screenRepository.screenOn.value == false) {
             val intent = Intent(applicationContext, LockScreenActivity::class.java).also {

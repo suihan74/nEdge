@@ -76,7 +76,7 @@
         <View
             android:id="@+id/notificationBar"
             android:background="#ff00ff00"
-            android:visibility="@{vm.existNotifications}"
+            android:visibility="@{!vm.statusBarNotifications.empty}"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

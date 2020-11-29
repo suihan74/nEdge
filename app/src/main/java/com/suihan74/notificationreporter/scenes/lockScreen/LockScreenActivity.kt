@@ -117,8 +117,7 @@ class LockScreenActivity : AppCompatActivity() {
     }
 
     override fun finish() {
-        Application.instance.notificationRepository.existUnreadNotifications.value = false
-
         super.finish()
+        Application.instance.notificationRepository.clearNotifications()
     }
 }
