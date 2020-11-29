@@ -1,5 +1,8 @@
 package com.suihan74.notificationreporter.scenes.lockScreen
 
+import android.service.notification.StatusBarNotification
+import android.view.MotionEvent
+import android.view.View
 import androidx.annotation.MainThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -22,9 +25,9 @@ class LockScreenViewModel(
     val currentTime : LiveData<LocalDateTime> by lazy { _currentTime }
     private val _currentTime = MutableLiveData<LocalDateTime>()
 
-    /** 画面消灯状態 */
+    /** バックライト最低レベルまで暗くするか */
     val lightOff : LiveData<Boolean> by lazy { _lightOff }
-    private val _lightOff = MutableLiveData<Boolean>(false).also { liveData ->
+    private val _lightOff = MutableLiveData(false).also { liveData ->
         liveData.observeForever {
             if (!it) {
                 viewModelScope.launch(Dispatchers.Main) {
@@ -37,13 +40,15 @@ class LockScreenViewModel(
 
     /** 画面消灯までの待機時間(ミリ秒) */
     val lightOffInterval : LiveData<Long> by lazy { _lightOffInterval }
-    private val _lightOffInterval = MutableLiveData<Long>(5_000)
+    private val _lightOffInterval = MutableLiveData(5_000L)
 
-    /** 待機開始時刻 */
-    private var waitStartTime = LocalDateTime.now()
-
-    /** 通知発生 */
-    val existNotifications : LiveData<Boolean> = notificationRepo.existUnreadNotifications
+    /**
+     * バックライト消灯後の画面をさらに暗くする度合い
+     *
+     * 0.0f ~ 1.0f
+     */
+    val lightLevel : LiveData<Float> by lazy { _lightLevel }
+    private val _lightLevel = MutableLiveData(0.5f)
 
     /** バッテリーレベル */
     val batteryLevel : LiveData<Int> = batteryRepo.batteryLevel
@@ -70,9 +75,14 @@ class LockScreenViewModel(
         }
     }
 
-    @MainThread
-    fun onClickScreen() {
-        _lightOff.value = false
-        waitStartTime = LocalDateTime.now()
+    // ------ //
+
+    val onTouchScreen : (View, MotionEvent)->Boolean = { _, motionEvent ->
+        when (motionEvent.action) {
+            MotionEvent.ACTION_DOWN -> {
+                _lightOff.value = false
+            }
+        }
+        true
     }
 }

@@ -68,8 +68,9 @@
 
         <View
             android:id="@+id/clickGuard"
+            lightLevel="@{vm.lightLevel}"
             android:visibility="@{vm.lightOff}"
-            android:onClick="@{()->vm.onClickScreen()}"
+            android:onTouch="@{vm.onTouchScreen}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 

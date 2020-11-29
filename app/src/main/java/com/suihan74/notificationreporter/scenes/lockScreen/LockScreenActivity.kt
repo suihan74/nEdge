@@ -66,6 +66,7 @@ class LockScreenActivity : AppCompatActivity() {
             })
         }
 
+        // バックライトを最低レベルにする
         viewModel.lightOff.observe(this, { lightOff ->
             window.attributes = window.attributes.also { lp ->
                 lp.screenBrightness =
@@ -76,7 +77,7 @@ class LockScreenActivity : AppCompatActivity() {
     }
 
     /**
-     * 常にフルスクリーンでロック画面より上に表示し，画面を消灯しない
+     * 常にフルスクリーンでロック画面より上に表示し，画面を完全に消灯しない
      */
     private fun overlapLockScreenAndKeepScreenOn() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
