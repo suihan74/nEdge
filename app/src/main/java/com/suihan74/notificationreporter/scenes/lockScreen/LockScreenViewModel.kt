@@ -24,11 +24,20 @@ class LockScreenViewModel(
 
     /** 画面消灯状態 */
     val lightOff : LiveData<Boolean> by lazy { _lightOff }
-    private val _lightOff = MutableLiveData<Boolean>()
+    private val _lightOff = MutableLiveData<Boolean>(false).also { liveData ->
+        liveData.observeForever {
+            if (!it) {
+                viewModelScope.launch(Dispatchers.Main) {
+                    delay(lightOffInterval.value ?: 5_000)
+                    liveData.value = true
+                }
+            }
+        }
+    }
 
     /** 画面消灯までの待機時間(ミリ秒) */
     val lightOffInterval : LiveData<Long> by lazy { _lightOffInterval }
-    private val _lightOffInterval = MutableLiveData<Long>(5)
+    private val _lightOffInterval = MutableLiveData<Long>(5_000)
 
     /** 待機開始時刻 */
     private var waitStartTime = LocalDateTime.now()
@@ -50,21 +59,9 @@ class LockScreenViewModel(
                 val now = LocalDateTime.now()
                 _currentTime.value = now
 
-                if (_lightOff.value != true) {
-                    viewModelScope.launch(Dispatchers.Default) {
-                        val interval = lightOffInterval.value ?: 0
-                        val duration =
-                            now.toEpochSecond(ZoneOffset.UTC) - waitStartTime.toEpochSecond(
-                                ZoneOffset.UTC
-                            )
-                        if (duration >= interval) {
-                            _lightOff.postValue(true)
-                        }
-                    }
-                }
-
+                // 1分間隔で時計を更新する
                 delay(
-                    (1_000_000_000L - now.nano) / 1_000_000L
+                    60_000L - (now.second * 1_000L + now.nano / 1_000_000L)
                 )
             }
         }
