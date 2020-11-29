@@ -7,6 +7,7 @@ import com.suihan74.notificationreporter.receivers.BatteryStateReceiver
 import com.suihan74.notificationreporter.receivers.ScreenReceiver
 import com.suihan74.notificationreporter.repositories.BatteryRepository
 import com.suihan74.notificationreporter.repositories.NotificationRepository
+import com.suihan74.notificationreporter.repositories.ScreenRepository
 
 /**
  * アプリ情報
@@ -29,6 +30,11 @@ class Application : android.app.Application() {
     /** 通知を扱うリポジトリ */
     val notificationRepository by lazy {
         NotificationRepository()
+    }
+
+    /** 画面状態を扱うリポジトリ */
+    val screenRepository by lazy {
+        ScreenRepository()
     }
 
     // ------ //
