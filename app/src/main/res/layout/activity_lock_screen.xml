@@ -67,9 +67,9 @@
         </androidx.constraintlayout.motion.widget.MotionLayout>
 
         <View
-            android:id="@+id/shadowView"
-            android:background="#dd000000"
+            android:id="@+id/clickGuard"
             android:visibility="@{vm.lightOff}"
+            android:onClick="@{()->vm.onClickScreen()}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 

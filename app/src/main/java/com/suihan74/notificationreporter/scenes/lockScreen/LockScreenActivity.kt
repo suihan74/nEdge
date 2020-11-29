@@ -11,6 +11,7 @@ import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.R
 import com.suihan74.notificationreporter.databinding.ActivityLockScreenBinding
@@ -65,10 +66,13 @@ class LockScreenActivity : AppCompatActivity() {
             })
         }
 
-        binding.shadowView.setOnTouchListener { view, motionEvent ->
-            viewModel.onClickScreen()
-            true
-        }
+        viewModel.lightOff.observe(this, { lightOff ->
+            window.attributes = window.attributes.also { lp ->
+                lp.screenBrightness =
+                    if (lightOff) 0.01f  // 1/256以下の値にするとバグる機種がある
+                    else -1.0f  // システムの値
+            }
+        })
     }
 
     /**
