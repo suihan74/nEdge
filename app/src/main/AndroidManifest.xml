@@ -42,6 +42,7 @@
         <!-- 起動画面 -->
         <activity
             android:name=".scenes.splash.SplashActivity"
+            android:noHistory="true"
             android:launchMode="singleTask">
 
             <intent-filter>
