@@ -3,6 +3,7 @@ package com.suihan74.notificationreporter
 import android.content.Intent
 import android.content.IntentFilter
 import com.jakewharton.threetenabp.AndroidThreeTen
+import com.suihan74.notificationreporter.receivers.BatteryStateReceiver
 import com.suihan74.notificationreporter.receivers.ScreenReceiver
 import com.suihan74.notificationreporter.repositories.BatteryRepository
 import com.suihan74.notificationreporter.repositories.NotificationRepository
@@ -30,9 +31,16 @@ class Application : android.app.Application() {
         NotificationRepository()
     }
 
+    // ------ //
+
     /** 画面消灯を監視するレシーバ */
     private val screenReceiver by lazy {
         ScreenReceiver()
+    }
+
+    /** バッテリ状態を監視するレシーバ */
+    private val batteryStateReceiver by lazy {
+        BatteryStateReceiver()
     }
 
     // ------ //
@@ -47,5 +55,10 @@ class Application : android.app.Application() {
         // 画面消灯を監視する
         registerReceiver(screenReceiver, IntentFilter(Intent.ACTION_SCREEN_OFF))
         registerReceiver(screenReceiver, IntentFilter(Intent.ACTION_SCREEN_ON))
+
+        // バッテリ残量・充電状態変更を監視する
+        registerReceiver(batteryStateReceiver, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
+        registerReceiver(batteryStateReceiver, IntentFilter(Intent.ACTION_POWER_CONNECTED))
+        registerReceiver(batteryStateReceiver, IntentFilter(Intent.ACTION_POWER_DISCONNECTED))
     }
 }
