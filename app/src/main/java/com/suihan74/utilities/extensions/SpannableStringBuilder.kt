@@ -58,7 +58,7 @@ fun SpannableStringBuilder.appendDrawable(
         drawable.setBounds(0, 0, sizePx, sizePx)
 
         val vAlign = verticalAlign ?:
-            if (Build.VERSION.SDK_INT >= 29) ImageSpan.ALIGN_CENTER
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) ImageSpan.ALIGN_CENTER
             else ImageSpan.ALIGN_BASELINE
 
         append("_", ImageSpan(drawable, vAlign))
