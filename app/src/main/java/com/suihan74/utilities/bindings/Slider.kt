@@ -6,13 +6,17 @@ import androidx.databinding.InverseBindingListener
 import com.google.android.material.slider.Slider
 
 object SliderBindingAdapters {
+    /** 双方向バインドのためのリスナを設定する */
     @JvmStatic
     @BindingAdapter("android:valueAttrChanged")
     fun bindListeners(slider: Slider, valueAttrChanged: InverseBindingListener?) {
-        slider.addOnChangeListener { _, newValue, fromUser ->
+        slider.addOnChangeListener { _, _, _ ->
             valueAttrChanged?.onChange()
         }
     }
+
+    // ------ //
+    // "android:value"の双方向バインド
 
     @JvmStatic
     @BindingAdapter("android:value")
