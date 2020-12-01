@@ -14,8 +14,8 @@
 
         <androidx.constraintlayout.motion.widget.MotionLayout
             android:id="@+id/motionLayout"
-            app:layoutDescription="@xml/motion_lock_screen"
             android:theme="@style/LockScreenActivity"
+            app:layoutDescription="@xml/motion_lock_screen"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -76,12 +76,12 @@
 
         <View
             android:id="@+id/notificationBar"
-            android:background="#ff00ff00"
-            android:visibility="@{!vm.statusBarNotifications.empty}"
+            notifications="@{vm.statusBarNotifications}"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_width="match_parent"
-            android:layout_height="4dp"/>
+            android:layout_height="4dp"
+            tools:background="#ff00ff00"/>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

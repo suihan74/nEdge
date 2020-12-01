@@ -1,9 +1,13 @@
 package com.suihan74.notificationreporter.scenes.lockScreen
 
+import android.content.pm.PackageManager
 import android.graphics.Color
+import android.service.notification.StatusBarNotification
 import android.view.View
 import android.widget.TextView
 import androidx.annotation.FloatRange
+import androidx.appcompat.widget.ThemeUtils
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.text.buildSpannedString
 import androidx.databinding.BindingAdapter
 import com.suihan74.notificationreporter.R
@@ -40,6 +44,20 @@ object BindingAdapters {
             val alpha = (255 * (1.0f - lightLevel)).toInt()
             val color = alpha shl 24
             view.setBackgroundColor(color)
+        }
+    }
+
+    /** 通知バーの色・表示 */
+    @JvmStatic
+    @BindingAdapter("notifications")
+    fun setNotifications(view: View, notifications: List<StatusBarNotification>?) {
+        if (notifications.isNullOrEmpty()) {
+            view.visibility = View.GONE
+        }
+        else {
+            // TODO: 通知ごとに色を設定する
+            view.setBackgroundColor(Color.GREEN)
+            view.visibility = View.VISIBLE
         }
     }
 }

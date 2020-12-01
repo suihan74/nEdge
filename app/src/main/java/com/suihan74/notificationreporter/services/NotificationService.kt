@@ -20,7 +20,7 @@ class NotificationService : NotificationListenerService() {
 
         app.notificationRepository.pushNotification(sbn)
 
-        if (app.screenRepository.screenOn.value == false) {
+        if (sbn?.notification != null && app.screenRepository.screenOn.value == false) {
             val intent = Intent(applicationContext, LockScreenActivity::class.java).also {
                 it.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             }

@@ -20,7 +20,7 @@ class NotificationRepository {
     /** 新しく発生した通知を記録する */
     @MainThread
     fun pushNotification(sbn: StatusBarNotification?) {
-        if (sbn == null) return
+        if (sbn?.notification == null) return
         val oldList = statusBarNotifications.value.orEmpty()
         statusBarNotifications.value = oldList.plus(sbn)
     }
