@@ -25,6 +25,12 @@ class LockScreenViewModel(
     val currentTime : LiveData<LocalDateTime> by lazy { _currentTime }
     private val _currentTime = MutableLiveData<LocalDateTime>()
 
+    /** 通知バーの色 */
+    val notificationBarColor : LiveData<Int> = prefRepo.defaultNotificationColor
+
+    /** 通知バーの角丸の強さ */
+    val screenCornerRadius : LiveData<Float> = prefRepo.screenCornerRadius
+
     /** バックライト最低レベルまで暗くするか */
     val lightOff : LiveData<Boolean> by lazy { _lightOff }
     private val _lightOff = MutableLiveData(false).also { liveData ->

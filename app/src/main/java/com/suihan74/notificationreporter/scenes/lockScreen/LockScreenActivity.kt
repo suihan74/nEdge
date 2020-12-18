@@ -3,6 +3,7 @@ package com.suihan74.notificationreporter.scenes.lockScreen
 import android.annotation.SuppressLint
 import android.app.KeyguardManager
 import android.content.Context
+import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Bundle
@@ -16,6 +17,7 @@ import androidx.databinding.DataBindingUtil
 import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.R
 import com.suihan74.notificationreporter.databinding.ActivityLockScreenBinding
+import com.suihan74.utilities.extensions.alsoAs
 import com.suihan74.utilities.extensions.dp
 import com.suihan74.utilities.lazyProvideViewModel
 
@@ -79,9 +81,11 @@ class LockScreenActivity : AppCompatActivity() {
             }
         })
 
-        val edgeShape = ContextCompat.getDrawable(this, R.drawable.shape_edge_light) as? GradientDrawable
-        edgeShape?.cornerRadius = 24.dp
-        binding.notificationBar.setImageDrawable(edgeShape)
+        ContextCompat.getDrawable(this, R.drawable.shape_edge_light).alsoAs<GradientDrawable> { edgeShape ->
+            edgeShape.setStroke(3.dp.toInt(), viewModel.notificationBarColor.value ?: Color.GREEN)
+            edgeShape.cornerRadius = viewModel.screenCornerRadius.value ?: 0f
+            binding.notificationBar.setImageDrawable(edgeShape)
+        }
     }
 
     /**

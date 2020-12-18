@@ -1,5 +1,6 @@
 package com.suihan74.notificationreporter.repositories
 
+import android.graphics.Color
 import androidx.lifecycle.MutableLiveData
 
 /**
@@ -17,4 +18,14 @@ class PreferencesRepository {
      * 0.0f ~ 1.0f
      */
     val lightLevel = MutableLiveData(0.5f)
+
+    /**
+     * 通知バーの角丸のスケール
+     */
+    val screenCornerRadius = MutableLiveData(56.0f)
+
+    /**
+     * デフォルトの通知バー色
+     */
+    val defaultNotificationColor = MutableLiveData(Color.GREEN)
 }
