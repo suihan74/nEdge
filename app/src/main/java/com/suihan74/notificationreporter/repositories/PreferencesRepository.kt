@@ -1,9 +1,7 @@
 package com.suihan74.notificationreporter.repositories
 
-import android.graphics.Color
 import androidx.lifecycle.MutableLiveData
 import com.suihan74.notificationreporter.models.NotificationSetting
-import com.suihan74.utilities.extensions.dp
 
 /**
  * アプリ設定を扱うリポジトリ

@@ -2,7 +2,6 @@ package com.suihan74.notificationreporter.scenes.lockScreen
 
 import android.graphics.*
 import android.os.Build
-import android.util.DisplayMetrics
 import android.view.Window
 import android.widget.ImageView
 import androidx.annotation.RequiresApi

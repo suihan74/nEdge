@@ -3,23 +3,17 @@ package com.suihan74.notificationreporter.scenes.lockScreen
 import android.annotation.SuppressLint
 import android.app.KeyguardManager
 import android.content.Context
-import android.graphics.*
 import android.os.Build
 import android.os.Bundle
-import android.util.DisplayMetrics
 import android.view.KeyEvent
 import android.view.View
 import android.view.WindowManager
-import android.widget.ImageView
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.databinding.DataBindingUtil
 import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.R
 import com.suihan74.notificationreporter.databinding.ActivityLockScreenBinding
-import com.suihan74.notificationreporter.models.*
-import com.suihan74.utilities.extensions.dp
 import com.suihan74.utilities.lazyProvideViewModel
 
 class LockScreenActivity : AppCompatActivity() {

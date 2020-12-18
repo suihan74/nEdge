@@ -1,6 +1,5 @@
 package com.suihan74.notificationreporter.scenes.lockScreen
 
-import android.graphics.Color
 import android.service.notification.StatusBarNotification
 import android.view.MotionEvent
 import android.view.View
@@ -12,7 +11,6 @@ import com.suihan74.notificationreporter.models.NotificationSetting
 import com.suihan74.notificationreporter.repositories.BatteryRepository
 import com.suihan74.notificationreporter.repositories.NotificationRepository
 import com.suihan74.notificationreporter.repositories.PreferencesRepository
-import com.suihan74.utilities.extensions.dp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

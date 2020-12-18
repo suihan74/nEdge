@@ -2,19 +2,13 @@ package com.suihan74.notificationreporter.scenes.preferences
 
 import android.app.Activity
 import android.graphics.Color
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.TextView
-import androidx.core.graphics.ColorUtils
-import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doAfterTextChanged
 import androidx.databinding.BindingAdapter
 import androidx.databinding.InverseBindingAdapter
 import androidx.databinding.InverseBindingListener
-import com.google.android.material.slider.Slider
 import com.suihan74.notificationreporter.models.NotificationSetting
 import com.suihan74.notificationreporter.scenes.lockScreen.NotificationDrawer
 

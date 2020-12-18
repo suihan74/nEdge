@@ -1,13 +1,10 @@
 package com.suihan74.notificationreporter.scenes.lockScreen
 
-import android.content.pm.PackageManager
 import android.graphics.Color
 import android.service.notification.StatusBarNotification
 import android.view.View
 import android.widget.TextView
 import androidx.annotation.FloatRange
-import androidx.appcompat.widget.ThemeUtils
-import androidx.core.content.res.ResourcesCompat
 import androidx.core.text.buildSpannedString
 import androidx.databinding.BindingAdapter
 import com.suihan74.notificationreporter.R
