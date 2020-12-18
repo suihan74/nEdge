@@ -3,21 +3,22 @@ package com.suihan74.notificationreporter.scenes.lockScreen
 import android.annotation.SuppressLint
 import android.app.KeyguardManager
 import android.content.Context
-import android.graphics.Color
-import android.graphics.drawable.GradientDrawable
+import android.graphics.*
 import android.os.Build
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.view.KeyEvent
 import android.view.View
 import android.view.WindowManager
+import android.widget.ImageView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.motion.widget.MotionLayout
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.R
 import com.suihan74.notificationreporter.databinding.ActivityLockScreenBinding
-import com.suihan74.utilities.extensions.alsoAs
+import com.suihan74.notificationreporter.models.*
 import com.suihan74.utilities.extensions.dp
 import com.suihan74.utilities.lazyProvideViewModel
 
@@ -31,6 +32,8 @@ class LockScreenActivity : AppCompatActivity() {
         )
     }
 
+    private lateinit var binding : ActivityLockScreenBinding
+
     // ------ //
 
     @SuppressLint("ClickableViewAccessibility")
@@ -39,7 +42,7 @@ class LockScreenActivity : AppCompatActivity() {
         setTheme(R.style.LockScreenActivity)
         overlapLockScreenAndKeepScreenOn()
 
-        val binding = DataBindingUtil.setContentView<ActivityLockScreenBinding>(
+        binding = DataBindingUtil.setContentView<ActivityLockScreenBinding>(
                 this,
                 R.layout.activity_lock_screen
         ).also {
@@ -80,12 +83,14 @@ class LockScreenActivity : AppCompatActivity() {
                         else -1.0f  // システムの値
             }
         })
+    }
 
-        ContextCompat.getDrawable(this, R.drawable.shape_edge_light)?.mutate().alsoAs<GradientDrawable> { edgeShape ->
-            edgeShape.setStroke(3.dp.toInt(), viewModel.notificationBarColor.value ?: Color.GREEN)
-            edgeShape.cornerRadii = viewModel.screenCornerRadii.value ?: floatArrayOf(0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f)
-            binding.notificationBar.setImageDrawable(edgeShape)
-        }
+    // ノッチ情報の取得はウィンドウアタッチ後でないとできない
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+
+        val notificationDrawer = NotificationDrawer(window)
+        notificationDrawer.draw(binding.notificationBar, viewModel.defaultNotificationSetting)
     }
 
     /**

@@ -2,6 +2,8 @@ package com.suihan74.notificationreporter.repositories
 
 import android.graphics.Color
 import androidx.lifecycle.MutableLiveData
+import com.suihan74.notificationreporter.models.NotificationSetting
+import com.suihan74.utilities.extensions.dp
 
 /**
  * アプリ設定を扱うリポジトリ
@@ -20,14 +22,7 @@ class PreferencesRepository {
     val lightLevel = MutableLiveData(0.5f)
 
     /**
-     * 通知バーの角丸のスケール
-     *
-     * 左上から時計回りに(X_rad, Y_rad)のペアを4角分設定する
+     * デフォルトの通知バー描画設定
      */
-    val screenCornerRadii = MutableLiveData(floatArrayOf(120.0f, 120.0f, 120.0f, 120.0f, 56.0f, 56.0f, 56.0f, 56.0f))
-
-    /**
-     * デフォルトの通知バー色
-     */
-    val defaultNotificationColor = MutableLiveData(Color.GREEN)
+    val defaultNotificationSetting = MutableLiveData(NotificationSetting())
 }

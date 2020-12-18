@@ -1,5 +1,6 @@
 package com.suihan74.notificationreporter.scenes.lockScreen
 
+import android.graphics.Color
 import android.service.notification.StatusBarNotification
 import android.view.MotionEvent
 import android.view.View
@@ -7,9 +8,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.suihan74.notificationreporter.models.NotificationSetting
 import com.suihan74.notificationreporter.repositories.BatteryRepository
 import com.suihan74.notificationreporter.repositories.NotificationRepository
 import com.suihan74.notificationreporter.repositories.PreferencesRepository
+import com.suihan74.utilities.extensions.dp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -25,11 +28,8 @@ class LockScreenViewModel(
     val currentTime : LiveData<LocalDateTime> by lazy { _currentTime }
     private val _currentTime = MutableLiveData<LocalDateTime>()
 
-    /** 通知バーの色 */
-    val notificationBarColor : LiveData<Int> = prefRepo.defaultNotificationColor
-
-    /** 通知バーの角丸の強さ */
-    val screenCornerRadii : LiveData<FloatArray> = prefRepo.screenCornerRadii
+    /** デフォルトの通知バーの描画設定 */
+    val defaultNotificationSetting = prefRepo.defaultNotificationSetting.value ?: NotificationSetting()
 
     /** バックライト最低レベルまで暗くするか */
     val lightOff : LiveData<Boolean> by lazy { _lightOff }

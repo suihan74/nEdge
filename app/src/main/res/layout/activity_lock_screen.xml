@@ -79,9 +79,9 @@
 
         <ImageView
             android:id="@+id/notificationBar"
-            android:src="@drawable/shape_edge_light"
             android:background="@android:color/transparent"
             notifications="@{vm.statusBarNotifications}"
+            android:contentDescription="@null"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
