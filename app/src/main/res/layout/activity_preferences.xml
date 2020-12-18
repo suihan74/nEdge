@@ -9,51 +9,139 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:paddingHorizontal="30dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
+        <ScrollView
+            android:paddingHorizontal="30dp"
+            android:paddingTop="80dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintVertical_bias="0.25"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_width="0dp"
+            android:layout_height="0dp">
 
-            <Button
-                android:id="@+id/previewButton"
-                android:text="@string/prefs_preview_button_text"
-                android:layout_gravity="center_horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-            <Button
-                android:id="@+id/notifyButton"
-                android:text="@string/prefs_notify_button_text"
-                android:layout_marginTop="40dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:text="@string/prefs_light_level_desc"
-                android:layout_marginTop="40dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-            <com.google.android.material.slider.Slider
-                android:id="@+id/lightLevelSlider"
-                android:valueFrom="0.0"
-                android:valueTo="1.0"
-                android:stepSize="0.02"
-                android:value="@={vm.lightLevel}"
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content">
 
-        </LinearLayout>
+                <Button
+                    android:id="@+id/previewButton"
+                    android:text="@string/prefs_preview_button_text"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <Button
+                    android:id="@+id/notifyButton"
+                    android:text="@string/prefs_notify_button_text"
+                    android:layout_marginTop="40dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:text="@string/prefs_light_level_desc"
+                    android:layout_marginTop="40dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <com.google.android.material.slider.Slider
+                    android:id="@+id/lightLevelSlider"
+                    android:valueFrom="0.0"
+                    android:valueTo="1.0"
+                    android:stepSize="0.02"
+                    android:value="@={vm.lightLevel}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:text="@{@string/prefs_corner_radius_desc(`左上`)}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <com.google.android.material.slider.Slider
+                    android:id="@+id/leftTopCornerRadiusSlider"
+                    android:valueFrom="0.0"
+                    android:valueTo="100.0"
+                    android:stepSize="1.0"
+                    android:value="@{vm.notificationSetting.outlinesSetting.leftTopCornerRadius}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:text="@{@string/prefs_corner_radius_desc(`右上`)}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <com.google.android.material.slider.Slider
+                    android:id="@+id/rightTopCornerRadiusSlider"
+                    android:valueFrom="0.0"
+                    android:valueTo="100.0"
+                    android:stepSize="1.0"
+                    android:value="@{vm.notificationSetting.outlinesSetting.rightTopCornerRadius}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:text="@{@string/prefs_corner_radius_desc(`左下`)}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <com.google.android.material.slider.Slider
+                    android:id="@+id/leftBottomCornerRadiusSlider"
+                    android:valueFrom="0.0"
+                    android:valueTo="100.0"
+                    android:stepSize="1.0"
+                    android:value="@{vm.notificationSetting.outlinesSetting.leftBottomCornerRadius}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:text="@{@string/prefs_corner_radius_desc(`右下`)}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <com.google.android.material.slider.Slider
+                    android:id="@+id/rightBottomCornerRadiusSlider"
+                    android:valueFrom="0.0"
+                    android:valueTo="100.0"
+                    android:stepSize="1.0"
+                    android:value="@{vm.notificationSetting.outlinesSetting.rightBottomCornerRadius}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:text="@string/prefs_default_notification_color_desc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <EditText
+                    colorCode="@={vm.notificationColor}"
+                    android:hint="color | e.g.) #ff0000 (red)"
+                    android:inputType="text"
+                    android:maxLength="6"
+                    android:importantForAutofill="no"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+        <ImageView
+            android:id="@+id/notificationBar"
+            notificationSetting="@{vm.notificationSetting}"
+            android:background="@android:color/transparent"
+            android:contentDescription="@null"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="0dp"
+            android:layout_height="0dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

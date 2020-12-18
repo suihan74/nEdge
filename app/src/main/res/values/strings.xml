@@ -5,4 +5,6 @@
     <string name="prefs_preview_button_text">プレビュー</string>
     <string name="prefs_notify_button_text">5秒後に通知する</string>
     <string name="prefs_light_level_desc">バックライトを消灯したときの画面の暗さ</string>
+    <string name="prefs_corner_radius_desc">%sの角丸半径</string>
+    <string name="prefs_default_notification_color_desc">デフォルト通知表示色</string>
 </resources>

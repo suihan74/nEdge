@@ -8,7 +8,13 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
+    <!-- LockScreenActivity -->
     <color name="clockTextColor">#FFF</color>
     <color name="dateTextColor">#8a8a8a</color>
     <color name="defaultEdgeColor">#ff00ff00</color>
+
+    <!-- PreferencesActivity -->
+    <color name="preferencesBackgroundColor">#292929</color>
+    <color name="preferencesTextColor">#dedede</color>
+
 </resources>
