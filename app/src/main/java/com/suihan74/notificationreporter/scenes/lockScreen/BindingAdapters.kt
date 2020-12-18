@@ -56,7 +56,7 @@ object BindingAdapters {
         }
         else {
             // TODO: 通知ごとに色を設定する
-            view.setBackgroundColor(Color.GREEN)
+            //view.setBackgroundColor(Color.GREEN)
             view.visibility = View.VISIBLE
         }
     }

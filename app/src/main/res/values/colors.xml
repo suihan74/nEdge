@@ -10,4 +10,5 @@
 
     <color name="clockTextColor">#FFF</color>
     <color name="dateTextColor">#8a8a8a</color>
+    <color name="defaultEdgeColor">#ff00ff00</color>
 </resources>

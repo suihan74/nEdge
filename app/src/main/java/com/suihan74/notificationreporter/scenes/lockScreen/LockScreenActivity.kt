@@ -3,6 +3,7 @@ package com.suihan74.notificationreporter.scenes.lockScreen
 import android.annotation.SuppressLint
 import android.app.KeyguardManager
 import android.content.Context
+import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Bundle
 import android.view.KeyEvent
@@ -10,19 +11,22 @@ import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.motion.widget.MotionLayout
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.R
 import com.suihan74.notificationreporter.databinding.ActivityLockScreenBinding
+import com.suihan74.utilities.extensions.dp
 import com.suihan74.utilities.lazyProvideViewModel
+
 
 class LockScreenActivity : AppCompatActivity() {
     private val viewModel by lazyProvideViewModel {
         val app = Application.instance
         LockScreenViewModel(
-            batteryRepo = app.batteryRepository,
-            notificationRepo = app.notificationRepository,
-            prefRepo = app.preferencesRepository
+                batteryRepo = app.batteryRepository,
+                notificationRepo = app.notificationRepository,
+                prefRepo = app.preferencesRepository
         )
     }
 
@@ -34,8 +38,8 @@ class LockScreenActivity : AppCompatActivity() {
         overlapLockScreenAndKeepScreenOn()
 
         val binding = DataBindingUtil.setContentView<ActivityLockScreenBinding>(
-            this,
-            R.layout.activity_lock_screen
+                this,
+                R.layout.activity_lock_screen
         ).also {
             it.vm = viewModel
             it.lifecycleOwner = this
@@ -57,11 +61,12 @@ class LockScreenActivity : AppCompatActivity() {
                 }
 
                 override fun onTransitionTrigger(
-                    p0: MotionLayout?,
-                    p1: Int,
-                    p2: Boolean,
-                    p3: Float
-                ) {}
+                        p0: MotionLayout?,
+                        p1: Int,
+                        p2: Boolean,
+                        p3: Float
+                ) {
+                }
             })
         }
 
@@ -69,10 +74,14 @@ class LockScreenActivity : AppCompatActivity() {
         viewModel.lightOff.observe(this, { lightOff ->
             window.attributes = window.attributes.also { lp ->
                 lp.screenBrightness =
-                    if (lightOff) 0.01f  // 1/256以下の値にするとバグる機種がある
-                    else -1.0f  // システムの値
+                        if (lightOff) 0.01f  // 1/256以下の値にするとバグる機種がある
+                        else -1.0f  // システムの値
             }
         })
+
+        val edgeShape = ContextCompat.getDrawable(this, R.drawable.shape_edge_light) as? GradientDrawable
+        edgeShape?.cornerRadius = 24.dp
+        binding.notificationBar.setImageDrawable(edgeShape)
     }
 
     /**
