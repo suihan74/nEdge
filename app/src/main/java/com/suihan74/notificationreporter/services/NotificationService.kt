@@ -16,8 +16,12 @@ class NotificationService : NotificationListenerService() {
     override fun onNotificationPosted(sbn: StatusBarNotification?) {
         super.onNotificationPosted(sbn)
 
-        val app = Application.instance
+        // TODO: blacklist
+        if (sbn?.packageName == "com.android.systemui") {
+            return
+        }
 
+        val app = Application.instance
         app.notificationRepository.pushNotification(sbn)
 
         if (sbn?.notification != null && app.screenRepository.screenOn.value == false) {
@@ -25,8 +29,8 @@ class NotificationService : NotificationListenerService() {
                 it.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             }
             applicationContext.startActivity(intent)
-        }
+            Log.i("Notification", sbn.packageName)
 
-        Log.i("Notification", "notification posted")
+        }
     }
 }
