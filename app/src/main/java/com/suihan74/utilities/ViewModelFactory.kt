@@ -54,16 +54,14 @@ inline fun <reified ViewModelT : ViewModel> provideViewModel(
 /**
  * ViewModelを作成・取得する(lazy版)
  */
-inline fun <reified ViewModelT : ViewModel> lazyProvideViewModel(
-    owner: ViewModelStoreOwner,
+inline fun <reified ViewModelT : ViewModel> ViewModelStoreOwner.lazyProvideViewModel(
     noinline creator: ()->ViewModelT
-) = lazy { provideViewModel(owner, creator) }
+) = lazy { provideViewModel(this, creator) }
 
 /**
  * ViewModelを作成・取得する(lazy版)
  */
-inline fun <reified ViewModelT : ViewModel> lazyProvideViewModel(
-    owner: ViewModelStoreOwner,
+inline fun <reified ViewModelT : ViewModel> ViewModelStoreOwner.lazyProvideViewModel(
     key: String?,
     noinline creator: ()->ViewModelT
-) = lazy { provideViewModel(owner, key, creator) }
+) = lazy { provideViewModel(this, key, creator) }

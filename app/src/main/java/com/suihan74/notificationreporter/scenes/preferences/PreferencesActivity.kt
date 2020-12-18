@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
  */
 class PreferencesActivity : AppCompatActivity() {
 
-    private val viewModel by lazyProvideViewModel(this) {
+    private val viewModel by lazyProvideViewModel {
         val app = Application.instance
         PreferencesViewModel(app.preferencesRepository)
     }
