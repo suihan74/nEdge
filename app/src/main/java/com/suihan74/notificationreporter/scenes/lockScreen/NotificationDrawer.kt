@@ -54,10 +54,8 @@ class NotificationDrawer(
         drawOutLines(canvas, paint, notificationSetting)
 
         // ノッチの縁
-        /*
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            /*
-            // テスト用の水滴ノッチ設定
+            // テスト用の矩形ノッチ設定
             val notchSetting = RectangleNotchSetting(
                 leftTopRadius = 12.dp,
                 rightTopRadius = 12.dp,
@@ -66,8 +64,7 @@ class NotificationDrawer(
                 widthAdjustment = 18f,
                 heightAdjustment = 0f
             )
-            drawNotificationBarRectangleNotch(canvas, paint, notchSetting)
-            */
+            drawRectangleNotch(canvas, paint, notchSetting)
 
             /*
             // テスト用のパンチホールノッチ設定
@@ -78,7 +75,7 @@ class NotificationDrawer(
             )
             drawNotificationBarPunchHoleNotch(canvas, paint, notchSetting)
             */
-        }*/
+        }
 
         imageView.setImageBitmap(bitmap)
     }
