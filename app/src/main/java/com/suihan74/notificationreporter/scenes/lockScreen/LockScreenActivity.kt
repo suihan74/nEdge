@@ -21,7 +21,6 @@ import com.suihan74.utilities.extensions.alsoAs
 import com.suihan74.utilities.extensions.dp
 import com.suihan74.utilities.lazyProvideViewModel
 
-
 class LockScreenActivity : AppCompatActivity() {
     private val viewModel by lazyProvideViewModel {
         val app = Application.instance
@@ -82,9 +81,9 @@ class LockScreenActivity : AppCompatActivity() {
             }
         })
 
-        ContextCompat.getDrawable(this, R.drawable.shape_edge_light).alsoAs<GradientDrawable> { edgeShape ->
+        ContextCompat.getDrawable(this, R.drawable.shape_edge_light)?.mutate().alsoAs<GradientDrawable> { edgeShape ->
             edgeShape.setStroke(3.dp.toInt(), viewModel.notificationBarColor.value ?: Color.GREEN)
-            edgeShape.cornerRadius = viewModel.screenCornerRadius.value ?: 0f
+            edgeShape.cornerRadii = viewModel.screenCornerRadii.value ?: floatArrayOf(0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f)
             binding.notificationBar.setImageDrawable(edgeShape)
         }
     }

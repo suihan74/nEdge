@@ -29,7 +29,7 @@ class LockScreenViewModel(
     val notificationBarColor : LiveData<Int> = prefRepo.defaultNotificationColor
 
     /** 通知バーの角丸の強さ */
-    val screenCornerRadius : LiveData<Float> = prefRepo.screenCornerRadius
+    val screenCornerRadii : LiveData<FloatArray> = prefRepo.screenCornerRadii
 
     /** バックライト最低レベルまで暗くするか */
     val lightOff : LiveData<Boolean> by lazy { _lightOff }
