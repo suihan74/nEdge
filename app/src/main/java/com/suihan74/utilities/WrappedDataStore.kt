@@ -3,6 +3,7 @@
 package com.suihan74.utilities
 
 import android.content.Context
+import androidx.annotation.MainThread
 import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.createDataStore
 import androidx.lifecycle.MutableLiveData
@@ -192,24 +193,9 @@ class WrappedDataStore private constructor (
     fun <T> getLiveData(key: Key<T>, coroutineScope: CoroutineScope = GlobalScope) : MutableLiveData<T> {
         checkKey(key)
 
-        val liveData = runBlocking {
+        val liveData = runBlocking(Dispatchers.Main) {
             liveDataCacheMutex.withLock {
-                liveDataCache[key.key.name]?.get() ?: let {
-                    MutableLiveData<T>().also { newLiveData ->
-                        liveDataCache[key.key.name] = WeakReference(newLiveData)
-                        coroutineScope.launch(Dispatchers.Main) {
-                            newLiveData.value = get(key)
-                        }
-
-                        newLiveData.observeForever { value ->
-                            coroutineScope.launch {
-                                edit {
-                                    set(key, value)
-                                }
-                            }
-                        }
-                    }
-                }
+                liveDataCache[key.key.name]?.get() ?: createLiveData(key, coroutineScope)
             }
         }
 
@@ -217,9 +203,35 @@ class WrappedDataStore private constructor (
     }
 
     /**
+     * キーに対応する新しい`LiveData`を生成する
+     */
+    @MainThread
+    private fun <T> createLiveData(key: Key<T>, coroutineScope: CoroutineScope) : MutableLiveData<T> {
+        val liveData = MutableLiveData<T>()
+
+        liveData.observeForever { value ->
+            coroutineScope.launch {
+                edit {
+                    set(key, value)
+                }
+            }
+        }
+
+        coroutineScope.launch(Dispatchers.Main) {
+            liveData.value = get(key)
+        }
+
+        liveDataCache[key.key.name] = WeakReference(liveData)
+
+        return liveData
+    }
+
+    /**
      * 使用されている`LiveData`のキャッシュ
      */
     private val liveDataCache = HashMap<String, WeakReference<MutableLiveData<*>>>()
+
+    /** `liveDataCache`アクセス用の排他ロック */
     private val liveDataCacheMutex = Mutex()
 
     // ------ //
@@ -328,4 +340,5 @@ class WrappedDataStore private constructor (
 }
 
 /** キーを表すアノテーション */
+@Target(AnnotationTarget.CLASS)
 annotation class DataStoreKey(val dataStoreName: String, val version: Int)
