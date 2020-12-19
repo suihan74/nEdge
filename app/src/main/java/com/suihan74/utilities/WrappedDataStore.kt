@@ -5,7 +5,6 @@ package com.suihan74.utilities
 import android.content.Context
 import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.createDataStore
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.suihan74.utilities.extensions.alsoAs
 import com.suihan74.utilities.extensions.firstByType
@@ -13,6 +12,9 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import java.lang.ref.WeakReference
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.reflect.KClass
@@ -182,27 +184,43 @@ class WrappedDataStore private constructor (
     }
 
     /**
-     * 値の変更を監視する`LiveData`を取得する
+     * 値の変更を監視する`MutableLiveData`を取得する
+     *
+     * この`LiveData`に対して値変更を行うと自動的に`DataStore`側の値も更新される
      */
     @Suppress("UNCHECKED_CAST")
-    fun <T> getLiveData(key: Key<T>, coroutineScope: CoroutineScope = GlobalScope) : LiveData<T> {
+    fun <T> getLiveData(key: Key<T>, coroutineScope: CoroutineScope = GlobalScope) : MutableLiveData<T> {
         checkKey(key)
 
-        val liveData = liveDataCache.getOrPut(key.key.name) {
-            MutableLiveData<T>().also { newLiveData ->
-                coroutineScope.launch(Dispatchers.Main) {
-                    newLiveData.value = get(key)
+        val liveData = runBlocking {
+            liveDataCacheMutex.withLock {
+                liveDataCache[key.key.name]?.get() ?: let {
+                    MutableLiveData<T>().also { newLiveData ->
+                        liveDataCache[key.key.name] = WeakReference(newLiveData)
+                        coroutineScope.launch(Dispatchers.Main) {
+                            newLiveData.value = get(key)
+                        }
+
+                        newLiveData.observeForever { value ->
+                            coroutineScope.launch {
+                                edit {
+                                    set(key, value)
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
 
-        return liveData as LiveData<T>
+        return liveData as MutableLiveData<T>
     }
 
     /**
      * 使用されている`LiveData`のキャッシュ
      */
-    private val liveDataCache = HashMap<String, MutableLiveData<*>>()
+    private val liveDataCache = HashMap<String, WeakReference<MutableLiveData<*>>>()
+    private val liveDataCacheMutex = Mutex()
 
     // ------ //
     // 値更新
@@ -232,13 +250,18 @@ class WrappedDataStore private constructor (
          *
          * @throws IllegalStateException データストアとキーが非対応
          */
-        fun <T> set(key: Key<T>, value: T) {
+        suspend fun <T> set(key: Key<T>, value: T) {
             checkKey(key)
             prefs[key.key] = value
 
             // 該当キーの生きている`LiveData`が存在する場合、その値を更新する
-            liveDataCache[key.key.name]?.alsoAs<MutableLiveData<T>> { liveData ->
-                liveData.postValue(value)
+
+            liveDataCacheMutex.withLock {
+                liveDataCache[key.key.name]?.get()?.alsoAs<MutableLiveData<T>> { liveData ->
+                    if (liveData.value != value) {
+                        liveData.postValue(value)
+                    }
+                }
             }
         }
 

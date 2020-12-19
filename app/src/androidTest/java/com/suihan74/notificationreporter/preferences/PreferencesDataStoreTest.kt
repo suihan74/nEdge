@@ -10,6 +10,7 @@ import com.suihan74.utilities.WrappedDataStore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -26,6 +27,13 @@ class PreferencesDataStoreTest {
             dataStore.edit {
                 set(PreferencesKey.LIGHT_LEVEL, 0f)
             }
+        }
+    }
+
+    @After
+    fun post() {
+        runBlocking {
+            WrappedDataStore.clear(context, PreferencesKey::class)
         }
     }
 
