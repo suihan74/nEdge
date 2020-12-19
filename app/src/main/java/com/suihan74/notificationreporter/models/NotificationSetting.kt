@@ -1,12 +1,13 @@
 package com.suihan74.notificationreporter.models
 
 import android.graphics.Color
-import android.graphics.PathEffect
 import com.suihan74.utilities.extensions.dp
+import kotlinx.serialization.Serializable
 
 /**
  * 通知表示の設定
  */
+@Serializable
 data class NotificationSetting (
     /** 線の色 */
     val color: Int = Color.WHITE,
@@ -20,7 +21,7 @@ data class NotificationSetting (
      * `DashPathEffect`, `DashPathEffect`, `CornerPathEffect`, `DiscretePathEffect`,
      * `SumPathEffect`, `ComposePathEffect`
      */
-    val pathEffect: PathEffect? = null,
+//    val pathEffect: PathEffect? = null,
 
     /** スクリーン輪郭線の描画設定 */
     val outlinesSetting: OutlinesSetting = OutlinesSetting(),

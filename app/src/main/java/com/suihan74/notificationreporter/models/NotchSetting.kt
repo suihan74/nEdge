@@ -1,8 +1,11 @@
 package com.suihan74.notificationreporter.models
 
+import kotlinx.serialization.Serializable
+
 /**
  * 通知表示のノッチ部分の描画設定
  */
+@Serializable
 open class NotchSetting(
     /** ノッチの種類 */
     val type: NotchType
@@ -13,6 +16,7 @@ open class NotchSetting(
 /**
  * 矩形ノッチ用の描画設定
  */
+@Serializable
 data class RectangleNotchSetting(
     /** 左上の角丸半径 */
     val leftTopRadius: Float = 0f,
@@ -39,6 +43,7 @@ data class RectangleNotchSetting(
 /**
  * 水滴ノッチ用の描画設定
  */
+@Serializable
 data class WaterDropNotchSetting(
     /** 左上の角丸半径 */
     val leftTopRadius: Float = 0f,
@@ -65,6 +70,7 @@ data class WaterDropNotchSetting(
 /**
  * パンチホールノッチ用の描画設定
  */
+@Serializable
 data class PunchHoleNotchSetting(
     /** 中心位置X */
     val cx: Float = 0f,

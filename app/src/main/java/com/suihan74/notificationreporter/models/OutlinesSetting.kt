@@ -1,8 +1,11 @@
 package com.suihan74.notificationreporter.models
 
+import kotlinx.serialization.Serializable
+
 /**
  * スクリーン輪郭線の描画設定
  */
+@Serializable
 data class OutlinesSetting (
     /** 描画タイプ */
     val type: OutlinesType = OutlinesType.FULL,
