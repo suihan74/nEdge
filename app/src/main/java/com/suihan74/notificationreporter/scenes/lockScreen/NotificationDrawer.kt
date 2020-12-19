@@ -46,7 +46,7 @@ class NotificationDrawer(
             style = Paint.Style.STROKE
             strokeWidth = notificationSetting.thickness
             color = notificationSetting.color
-            pathEffect = notificationSetting.pathEffect
+//            pathEffect = notificationSetting.pathEffect
         }
 
         // スクリーンの輪郭線

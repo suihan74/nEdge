@@ -7,7 +7,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.suihan74.notificationreporter.models.NotificationSetting
 import com.suihan74.notificationreporter.repositories.BatteryRepository
 import com.suihan74.notificationreporter.repositories.NotificationRepository
 import com.suihan74.notificationreporter.repositories.PreferencesRepository
@@ -27,7 +26,7 @@ class LockScreenViewModel(
     private val _currentTime = MutableLiveData<LocalDateTime>()
 
     /** デフォルトの通知バーの描画設定 */
-    val defaultNotificationSetting = prefRepo.defaultNotificationSetting.value ?: NotificationSetting()
+    val defaultNotificationSetting = prefRepo.defaultNotificationSetting
 
     /** バックライト最低レベルまで暗くするか */
     val lightOff : LiveData<Boolean> by lazy { _lightOff }
@@ -61,6 +60,8 @@ class LockScreenViewModel(
 
     init {
         viewModelScope.launch(Dispatchers.Main) {
+            prefRepo.init()
+
             while (true) {
                 val now = LocalDateTime.now()
                 _currentTime.value = now

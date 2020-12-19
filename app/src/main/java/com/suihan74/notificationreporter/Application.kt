@@ -2,13 +2,17 @@ package com.suihan74.notificationreporter
 
 import android.content.Intent
 import android.content.IntentFilter
+import androidx.room.Room
 import com.jakewharton.threetenabp.AndroidThreeTen
+import com.suihan74.notificationreporter.database.AppDatabase
+import com.suihan74.notificationreporter.preferences.PreferencesKey
 import com.suihan74.notificationreporter.receivers.BatteryStateReceiver
 import com.suihan74.notificationreporter.receivers.ScreenReceiver
 import com.suihan74.notificationreporter.repositories.BatteryRepository
 import com.suihan74.notificationreporter.repositories.NotificationRepository
 import com.suihan74.notificationreporter.repositories.PreferencesRepository
 import com.suihan74.notificationreporter.repositories.ScreenRepository
+import kotlinx.coroutines.runBlocking
 
 /**
  * アプリ情報
@@ -39,9 +43,7 @@ class Application : android.app.Application() {
     }
 
     /** アプリ設定を扱うリポジトリ */
-    val preferencesRepository by lazy {
-        PreferencesRepository()
-    }
+    lateinit var preferencesRepository : PreferencesRepository
 
     // ------ //
 
@@ -53,6 +55,16 @@ class Application : android.app.Application() {
     /** バッテリ状態を監視するレシーバ */
     private val batteryStateReceiver by lazy {
         BatteryStateReceiver()
+    }
+
+    // ------ //
+
+    /** データベースインスタンス */
+    private val db by lazy {
+        Room.databaseBuilder(
+            this,
+            AppDatabase::class.java, "app-db"
+        ).build()
     }
 
     // ------ //
@@ -72,5 +84,13 @@ class Application : android.app.Application() {
         registerReceiver(batteryStateReceiver, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
         registerReceiver(batteryStateReceiver, IntentFilter(Intent.ACTION_POWER_CONNECTED))
         registerReceiver(batteryStateReceiver, IntentFilter(Intent.ACTION_POWER_DISCONNECTED))
+
+        // 設定リポジトリの用意
+        runBlocking {
+            preferencesRepository = PreferencesRepository(
+                dataStore = PreferencesKey.dataStore(instance),
+                notificationDao = db.notificationDao()
+            )
+        }
     }
 }

@@ -84,7 +84,9 @@ class LockScreenActivity : AppCompatActivity() {
         super.onAttachedToWindow()
 
         val notificationDrawer = NotificationDrawer(window)
-        notificationDrawer.draw(binding.notificationBar, viewModel.defaultNotificationSetting)
+        viewModel.defaultNotificationSetting.observe(this, {
+            notificationDrawer.draw(binding.notificationBar, it)
+        })
     }
 
     /**
