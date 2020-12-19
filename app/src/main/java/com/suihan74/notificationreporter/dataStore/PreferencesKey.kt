@@ -1,4 +1,4 @@
-package com.suihan74.notificationreporter.preferences
+package com.suihan74.notificationreporter.dataStore
 
 import android.content.Context
 import androidx.datastore.preferences.core.Preferences

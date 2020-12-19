@@ -4,8 +4,8 @@ import android.content.Intent
 import android.content.IntentFilter
 import androidx.room.Room
 import com.jakewharton.threetenabp.AndroidThreeTen
+import com.suihan74.notificationreporter.dataStore.PreferencesKey
 import com.suihan74.notificationreporter.database.AppDatabase
-import com.suihan74.notificationreporter.preferences.PreferencesKey
 import com.suihan74.notificationreporter.receivers.BatteryStateReceiver
 import com.suihan74.notificationreporter.receivers.ScreenReceiver
 import com.suihan74.notificationreporter.repositories.BatteryRepository

@@ -1,9 +1,9 @@
 package com.suihan74.notificationreporter.repositories
 
 import androidx.lifecycle.MutableLiveData
+import com.suihan74.notificationreporter.dataStore.PreferencesKey
 import com.suihan74.notificationreporter.database.notification.NotificationDao
 import com.suihan74.notificationreporter.models.NotificationSetting
-import com.suihan74.notificationreporter.preferences.PreferencesKey
 import com.suihan74.utilities.WrappedDataStore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
