@@ -3,7 +3,6 @@
 package com.suihan74.utilities
 
 import android.content.Context
-import androidx.annotation.MainThread
 import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.createDataStore
 import androidx.lifecycle.MutableLiveData
@@ -15,6 +14,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import java.io.File
 import java.lang.ref.WeakReference
 import java.util.*
 import kotlin.collections.ArrayList
@@ -33,12 +33,13 @@ class WrappedDataStore private constructor (
          *
          * 必要ならマイグレーション処理を行う
          *
-         * @throws MigrationFailureException
+         * @throws MigrationFailureException 移行処理中に発生した例外を内包した例外
          */
         suspend fun create(
             context: Context,
             keyClass: KClass<*>,
-            migrations: Migrations? = null
+            migrations: Migrations? = null,
+            onMigrationFailureStrategy: OnMigrationFailureStrategy = OnMigrationFailureStrategy.ROLLBACK
         ) : WrappedDataStore {
             val instance = WrappedDataStore(context, keyClass)
             val keyVersion = instance.currentKeyVersion
@@ -52,53 +53,20 @@ class WrappedDataStore private constructor (
                         )
                     }
 
-                    migrate(
-                        instance,
+                    instance.migrate(
                         oldVersion = dataStoreVersion,
                         newVersion = keyVersion,
-                        migrations = migrations ?: throw IllegalArgumentException("need to migrate")
+                        migrations = migrations ?: throw IllegalArgumentException("need to migrate"),
+                        onMigrationFailureStrategy
                     )
                 }
 
-                if (result.isFailure) {
-                    throw MigrationFailureException(cause = result.exceptionOrNull())
+                result.onFailure {
+                    throw MigrationFailureException(cause = it)
                 }
             }
 
             return instance
-        }
-
-        /**
-         * データストアのマイグレーション処理
-         *
-         * @throws IllegalStateException
-         */
-        private suspend fun migrate(
-            instance: WrappedDataStore,
-            oldVersion: Int,
-            newVersion: Int,
-            migrations: Migrations
-        ) {
-            val migrationPath = ArrayList<Migration>()
-            var from = oldVersion
-            while (from < newVersion) {
-                val elem = migrations.migrations
-                    .filter { it.from == from }
-                    .maxWithOrNull { a, b -> a.to - b.to } ?: throw IllegalStateException("migration path is not reached to current version")
-                migrationPath.add(elem)
-                from = elem.to
-            }
-            if (migrationPath.last().to != newVersion) {
-                throw IllegalStateException("migration path is not reached to current version")
-            }
-
-            instance.dataStore.edit {
-                val versionKey = instance.versionKey
-                migrationPath.forEach { migration ->
-                    migration.migrate(it)
-                    it[versionKey] = migration.to
-                }
-            }
         }
 
         /**
@@ -139,6 +107,14 @@ class WrappedDataStore private constructor (
     /** `Key`バージョン記録用のキー */
     private val versionKey
         get() = preferencesKey<Int>("!!__DATA_STORE_VERSION__!!")
+
+    /**
+     * データ保存先ファイル
+     *
+     * マイグレーション失敗時のロールバックに使用
+     */
+    private val rawFile =
+        File(context.filesDir, "datastore/$dataStoreName.preferences_pb")
 
     // ------ //
 
@@ -325,6 +301,101 @@ class WrappedDataStore private constructor (
      * マイグレーション失敗時の例外
      */
     class MigrationFailureException(cause: Throwable? = null) : Throwable(cause = cause)
+
+    /**
+     * マイグレーション失敗時の処理方法
+     */
+    enum class OnMigrationFailureStrategy {
+        /** マイグレーション処理前の状態にロールバック */
+        ROLLBACK,
+
+        /** データを全消去 */
+        CLEAR,
+    }
+
+    /**
+     * データストアのマイグレーション処理
+     *
+     * @throws IllegalStateException 移行処理の準備に失敗
+     * @throws Throwable ユーザーが記述した移行処理内で発生したあらゆる例外
+     */
+    private suspend fun migrate(
+        oldVersion: Int,
+        newVersion: Int,
+        migrations: Migrations,
+        onMigrationFailureStrategy: OnMigrationFailureStrategy
+    ) {
+        val migrationPath = ArrayList<Migration>()
+        var from = oldVersion
+        while (from < newVersion) {
+            val elem = migrations.migrations
+                .filter { it.from == from }
+                .maxWithOrNull { a, b -> a.to - b.to } ?: throw IllegalStateException("migration path is not reached to current version")
+            migrationPath.add(elem)
+            from = elem.to
+        }
+        if (migrationPath.last().to != newVersion) {
+            throw IllegalStateException("migration path is not reached to current version")
+        }
+
+        val migrationBody = suspend {
+            dataStore.edit {
+                val versionKey = versionKey
+                migrationPath.forEach { migration ->
+                    migration.migrate(it)
+                    it[versionKey] = migration.to
+                }
+            }
+        }
+
+        when (onMigrationFailureStrategy) {
+            OnMigrationFailureStrategy.ROLLBACK ->
+                migrateOrRollback(migrationBody)
+
+            OnMigrationFailureStrategy.CLEAR ->
+                migrateOrClear(migrationBody)
+        }
+    }
+
+    /**
+     * バージョン移行を行い、失敗したらロールバックする
+     *
+     * @throws Throwable ユーザーが記述した移行処理内で発生したあらゆる例外
+     */
+    private suspend fun migrateOrRollback(migrationBody: suspend ()->Any) {
+        val backupFile = File(rawFile.absolutePath + "_bak")
+        rawFile.copyTo(backupFile, overwrite = true)
+
+        val result = runCatching {
+            migrationBody()
+        }
+
+        result.onFailure {
+            rawFile.delete()
+            backupFile.renameTo(rawFile)
+            throw it
+        }
+
+        result.onSuccess {
+            backupFile.delete()
+        }
+    }
+
+    /**
+     * バージョン移行を行い、失敗したら全消去する
+     *
+     * @throws Throwable ユーザーが記述した移行処理内で発生したあらゆる例外
+     */
+    private suspend fun migrateOrClear(migrationBody: suspend () -> Any) {
+        val result = runCatching {
+            migrationBody()
+        }
+
+        result.onFailure {
+            edit { clear() }
+            throw it
+        }
+    }
 
     // ------ //
 

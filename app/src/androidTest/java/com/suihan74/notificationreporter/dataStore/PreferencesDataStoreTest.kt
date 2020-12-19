@@ -57,7 +57,7 @@ class PreferencesDataStoreTest {
     }
 
     @Test
-    fun マイグレーション() {
+    fun マイグレーション失敗時のロールバック() {
         runBlocking {
             val dataStore = PreferencesKey.dataStore(context)
             dataStore.edit {
@@ -66,9 +66,18 @@ class PreferencesDataStoreTest {
         }
 
         runBlocking {
-            val dataStore = PreferencesKey2.dataStore(context)
-            assertEquals(456, dataStore.get(PreferencesKey2.LIGHT_LEVEL))
-            assertEquals(5000, dataStore.get(PreferencesKey2.LIGHT_OFF_INTERVAL))
+            val result = runCatching {
+                val dataStore = PreferencesKey2.dataStore(context)
+                assertEquals(456, dataStore.get(PreferencesKey2.LIGHT_LEVEL))
+                assertEquals(5000, dataStore.get(PreferencesKey2.LIGHT_OFF_INTERVAL))
+            }
+
+            assert(result.isFailure)
+
+            val dataStore = PreferencesKey.dataStore(context)
+            assertEquals(456f, dataStore.get(PreferencesKey.LIGHT_LEVEL))
+
+            Log.i("test", "dataStore version: ${dataStore.version()}")
         }
     }
 
@@ -133,6 +142,7 @@ class PreferencesKey2<T>(
                 Log.i("migration", "2 -> 3")
             }
             .add(1, 3) { prefs ->
+                throw Throwable()
                 // 1 -> 3;
                 run {
                     val key = preferencesKey<Float>(LIGHT_LEVEL.key.name)
