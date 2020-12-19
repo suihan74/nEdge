@@ -5,10 +5,16 @@ package com.suihan74.utilities
 import android.content.Context
 import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.createDataStore
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import com.suihan74.utilities.extensions.alsoAs
 import com.suihan74.utilities.extensions.firstByType
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.reflect.KClass
 
 /**
@@ -175,6 +181,29 @@ class WrappedDataStore private constructor (
         }
     }
 
+    /**
+     * 値の変更を監視する`LiveData`を取得する
+     */
+    @Suppress("UNCHECKED_CAST")
+    fun <T> getLiveData(key: Key<T>, coroutineScope: CoroutineScope = GlobalScope) : LiveData<T> {
+        checkKey(key)
+
+        val liveData = liveDataCache.getOrPut(key.key.name) {
+            MutableLiveData<T>().also { newLiveData ->
+                coroutineScope.launch(Dispatchers.Main) {
+                    newLiveData.value = get(key)
+                }
+            }
+        }
+
+        return liveData as LiveData<T>
+    }
+
+    /**
+     * 使用されている`LiveData`のキャッシュ
+     */
+    private val liveDataCache = HashMap<String, MutableLiveData<*>>()
+
     // ------ //
     // 値更新
 
@@ -185,7 +214,7 @@ class WrappedDataStore private constructor (
      *     set(key, value)
      * }
      */
-    suspend fun edit(transform: suspend Editor.()->Unit) {
+    suspend fun edit(transform: suspend Editor.()->Unit) = withContext(Dispatchers.Default) {
         dataStore.edit { prefs ->
             val result = runCatching {
                 transform.invoke(Editor(prefs))
@@ -206,6 +235,11 @@ class WrappedDataStore private constructor (
         fun <T> set(key: Key<T>, value: T) {
             checkKey(key)
             prefs[key.key] = value
+
+            // 該当キーの生きている`LiveData`が存在する場合、その値を更新する
+            liveDataCache[key.key.name]?.alsoAs<MutableLiveData<T>> { liveData ->
+                liveData.postValue(value)
+            }
         }
 
         /**
@@ -217,6 +251,7 @@ class WrappedDataStore private constructor (
     }
 
     // ------ //
+    // バージョン移行
 
     internal data class Migration internal constructor(
         val from: Int,

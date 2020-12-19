@@ -7,6 +7,8 @@ import androidx.datastore.preferences.core.preferencesKey
 import androidx.test.core.app.ApplicationProvider
 import com.suihan74.utilities.DataStoreKey
 import com.suihan74.utilities.WrappedDataStore
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -59,6 +61,33 @@ class PreferencesDataStoreTest {
             val dataStore = PreferencesKey2.dataStore(context)
             assertEquals(456, dataStore.get(PreferencesKey2.LIGHT_LEVEL))
             assertEquals(5000, dataStore.get(PreferencesKey2.LIGHT_OFF_INTERVAL))
+        }
+    }
+
+    @Test
+    fun LiveData() {
+        val dataStore = runBlocking {
+            PreferencesKey.dataStore(context)
+        }
+
+        val liveData = runBlocking {
+            dataStore.getLiveData(PreferencesKey.LIGHT_LEVEL)
+        }
+
+        runBlocking(Dispatchers.Main) {
+            liveData.observeForever {
+                Log.i("test", it.toString())
+            }
+        }
+
+        runBlocking {
+            dataStore.edit {
+                set(PreferencesKey.LIGHT_LEVEL, 678f)
+            }
+
+            delay(1000)
+
+            assertEquals(678f, liveData.value)
         }
     }
 }
