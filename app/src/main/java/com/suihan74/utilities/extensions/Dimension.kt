@@ -15,5 +15,8 @@ private val displayMetrics : DisplayMetrics?
             }
         }
 
+/**
+ * dpで指定した数値をpxに変換する
+ */
 val Int.dp : Float
     get() = this * (displayMetrics?.density ?: 1.0f)
