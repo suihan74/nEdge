@@ -193,7 +193,7 @@ class WrappedDataStore private constructor (
     fun <T> getLiveData(key: Key<T>, coroutineScope: CoroutineScope = GlobalScope) : MutableLiveData<T> {
         checkKey(key)
 
-        val liveData = runBlocking(Dispatchers.Main) {
+        val liveData = runBlocking {
             liveDataCacheMutex.withLock {
                 liveDataCache[key.key.name]?.get() ?: createLiveData(key, coroutineScope)
             }
@@ -205,19 +205,21 @@ class WrappedDataStore private constructor (
     /**
      * キーに対応する新しい`LiveData`を生成する
      */
-    @MainThread
-    private fun <T> createLiveData(key: Key<T>, coroutineScope: CoroutineScope) : MutableLiveData<T> {
+    private fun <T> createLiveData(
+        key: Key<T>,
+        coroutineScope: CoroutineScope
+    ) : MutableLiveData<T> {
         val liveData = MutableLiveData<T>()
 
-        liveData.observeForever { value ->
-            coroutineScope.launch {
-                edit {
-                    set(key, value)
+        coroutineScope.launch(Dispatchers.Main) {
+            liveData.observeForever { value ->
+                coroutineScope.launch {
+                    edit {
+                        set(key, value)
+                    }
                 }
             }
-        }
 
-        coroutineScope.launch(Dispatchers.Main) {
             liveData.value = get(key)
         }
 
