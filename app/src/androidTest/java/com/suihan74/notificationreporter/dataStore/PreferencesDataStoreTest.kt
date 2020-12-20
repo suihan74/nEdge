@@ -5,8 +5,9 @@ import android.util.Log
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.preferencesKey
 import androidx.test.core.app.ApplicationProvider
-import com.suihan74.utilities.DataStoreKey
-import com.suihan74.utilities.WrappedDataStore
+import com.suihan74.utilities.dataStore.DataStoreKey
+import com.suihan74.utilities.dataStore.Migrations
+import com.suihan74.utilities.dataStore.WrappedDataStore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
@@ -126,7 +127,7 @@ class PreferencesKey2<T>(
 
         // ------ //
 
-        private val migrations = WrappedDataStore.Migrations()
+        private val migrations = Migrations()
             .add(1, 2) { prefs ->
                 // 1 -> 2; LIGHT_LEVELをFloatからIntに変更
                 val key = preferencesKey<Float>(LIGHT_LEVEL.key.name)
@@ -144,6 +145,7 @@ class PreferencesKey2<T>(
             .add(1, 3) { prefs ->
                 throw Throwable()
                 // 1 -> 3;
+                /*
                 run {
                     val key = preferencesKey<Float>(LIGHT_LEVEL.key.name)
                     val prevValue = prefs[key]?.toInt() ?: LIGHT_LEVEL.default()
@@ -157,9 +159,10 @@ class PreferencesKey2<T>(
                 }
 
                 Log.i("migration", "1 -> 3")
+                 */
             }
 
-        suspend fun dataStore(context: Context) = WrappedDataStore.create(
+        suspend fun dataStore(context: Context) = WrappedDataStore.create<PreferencesKey2<*>>(
             context,
             PreferencesKey2::class,
             migrations

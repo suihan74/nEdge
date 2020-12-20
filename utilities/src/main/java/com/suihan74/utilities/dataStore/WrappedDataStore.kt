@@ -1,11 +1,13 @@
 @file:Suppress("unused", "MemberVisibilityCanBePrivate")
 
-package com.suihan74.utilities
+package com.suihan74.utilities.dataStore
 
 import android.content.Context
 import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.createDataStore
 import androidx.lifecycle.MutableLiveData
+import com.suihan74.utilities.dataStore.exception.InvalidKeyException
+import com.suihan74.utilities.dataStore.exception.MigrationFailureException
 import com.suihan74.utilities.extensions.alsoAs
 import com.suihan74.utilities.extensions.firstByType
 import kotlinx.coroutines.*
@@ -17,15 +19,14 @@ import kotlinx.coroutines.sync.withLock
 import java.io.File
 import java.lang.ref.WeakReference
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.reflect.KClass
 
 /**
  * デフォルト値とデータ型をキーに設定するようにした`DataStore`
  */
-class WrappedDataStore private constructor (
+class WrappedDataStore<KeyT : WrappedDataStore.Key<*>> private constructor (
     context: Context,
-    keyClass: KClass<*>
+    dataStoreKeyAnn: DataStoreKey
 ) {
     companion object {
         /**
@@ -33,33 +34,45 @@ class WrappedDataStore private constructor (
          *
          * 必要ならマイグレーション処理を行う
          *
+         * @throws InvalidKeyException 渡されたキーが不正
          * @throws MigrationFailureException 移行処理中に発生した例外を内包した例外
          */
-        suspend fun create(
+        suspend fun <KeyT : Key<*>> create(
             context: Context,
             keyClass: KClass<*>,
             migrations: Migrations? = null,
             onMigrationFailureStrategy: OnMigrationFailureStrategy = OnMigrationFailureStrategy.ROLLBACK
-        ) : WrappedDataStore {
-            val instance = WrappedDataStore(context, keyClass)
+        ) : WrappedDataStore<KeyT> {
+            val instance =
+                try { WrappedDataStore<KeyT>(context, keyClass.annotations.firstByType()) }
+                catch (e: Throwable) { throw InvalidKeyException(cause = e) }
+
             val keyVersion = instance.currentKeyVersion
             val dataStoreVersion = instance.version()
 
             if (keyVersion != dataStoreVersion) {
                 val result = runCatching {
-                    if (keyVersion < dataStoreVersion) {
-                        throw IllegalStateException(
-                            "key version($keyVersion) is older than DataStore version($dataStoreVersion)"
-                        )
-                    }
+                    when {
+                        keyVersion < dataStoreVersion ->
+                            throw IllegalStateException(
+                                "key version($keyVersion) is older than DataStore version($dataStoreVersion)"
+                            )
 
-                    instance.migrate(
-                        oldVersion = dataStoreVersion,
-                        newVersion = keyVersion,
-                        migrations = migrations ?: throw IllegalArgumentException("need to migrate"),
-                        onMigrationFailureStrategy
-                    )
+                        migrations == null ->
+                            throw IllegalArgumentException("need to migrate")
+
+                        else ->
+                            migrations.migrate(
+                                instance.dataStore,
+                                instance.versionKey,
+                                oldVersion = dataStoreVersion,
+                                newVersion = keyVersion,
+                                onMigrationFailureStrategy,
+                                instance.rawFile
+                            )
+                    }
                 }
+
 
                 result.onFailure {
                     throw MigrationFailureException(cause = it)
@@ -85,24 +98,20 @@ class WrappedDataStore private constructor (
         suspend fun clear(context: Context, keyClass: KClass<*>) =
             clear(
                 context,
-                keyClass.java.annotations.firstByType<DataStoreKey>().dataStoreName
+                keyClass.annotations.firstByType<DataStoreKey>().dataStoreName
             )
     }
 
     // ------ //
 
     /** データストア名 */
-    private val dataStoreName: String =
-        keyClass.java.annotations.firstByType<DataStoreKey>().dataStoreName
+    private val dataStoreName: String = dataStoreKeyAnn.dataStoreName
 
     /** データストアインスタンス本体 */
-    private val dataStore = context.createDataStore(
-        dataStoreName
-    )
+    private val dataStore = context.createDataStore(dataStoreName)
 
     /** 使用されているキーのバージョン */
-    private val currentKeyVersion: Int =
-        keyClass.java.annotations.firstByType<DataStoreKey>().version
+    private val currentKeyVersion: Int = dataStoreKeyAnn.version
 
     /** `Key`バージョン記録用のキー */
     private val versionKey
@@ -129,10 +138,12 @@ class WrappedDataStore private constructor (
     /**
      * 各メソッドに渡されたキーがこのデータストアで有効なものかを検証する
      *
-     * @throws IllegalStateException データストアとキーが非対応
+     * @throws InvalidKeyException データストアとキーが非対応
      */
     private inline fun checkKey(key: Key<*>, lazyMessage: ()->Any = { "invalid key" }) {
-        check(key.dataStoreName == dataStoreName, lazyMessage)
+        if (key.dataStoreName != dataStoreName) {
+            throw InvalidKeyException(message = lazyMessage().toString())
+        }
     }
 
     // ------ //
@@ -141,7 +152,7 @@ class WrappedDataStore private constructor (
     /**
      * 値を取得する
      *
-     * @throws IllegalStateException データストアとキーが非対応
+     * @throws InvalidKeyException データストアとキーが非対応
      */
     suspend fun <T> get(key: Key<T>) : T {
         checkKey(key)
@@ -151,7 +162,7 @@ class WrappedDataStore private constructor (
     /**
      * 値の変更を監視する`Flow`を取得する
      *
-     * @throws IllegalStateException データストアとキーが非対応
+     * @throws InvalidKeyException データストアとキーが非対応
      */
     fun <T> getFlow(key: Key<T>) : Flow<T> {
         checkKey(key)
@@ -238,7 +249,7 @@ class WrappedDataStore private constructor (
         /**
          * 対応キーの値を変更する
          *
-         * @throws IllegalStateException データストアとキーが非対応
+         * @throws InvalidKeyException データストアとキーが非対応
          */
         suspend fun <T> set(key: Key<T>, value: T) {
             checkKey(key)
@@ -264,137 +275,14 @@ class WrappedDataStore private constructor (
     }
 
     // ------ //
-    // バージョン移行
 
-    internal data class Migration internal constructor(
-        val from: Int,
-        val to: Int,
-        val migrate: (prefs: MutablePreferences)->Unit
-    )
+    /** そのままでは保存できないデータを保存できる型に変換する */
+    interface Serializer<SrcT, DestT> {
+        /** 保存可能な型に変換する */
+        fun serialize(value: SrcT) : DestT
 
-    class Migrations {
-        internal val migrations = ArrayList<Migration>()
-
-        /**
-         * マイグレーション処理を登録する
-         *
-         * @param from 移行前のバージョン番号
-         * @param to 移行後のバージョン番号
-         * @param migrate 移行処理
-         *
-         * @throws IllegalArgumentException バージョン指定が不正
-         */
-        fun add(from: Int, to: Int, migrate: (prefs: MutablePreferences)->Unit) : Migrations {
-            if (from >= to) {
-                throw IllegalArgumentException("`from` version is greater than `to` version")
-            }
-            if (migrations.any { it.from == from && it.to == to }) {
-                throw IllegalArgumentException("duplicate migration for the pair of versions")
-            }
-            migrations.add(Migration(from, to, migrate))
-
-            return this
-        }
-    }
-
-    /**
-     * マイグレーション失敗時の例外
-     */
-    class MigrationFailureException(cause: Throwable? = null) : Throwable(cause = cause)
-
-    /**
-     * マイグレーション失敗時の処理方法
-     */
-    enum class OnMigrationFailureStrategy {
-        /** マイグレーション処理前の状態にロールバック */
-        ROLLBACK,
-
-        /** データを全消去 */
-        CLEAR,
-    }
-
-    /**
-     * データストアのマイグレーション処理
-     *
-     * @throws IllegalStateException 移行処理の準備に失敗
-     * @throws Throwable ユーザーが記述した移行処理内で発生したあらゆる例外
-     */
-    private suspend fun migrate(
-        oldVersion: Int,
-        newVersion: Int,
-        migrations: Migrations,
-        onMigrationFailureStrategy: OnMigrationFailureStrategy
-    ) {
-        val migrationPath = ArrayList<Migration>()
-        var from = oldVersion
-        while (from < newVersion) {
-            val elem = migrations.migrations
-                .filter { it.from == from }
-                .maxWithOrNull { a, b -> a.to - b.to } ?: throw IllegalStateException("migration path is not reached to current version")
-            migrationPath.add(elem)
-            from = elem.to
-        }
-        if (migrationPath.last().to != newVersion) {
-            throw IllegalStateException("migration path is not reached to current version")
-        }
-
-        val migrationBody = suspend {
-            dataStore.edit {
-                val versionKey = versionKey
-                migrationPath.forEach { migration ->
-                    migration.migrate(it)
-                    it[versionKey] = migration.to
-                }
-            }
-        }
-
-        when (onMigrationFailureStrategy) {
-            OnMigrationFailureStrategy.ROLLBACK ->
-                migrateOrRollback(migrationBody)
-
-            OnMigrationFailureStrategy.CLEAR ->
-                migrateOrClear(migrationBody)
-        }
-    }
-
-    /**
-     * バージョン移行を行い、失敗したらロールバックする
-     *
-     * @throws Throwable ユーザーが記述した移行処理内で発生したあらゆる例外
-     */
-    private suspend fun migrateOrRollback(migrationBody: suspend ()->Any) {
-        val backupFile = File(rawFile.absolutePath + "_bak")
-        rawFile.copyTo(backupFile, overwrite = true)
-
-        val result = runCatching {
-            migrationBody()
-        }
-
-        result.onFailure {
-            rawFile.delete()
-            backupFile.renameTo(rawFile)
-            throw it
-        }
-
-        result.onSuccess {
-            backupFile.delete()
-        }
-    }
-
-    /**
-     * バージョン移行を行い、失敗したら全消去する
-     *
-     * @throws Throwable ユーザーが記述した移行処理内で発生したあらゆる例外
-     */
-    private suspend fun migrateOrClear(migrationBody: suspend () -> Any) {
-        val result = runCatching {
-            migrationBody()
-        }
-
-        result.onFailure {
-            edit { clear() }
-            throw it
-        }
+        /** 保存された型から利用時のデータ型に戻す */
+        fun deserialize(value: DestT) : SrcT
     }
 
     // ------ //
@@ -408,9 +296,11 @@ class WrappedDataStore private constructor (
         keyClass: KClass<*>,
     ) {
         internal val dataStoreName: String =
-            keyClass.java.annotations.firstByType<DataStoreKey>().dataStoreName
+            keyClass.annotations.firstByType<DataStoreKey>().dataStoreName
     }
 }
+
+// ------ //
 
 /** キーを表すアノテーション */
 @Target(AnnotationTarget.CLASS)

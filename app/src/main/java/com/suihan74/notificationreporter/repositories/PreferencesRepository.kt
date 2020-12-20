@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import com.suihan74.notificationreporter.dataStore.PreferencesKey
 import com.suihan74.notificationreporter.database.notification.NotificationDao
 import com.suihan74.notificationreporter.models.NotificationSetting
-import com.suihan74.utilities.WrappedDataStore
+import com.suihan74.utilities.dataStore.WrappedDataStore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -14,7 +14,7 @@ import kotlinx.coroutines.withContext
  * TODO: `SharedPreferences`または`DataStore`を扱うようにする
  */
 class PreferencesRepository(
-    dataStore: WrappedDataStore,
+    dataStore: WrappedDataStore<PreferencesKey<*>>,
     private val notificationDao: NotificationDao
 ) {
     /** 画面消灯までの待機時間(ミリ秒) */

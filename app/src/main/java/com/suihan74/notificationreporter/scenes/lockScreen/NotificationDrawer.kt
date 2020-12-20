@@ -6,7 +6,6 @@ import android.view.Window
 import android.widget.ImageView
 import androidx.annotation.RequiresApi
 import com.suihan74.notificationreporter.models.*
-import com.suihan74.utilities.extensions.dp
 
 /**
  * 通知表示を生成する
@@ -54,6 +53,7 @@ class NotificationDrawer(
 
         // ノッチの縁
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            /*
             // テスト用の矩形ノッチ設定
             val notchSetting = RectangleNotchSetting(
                 leftTopRadius = 12.dp,
@@ -64,6 +64,7 @@ class NotificationDrawer(
                 heightAdjustment = 0f
             )
             drawRectangleNotch(canvas, paint, notchSetting)
+            */
 
             /*
             // テスト用のパンチホールノッチ設定
