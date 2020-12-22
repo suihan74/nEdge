@@ -1,5 +1,6 @@
 package com.suihan74.notificationreporter.services
 
+import android.app.Notification
 import android.content.Intent
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
@@ -21,6 +22,11 @@ class NotificationService : NotificationListenerService() {
             return
         }
 
+        // ロック画面に表示しない通知を除外する
+        if (sbn?.notification?.visibility == Notification.VISIBILITY_SECRET) {
+            return
+        }
+
         val app = Application.instance
         app.notificationRepository.pushNotification(sbn)
 
@@ -30,7 +36,6 @@ class NotificationService : NotificationListenerService() {
             }
             applicationContext.startActivity(intent)
             Log.i("Notification", sbn.packageName)
-
         }
     }
 }

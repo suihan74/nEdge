@@ -20,9 +20,9 @@ class LockScreenActivity : AppCompatActivity() {
     private val viewModel by lazyProvideViewModel {
         val app = Application.instance
         LockScreenViewModel(
-                batteryRepo = app.batteryRepository,
-                notificationRepo = app.notificationRepository,
-                prefRepo = app.preferencesRepository
+            batteryRepo = app.batteryRepository,
+            notificationRepo = app.notificationRepository,
+            prefRepo = app.preferencesRepository
         )
     }
 
@@ -35,6 +35,8 @@ class LockScreenActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setTheme(R.style.LockScreenActivity)
         overlapLockScreenAndKeepScreenOn()
+
+        viewModel.init(this)
 
         binding = DataBindingUtil.setContentView<ActivityLockScreenBinding>(
                 this,

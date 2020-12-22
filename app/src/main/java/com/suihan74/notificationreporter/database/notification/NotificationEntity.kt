@@ -11,4 +11,8 @@ data class NotificationEntity(
 
     /** 通知表示設定 */
     val setting: NotificationSetting
-)
+) {
+    companion object {
+        const val DEFAULT_SETTING_NAME = NotificationDao.DEFAULT_SETTING_NAME
+    }
+}

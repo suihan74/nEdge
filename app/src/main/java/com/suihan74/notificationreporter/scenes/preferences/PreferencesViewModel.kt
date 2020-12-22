@@ -4,11 +4,13 @@ import android.graphics.Color
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.suihan74.notificationreporter.models.NotchSetting
+import com.suihan74.notificationreporter.models.NotchType
 import com.suihan74.notificationreporter.repositories.PreferencesRepository
 import kotlinx.coroutines.launch
 
 class PreferencesViewModel(
-    prefRepo: PreferencesRepository
+    private val prefRepo: PreferencesRepository
 ) : ViewModel() {
     /** バックライト消灯後の画面をさらに暗くする度合い */
     val lightLevel : MutableLiveData<Float> = prefRepo.lightLevel
@@ -34,11 +36,21 @@ class PreferencesViewModel(
         }
     }
 
+    /** ノッチ設定 */
+    val notchSetting = MutableLiveData(notificationSetting.value?.topNotchSetting ?: NotchSetting.createInstance(NotchType.NONE)).also {
+        it.observeForever { notchSetting ->
+            val prevValue = notificationSetting.value
+            if (prevValue != null && prevValue.topNotchSetting != notchSetting) {
+                notificationSetting.value = prevValue.copy(
+                    topNotchSetting = notchSetting
+                )
+            }
+        }
+    }
+
     // ------ //
 
-    init {
-        viewModelScope.launch {
-            prefRepo.init()
-        }
+    suspend fun init() {
+        prefRepo.init()
     }
 }

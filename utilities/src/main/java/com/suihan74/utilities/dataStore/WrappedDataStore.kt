@@ -39,7 +39,7 @@ class WrappedDataStore<KeyT : WrappedDataStore.Key<*>> private constructor (
          */
         suspend fun <KeyT : Key<*>> create(
             context: Context,
-            keyClass: KClass<*>,
+            keyClass: KClass<KeyT>,
             migrations: Migrations? = null,
             onMigrationFailureStrategy: OnMigrationFailureStrategy = OnMigrationFailureStrategy.ROLLBACK
         ) : WrappedDataStore<KeyT> {
@@ -72,7 +72,6 @@ class WrappedDataStore<KeyT : WrappedDataStore.Key<*>> private constructor (
                             )
                     }
                 }
-
 
                 result.onFailure {
                     throw MigrationFailureException(cause = it)
@@ -272,17 +271,6 @@ class WrappedDataStore<KeyT : WrappedDataStore.Key<*>> private constructor (
         fun clear() {
             prefs.clear()
         }
-    }
-
-    // ------ //
-
-    /** そのままでは保存できないデータを保存できる型に変換する */
-    interface Serializer<SrcT, DestT> {
-        /** 保存可能な型に変換する */
-        fun serialize(value: SrcT) : DestT
-
-        /** 保存された型から利用時のデータ型に戻す */
-        fun deserialize(value: DestT) : SrcT
     }
 
     // ------ //

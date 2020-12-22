@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <variable
+            name="vm"
+            type="com.suihan74.notificationreporter.scenes.preferences.notch.RectangleNotchSettingViewModel" />
+    </data>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="@string/prefs_rectangle_notch_width_adjustment_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/widthAdjustmentSlider"
+            android:valueFrom="-100.0"
+            android:valueTo="100.0"
+            android:stepSize="1.0"
+            android:value="@{vm.setting.widthAdjustment}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:text="@string/prefs_rectangle_notch_height_adjustment_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/heightAdjustmentSlider"
+            android:valueFrom="-100.0"
+            android:valueTo="100.0"
+            android:stepSize="1.0"
+            android:value="@{vm.setting.heightAdjustment}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:text="@{@string/prefs_rectangle_notch_left_top_radius_desc(`左上`)}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/leftTopRadiusSlider"
+            android:valueFrom="0.0"
+            android:valueTo="200.0"
+            android:stepSize="1.0"
+            android:value="@{vm.setting.leftTopRadius}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:text="@{@string/prefs_rectangle_notch_left_top_radius_desc(`右上`)}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/rightTopRadiusSlider"
+            android:valueFrom="0.0"
+            android:valueTo="200.0"
+            android:stepSize="1.0"
+            android:value="@{vm.setting.rightTopRadius}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:text="@{@string/prefs_rectangle_notch_left_top_radius_desc(`左下`)}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/leftBottomRadiusSlider"
+            android:valueFrom="0.0"
+            android:valueTo="200.0"
+            android:stepSize="1.0"
+            android:value="@{vm.setting.leftBottomRadius}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:text="@{@string/prefs_rectangle_notch_left_top_radius_desc(`右下`)}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/rightBottomRadiusSlider"
+            android:valueFrom="0.0"
+            android:valueTo="200.0"
+            android:stepSize="1.0"
+            android:value="@{vm.setting.rightBottomRadius}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+</layout>

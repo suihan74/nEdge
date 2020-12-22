@@ -6,7 +6,6 @@ import android.content.Intent
 import android.util.Log
 import androidx.annotation.MainThread
 import com.suihan74.notificationreporter.Application
-import com.suihan74.notificationreporter.scenes.lockScreen.LockScreenActivity
 
 /**
  * 画面ON/OFFを検知するレシーバ
@@ -22,19 +21,16 @@ class ScreenReceiver : BroadcastReceiver() {
             Intent.ACTION_SCREEN_OFF -> {
                 app.screenRepository.screenOn.value = false
 
-                // 未読通知があったらActivityを開始する
-                if (app.notificationRepository.existNotifications) {
-                    val lockScreenIntent = Intent(context, LockScreenActivity::class.java).also {
-                        it.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                    }
-                    context.startActivity(lockScreenIntent)
-                }
-                Log.i("WakeLock", "detected screen off")
+                // 画面ON中にスタックに追加された通知の対応
+                // TODO: 現段階では暫定的に「無視する」
+                app.notificationRepository.clearNotifications()
+
+                Log.i("ScreenReceiver", "detected screen off")
             }
 
             Intent.ACTION_SCREEN_ON -> {
                 app.screenRepository.screenOn.value = true
-                Log.i("WakeLock", "detected screen on")
+                Log.i("ScreenReceiver", "detected screen on")
             }
         }
     }

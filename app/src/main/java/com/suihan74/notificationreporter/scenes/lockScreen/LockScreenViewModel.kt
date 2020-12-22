@@ -3,10 +3,7 @@ package com.suihan74.notificationreporter.scenes.lockScreen
 import android.service.notification.StatusBarNotification
 import android.view.MotionEvent
 import android.view.View
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.suihan74.notificationreporter.repositories.BatteryRepository
 import com.suihan74.notificationreporter.repositories.NotificationRepository
 import com.suihan74.notificationreporter.repositories.PreferencesRepository
@@ -18,7 +15,7 @@ import org.threeten.bp.LocalDateTime
 class LockScreenViewModel(
     batteryRepo : BatteryRepository,
     notificationRepo : NotificationRepository,
-    prefRepo : PreferencesRepository
+    private val prefRepo : PreferencesRepository
 ) : ViewModel() {
 
     /** 現在時刻 */
@@ -42,7 +39,7 @@ class LockScreenViewModel(
     }
 
     /** 画面消灯までの待機時間(ミリ秒) */
-    val lightOffInterval : LiveData<Long> = prefRepo.lightOffInterval
+    private val lightOffInterval : LiveData<Long> = prefRepo.lightOffInterval
 
     /** バックライト消灯後の画面をさらに暗くする度合い */
     val lightLevel : LiveData<Float> = prefRepo.lightLevel
@@ -56,9 +53,15 @@ class LockScreenViewModel(
     /** 発生した通知リスト */
     val statusBarNotifications : LiveData<List<StatusBarNotification>> = notificationRepo.statusBarNotifications
 
+    val currentNotice = MutableLiveData<StatusBarNotification?>()
+
     // ------ //
 
-    init {
+    fun init(lifecycleOwner: LifecycleOwner) {
+        statusBarNotifications.observe(lifecycleOwner, {
+            currentNotice.value = it.lastOrNull()
+        })
+
         viewModelScope.launch(Dispatchers.Main) {
             prefRepo.init()
 

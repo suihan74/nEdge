@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.preferencesKey
 import com.suihan74.utilities.dataStore.DataStoreKey
+import com.suihan74.utilities.dataStore.Serializer
 import com.suihan74.utilities.dataStore.WrappedDataStore
 import org.threeten.bp.LocalTime
 
@@ -11,11 +12,11 @@ import org.threeten.bp.LocalTime
 @DataStoreKey("settings", version = 1)
 class PreferencesKey<T>(
     key: Preferences.Key<T>,
-    default: ()->T
+    default: ()->T,
 ) : WrappedDataStore.Key<T>(key, default, PreferencesKey::class) {
     companion object {
         /** 消灯時のライトレベル */
-        val LIGHT_LEVEL = makeKey("LIGHT_LEVEL") { 0f }
+        val LIGHT_LEVEL = makeKey("LIGHT_LEVEL") { 1f }
 
         /** 消灯までの待機時間(ミリ秒) */
         val LIGHT_OFF_INTERVAL = makeKey("LIGHT_OFF_INTERVAL") { 5_000L }
@@ -29,17 +30,25 @@ class PreferencesKey<T>(
         // ------ //
 
         suspend fun dataStore(context: Context) =
-            WrappedDataStore.create<PreferencesKey<*>>(context, PreferencesKey::class)
-
-        // ------ //
+            WrappedDataStore.create(context, PreferencesKey::class)
 
         /** キーを作成する */
         private inline fun <reified T : Any> makeKey(
             name: String,
-            noinline default: ()->T
+            noinline default: ()->T,
         ) = PreferencesKey(
             key = preferencesKey(name),
-            default = default
+            default = default,
         )
+    }
+}
+
+class LocalTimeSerializer : Serializer<LocalTime, Long> {
+    override fun serialize(value: LocalTime): Long {
+        return value.toSecondOfDay().toLong()
+    }
+
+    override fun deserialize(value: Long): LocalTime {
+        return LocalTime.ofSecondOfDay(value)
     }
 }

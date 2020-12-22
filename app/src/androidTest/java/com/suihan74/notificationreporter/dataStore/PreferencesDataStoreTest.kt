@@ -108,6 +108,13 @@ class PreferencesDataStoreTest {
             assertEquals(678f, liveData.value)
         }
     }
+
+    @Test
+    fun アノテーション() = runBlocking {
+        val dataStore = PreferencesKey.dataStore(context)
+        val value = dataStore.get(PreferencesKey.DISABLE_TIME_START)
+        val flag = true
+    }
 }
 
 // ------ //

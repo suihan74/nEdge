@@ -26,6 +26,9 @@ data class NotificationSetting (
     /** スクリーン輪郭線の描画設定 */
     val outlinesSetting: OutlinesSetting = OutlinesSetting(),
 
-    /** ノッチ描画設定 */
-    val notchSetting: NotchSetting = NotchSetting(NotchType.NONE),
+    /** 画面上部ノッチ描画設定 */
+    val topNotchSetting: NotchSetting = NotchSetting.createInstance(NotchType.NONE),
+
+    /** 画面下部ノッチ描画設定 */
+    val bottomNotchSetting: NotchSetting = NotchSetting.createInstance(NotchType.RECTANGLE),
 )

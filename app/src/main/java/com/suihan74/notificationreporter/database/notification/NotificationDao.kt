@@ -6,7 +6,7 @@ import com.suihan74.notificationreporter.models.NotificationSetting
 @Dao
 interface NotificationDao {
     companion object {
-        private const val DEFAULT_SETTING_NAME = "!!__DEFAULT_SETTING__!!"
+        const val DEFAULT_SETTING_NAME = "!!__DEFAULT_SETTING__!!"
     }
 
     @Query("SELECT * FROM NotificationEntity")

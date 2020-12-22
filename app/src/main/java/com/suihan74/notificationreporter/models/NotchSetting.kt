@@ -1,15 +1,37 @@
 package com.suihan74.notificationreporter.models
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 /**
  * 通知表示のノッチ部分の描画設定
  */
 @Serializable
-open class NotchSetting(
+sealed class NotchSetting(
     /** ノッチの種類 */
+    @SerialName("notch_type")
     val type: NotchType
-)
+) {
+    companion object {
+        fun createInstance(type: NotchType) = when(type) {
+            NotchType.NONE -> EmptyNotchSetting()
+
+            NotchType.RECTANGLE -> RectangleNotchSetting()
+
+            NotchType.WATER_DROP -> WaterDropNotchSetting()
+
+            NotchType.PUNCH_HOLE -> PunchHoleNotchSetting()
+        }
+    }
+}
+
+// ------ //
+
+/**
+ * ノッチ設定なし
+ */
+@Serializable
+class EmptyNotchSetting : NotchSetting(type = NotchType.NONE)
 
 // ------ //
 
@@ -46,13 +68,16 @@ data class RectangleNotchSetting(
 @Serializable
 data class WaterDropNotchSetting(
     /** 左上の角丸半径 */
-    val leftTopRadius: Float = 0f,
-
-    /** 右上の角丸半径 */
-    val rightTopRadius: Float = 0f,
+    val topRadius: Float = 0f,
 
     /** 中央下の角丸半径 */
     val waterDropRadius: Float = 0f,
+
+    /** 左上角丸の角度 */
+    val topDegree: Float = 90f,
+
+    /** 水滴の角度 */
+    val waterDropDegree: Float = 90f,
 
     /** 水滴の高さ */
     val height: Float = 0f,
@@ -63,7 +88,7 @@ data class WaterDropNotchSetting(
     /** 高さの伸縮調整 */
     val heightAdjustment: Float = 0f,
 
-) : NotchSetting(NotchType.WATER_DROP)
+    ) : NotchSetting(NotchType.WATER_DROP)
 
 // ------ //
 

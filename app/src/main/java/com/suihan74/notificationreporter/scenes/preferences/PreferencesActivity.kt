@@ -11,11 +11,20 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.R
+import com.suihan74.notificationreporter.database.notification.NotificationEntity
 import com.suihan74.notificationreporter.databinding.ActivityPreferencesBinding
+import com.suihan74.notificationreporter.models.NotchSetting
+import com.suihan74.notificationreporter.models.NotchType
+import com.suihan74.notificationreporter.models.RectangleNotchSetting
+import com.suihan74.notificationreporter.models.WaterDropNotchSetting
 import com.suihan74.notificationreporter.scenes.lockScreen.LockScreenActivity
+import com.suihan74.notificationreporter.scenes.preferences.notch.RectangleNotchSettingFragment
+import com.suihan74.notificationreporter.scenes.preferences.notch.WaterDropNotchSettingFragment
+import com.suihan74.utilities.fragment.AlertDialogFragment
 import com.suihan74.utilities.lazyProvideViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -74,6 +83,12 @@ class PreferencesActivity : AppCompatActivity() {
             }
         }
 
+        binding.lineWidthSlider.addOnChangeListener { _, value, _ ->
+            viewModel.notificationSetting.value?.let { prev ->
+                viewModel.notificationSetting.value = prev.copy(thickness = value)
+            }
+        }
+
         binding.leftTopCornerRadiusSlider.addOnChangeListener { _, value, _ ->
             viewModel.notificationSetting.value =
                 viewModel.notificationSetting.value?.let {
@@ -109,12 +124,42 @@ class PreferencesActivity : AppCompatActivity() {
                     ))
                 }
         }
+
+        binding.notchTypeSelectionButton.setOnClickListener {
+            val dialog = AlertDialogFragment.Builder()
+                .setTitle(R.string.prefs_notch_type_selection_desc)
+                .setItems(NotchType.values().map { it.name }) { _, which ->
+                    viewModel.notchSetting.value = NotchSetting.createInstance(type = NotchType.values()[which])
+                }
+                .setNegativeButton(R.string.dialog_cancel)
+                .create()
+            dialog.show(supportFragmentManager, null)
+        }
+
+        viewModel.notchSetting.observe(this, {
+            val fragment = when (it) {
+                is RectangleNotchSetting ->
+                    RectangleNotchSettingFragment.createInstance(NotificationEntity.DEFAULT_SETTING_NAME)
+
+                is WaterDropNotchSetting ->
+                    WaterDropNotchSettingFragment.createInstance(NotificationEntity.DEFAULT_SETTING_NAME)
+
+                else -> Fragment()
+            }
+
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.notchSettingFragmentArea, fragment)
+                .commit()
+        })
     }
 
     // スクリーン輪郭線・ノッチ輪郭線の描画がウィンドウアタッチ後でないとできないため
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        binding.vm = viewModel
+        lifecycleScope.launch(Dispatchers.Main) {
+            viewModel.init()
+            binding.vm = viewModel
+        }
     }
 
     // ------ //

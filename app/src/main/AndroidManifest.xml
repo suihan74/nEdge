@@ -45,6 +45,7 @@
         <!-- ロック画面 -->
         <activity
             android:name=".scenes.lockScreen.LockScreenActivity"
+            android:windowSoftInputMode="adjustResize"
             android:showOnLockScreen="true"
             android:screenOrientation="sensorPortrait"
             android:lockTaskMode="if_whitelisted"

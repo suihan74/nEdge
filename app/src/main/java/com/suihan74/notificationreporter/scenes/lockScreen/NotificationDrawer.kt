@@ -5,6 +5,7 @@ import android.os.Build
 import android.view.Window
 import android.widget.ImageView
 import androidx.annotation.RequiresApi
+import androidx.core.graphics.toRect
 import com.suihan74.notificationreporter.models.*
 
 /**
@@ -13,6 +14,11 @@ import com.suihan74.notificationreporter.models.*
 class NotificationDrawer(
     private val window: Window
 ) {
+    companion object {
+        /** 輪郭線とノッチ縁を繋いで描画する際のノッチ部分の余剰の長さ */
+        private const val NOTCH_SURPLUS = 50f
+    }
+
     /** 画面サイズ */
     private val displayRealSize : Point by lazy {
         Point().also {
@@ -29,7 +35,6 @@ class NotificationDrawer(
     private val screenHeight: Int by lazy {
         displayRealSize.y
     }
-
 
     // ------ //
 
@@ -51,30 +56,45 @@ class NotificationDrawer(
         // スクリーンの輪郭線
         drawOutLines(canvas, paint, notificationSetting)
 
-        // ノッチの縁
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            /*
-            // テスト用の矩形ノッチ設定
-            val notchSetting = RectangleNotchSetting(
-                leftTopRadius = 12.dp,
-                rightTopRadius = 12.dp,
-                leftBottomRadius = 26.dp,
-                rightBottomRadius = 26.dp,
-                widthAdjustment = 18f,
-                heightAdjustment = 0f
-            )
-            drawRectangleNotch(canvas, paint, notchSetting)
-            */
+            // スクリーン輪郭線とノッチの縁を描画する
+            notificationSetting.topNotchSetting.let { notchSetting ->
+                val rect = window.decorView.rootWindowInsets.displayCutout?.boundingRects?.firstOrNull {
+                    it.top < window.decorView.height * .5f
+                } ?: return@let
 
-            /*
-            // テスト用のパンチホールノッチ設定
-            val notchSetting = PunchHoleNotchSetting(
-                cx = 84f,
-                cy = 84f,
-                radius = 40f + 3.dp
-            )
-            drawNotificationBarPunchHoleNotch(canvas, paint, notchSetting)
-            */
+                when (notchSetting.type) {
+                    NotchType.NONE -> {}
+
+                    NotchType.RECTANGLE ->
+                        drawTopRectangleNotch(canvas, paint, rect, notchSetting as RectangleNotchSetting)
+
+                    NotchType.WATER_DROP ->
+                        drawTopWaterDropNotch(canvas, paint, rect, notchSetting as WaterDropNotchSetting)
+
+                    NotchType.PUNCH_HOLE ->
+                        drawPunchHoleNotch(canvas, paint, notchSetting as PunchHoleNotchSetting)
+                }
+            }
+
+            notificationSetting.bottomNotchSetting.let { notchSetting ->
+                val rect = window.decorView.rootWindowInsets.displayCutout?.boundingRects?.firstOrNull {
+                    it.top > window.decorView.height * .5f
+                } ?: return@let
+
+                when (notchSetting.type) {
+                    NotchType.NONE -> {}
+
+                    NotchType.RECTANGLE ->
+                        drawBottomRectangleNotch(canvas, paint, rect, notchSetting as RectangleNotchSetting)
+
+                    NotchType.WATER_DROP ->
+                        drawBottomWaterDropNotch(canvas, paint, rect, notchSetting as WaterDropNotchSetting)
+
+                    NotchType.PUNCH_HOLE ->
+                        drawPunchHoleNotch(canvas, paint, notchSetting as PunchHoleNotchSetting)
+                }
+            }
         }
 
         imageView.setImageBitmap(bitmap)
@@ -217,17 +237,27 @@ class NotificationDrawer(
     // ------ //
 
     /**
-     * 通知バーのノッチ縁を描画する
+     * 既に描画した内容を消去する
+     *
+     * ノッチ部分の輪郭線削除を行う用途
+     */
+    private fun Canvas.eraseRect(rect: Rect) {
+        val unPaint = Paint().apply {
+            xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
+        }
+        this.drawRect(rect, unPaint)
+    }
+
+    /**
+     * 通知バーの矩形ノッチ縁を描画する(画面上部)
      */
     @RequiresApi(Build.VERSION_CODES.P)
-    private fun drawRectangleNotch(
+    private fun drawTopRectangleNotch(
         canvas: Canvas,
         paint: Paint,
+        rect: Rect,
         notchSetting: RectangleNotchSetting
     ) {
-        val rect = window.decorView.rootWindowInsets.displayCutout?.boundingRects?.firstOrNull() ?: return
-
-        val surplus = 50f
         val offset = paint.strokeWidth / 2
 
         val left = rect.left - offset + notchSetting.widthAdjustment
@@ -238,7 +268,7 @@ class NotificationDrawer(
         val path = Path().apply {
             notchSetting.leftTopRadius.let { r ->
                 // top left
-                moveTo(left - surplus, top)
+                moveTo(left - NOTCH_SURPLUS, top)
                 lineTo(left - r, top)
                 arcTo(left - r * 2, top, left, top + r * 2, 270f, 90f, true)
             }
@@ -261,25 +291,83 @@ class NotificationDrawer(
                 // top right
                 lineTo(right, top + r)
                 arcTo(right, top, right + r * 2, top + r * 2, 180f, 90f, true)
-                lineTo(right + surplus, top)
+                lineTo(right + NOTCH_SURPLUS, top)
             }
+        }
+
+        // ノッチ部分に被るスクリーン輪郭線を消す
+        RectF(left + offset - NOTCH_SURPLUS, top - offset, right - offset + NOTCH_SURPLUS, bottom).toRect().let {
+            canvas.eraseRect(it)
         }
 
         canvas.drawPath(path, paint)
     }
 
     /**
-     * 通知バーの水滴ノッチ縁を描画する
+     * 通知バーの矩形ノッチ縁を描画する(画面下部)
      */
     @RequiresApi(Build.VERSION_CODES.P)
-    private fun drawWaterDropNotch(
+    private fun drawBottomRectangleNotch(
         canvas: Canvas,
         paint: Paint,
+        rect: Rect,
+        notchSetting: RectangleNotchSetting
+    ) {
+        val offset = paint.strokeWidth / 2
+
+        val left = rect.left - offset + notchSetting.widthAdjustment
+        val right = rect.right + offset - notchSetting.widthAdjustment
+        val top = rect.top - offset - notchSetting.heightAdjustment
+        val bottom = rect.bottom - offset
+
+        val path = Path().apply {
+            notchSetting.leftTopRadius.let { r ->
+                // bottom left
+                moveTo(left - NOTCH_SURPLUS, bottom)
+                lineTo(left - r, bottom)
+                arcTo(left - r * 2, bottom - r * 2, left, bottom, 90f, -90f, true)
+            }
+
+            notchSetting.leftBottomRadius.let { r ->
+                // top left
+                lineTo(left, top + r)
+                arcTo(left, top, left + r * 2, top + r * 2, 180f, 90f, true)
+            }
+
+            notchSetting.rightBottomRadius.let { r ->
+                // top edge
+                lineTo(right - r, top)
+
+                // bottom right
+                arcTo(right - r * 2, top, right, top + r * 2, 270f, 90f, true)
+            }
+
+            notchSetting.rightTopRadius.let { r ->
+                // bottom right
+                lineTo(right, bottom - r)
+                arcTo(right, bottom - r * 2, right + r * 2, bottom, 180f, -90f, true)
+                lineTo(right + NOTCH_SURPLUS, bottom)
+            }
+        }
+
+        // ノッチ部分に被るスクリーン輪郭線を消す
+        RectF(left + offset - NOTCH_SURPLUS, top, right - offset + NOTCH_SURPLUS, bottom + offset).toRect().let {
+            canvas.eraseRect(it)
+        }
+
+        canvas.drawPath(path, paint)
+    }
+
+    /**
+     * 通知バーの水滴ノッチ縁を描画する(画面上部)
+     */
+    @RequiresApi(Build.VERSION_CODES.P)
+    private fun drawTopWaterDropNotch(
+        canvas: Canvas,
+        paint: Paint,
+        rect: Rect,
         notchSetting: WaterDropNotchSetting
     ) {
-        val rect = window.decorView.rootWindowInsets.displayCutout?.boundingRects?.firstOrNull() ?: return
-
-        val surplus = 50f
         val offset = paint.strokeWidth / 2
 
         val left = rect.left - offset + notchSetting.widthAdjustment
@@ -288,41 +376,89 @@ class NotificationDrawer(
         val bottom = rect.bottom + offset + notchSetting.heightAdjustment
 
         val path = Path().apply {
-            notchSetting.leftTopRadius.let { r ->
+            notchSetting.topRadius.let { r ->
                 // top left
-                moveTo(left - surplus, top)
+                moveTo(left - NOTCH_SURPLUS, top)
                 lineTo(left - r, top)
-                arcTo(left - r * 2, top, left, top + r * 2, 270f, 90f, true)
-                // height adjustment
-                if (top + r != bottom - r) {
-                    lineTo(left, bottom - r)
-                }
+                arcTo(left - r * 2, top, left, top + r * 2, 270f, notchSetting.topDegree, false)
             }
 
             notchSetting.waterDropRadius.let { r ->
                 // water drop
-                arcTo(left, bottom - r * 2, right, bottom, 180f, -180f, true)
+                val degree = notchSetting.waterDropDegree
+                val cx = screenWidth * .5f
+                arcTo(cx - r, bottom - r * 2, cx + r, bottom, 90f + degree, -degree * 2, false)
             }
 
-            notchSetting.rightTopRadius.let { r ->
-                // height adjustment
-                if (top + r != bottom - r) {
-                    lineTo(right, top + r)
-                }
+            notchSetting.topRadius.let { r ->
                 // top right
-                arcTo(right, top, right + r * 2, top + r * 2, 180f, 90f, true)
-                lineTo(right + surplus, top)
+                val degree = notchSetting.topDegree
+                arcTo(right, top, right + r * 2, top + r * 2, 270f - degree, degree, false)
+                lineTo(right + NOTCH_SURPLUS, top)
             }
+        }
+
+        // ノッチ部分に被るスクリーン輪郭線を消す
+        RectF(left + offset - NOTCH_SURPLUS, top - offset, right - offset + NOTCH_SURPLUS, bottom).toRect().let {
+            canvas.eraseRect(it)
         }
 
         canvas.drawPath(path, paint)
     }
 
     /**
-     * 通知バーの水滴ノッチ縁を描画する
+     * 通知バーの水滴ノッチ縁を描画する(画面下部)
      */
     @RequiresApi(Build.VERSION_CODES.P)
-    private fun drawNotificationBarPunchHoleNotch(
+    private fun drawBottomWaterDropNotch(
+        canvas: Canvas,
+        paint: Paint,
+        rect: Rect,
+        notchSetting: WaterDropNotchSetting
+    ) {
+        val offset = paint.strokeWidth / 2
+
+        val left = rect.left - offset + notchSetting.widthAdjustment
+        val right = rect.right + offset - notchSetting.widthAdjustment
+        val top = rect.top - offset - notchSetting.heightAdjustment
+        val bottom = rect.bottom - offset
+
+        val path = Path().apply {
+            notchSetting.topRadius.let { r ->
+                // bottom left
+                moveTo(left - NOTCH_SURPLUS, bottom)
+                lineTo(left - r, bottom)
+                arcTo(left - r * 2, bottom - r * 2, left, bottom, 90f, -notchSetting.topDegree, false)
+            }
+
+            notchSetting.waterDropRadius.let { r ->
+                // water drop
+                val degree = notchSetting.waterDropDegree
+                val cx = screenWidth * .5f
+                arcTo(cx - r, top, cx + r, top + r * 2, 270f - degree, degree * 2, false)
+            }
+
+            notchSetting.topRadius.let { r ->
+                // top right
+                val degree = notchSetting.topDegree
+                arcTo(right, bottom - r * 2, right + r * 2, bottom, 90f + degree, -degree, false)
+                lineTo(right + NOTCH_SURPLUS, bottom)
+            }
+        }
+
+        // ノッチ部分に被るスクリーン輪郭線を消す
+        RectF(left + offset - NOTCH_SURPLUS, top, right - offset + NOTCH_SURPLUS, bottom + offset).toRect().let {
+            canvas.eraseRect(it)
+        }
+
+        canvas.drawPath(path, paint)
+    }
+
+    /**
+     * 通知バーのパンチホールノッチ縁を描画する
+     */
+    @RequiresApi(Build.VERSION_CODES.P)
+    private fun drawPunchHoleNotch(
         canvas: Canvas,
         paint: Paint,
         notchSetting: PunchHoleNotchSetting
