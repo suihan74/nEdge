@@ -22,7 +22,7 @@
             android:valueFrom="-100.0"
             android:valueTo="100.0"
             android:stepSize="1.0"
-            android:value="@{vm.setting.widthAdjustment}"
+            android:value="@={vm.widthAdjustment}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
@@ -36,7 +36,7 @@
             android:valueFrom="-100.0"
             android:valueTo="100.0"
             android:stepSize="1.0"
-            android:value="@{vm.setting.heightAdjustment}"
+            android:value="@={vm.heightAdjustment}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
@@ -50,7 +50,7 @@
             android:valueFrom="0.0"
             android:valueTo="200.0"
             android:stepSize="1.0"
-            android:value="@{vm.setting.leftTopRadius}"
+            android:value="@={vm.leftTopRadius}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
@@ -64,7 +64,7 @@
             android:valueFrom="0.0"
             android:valueTo="200.0"
             android:stepSize="1.0"
-            android:value="@{vm.setting.rightTopRadius}"
+            android:value="@={vm.rightTopRadius}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
@@ -78,7 +78,7 @@
             android:valueFrom="0.0"
             android:valueTo="200.0"
             android:stepSize="1.0"
-            android:value="@{vm.setting.leftBottomRadius}"
+            android:value="@={vm.leftBottomRadius}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
@@ -92,7 +92,7 @@
             android:valueFrom="0.0"
             android:valueTo="200.0"
             android:stepSize="1.0"
-            android:value="@{vm.setting.rightBottomRadius}"
+            android:value="@={vm.rightBottomRadius}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 

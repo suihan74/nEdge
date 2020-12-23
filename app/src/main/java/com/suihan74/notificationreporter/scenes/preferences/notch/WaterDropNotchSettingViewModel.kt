@@ -1,50 +1,69 @@
 package com.suihan74.notificationreporter.scenes.preferences.notch
 
+import androidx.annotation.MainThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.android.material.slider.Slider
 import com.suihan74.notificationreporter.models.WaterDropNotchSetting
 import com.suihan74.notificationreporter.repositories.PreferencesRepository
+import com.suihan74.notificationreporter.scenes.preferences.PreferencesViewModel
+import com.suihan74.utilities.extensions.alsoAs
 
 class WaterDropNotchSettingViewModel(
+    preferencesViewModel: PreferencesViewModel,
     prefRepo: PreferencesRepository,
     private val settingKey : String
 ) : ViewModel() {
     // TODO: 任意の設定を対象にできるようにする
-    val setting = MutableLiveData(prefRepo.defaultNotificationSetting.value?.topNotchSetting as? WaterDropNotchSetting).also {
-        it.observeForever { setting ->
-            if (setting != null) {
-                prefRepo.defaultNotificationSetting.value =
-                    prefRepo.defaultNotificationSetting.value?.copy(
-                        topNotchSetting = setting
-                    )
-            }
-        }
-    }
+    val setting = preferencesViewModel.topNotchSetting
+
+    val widthAdjustment = mutableLiveData<Float>()
+
+    val heightAdjustment = mutableLiveData<Float>()
+
+    val topRadius = mutableLiveData<Float>()
+
+    val waterDropRadius = mutableLiveData<Float>()
+
+    val topDegree = mutableLiveData<Float>()
+
+    val waterDropDegree = mutableLiveData<Float>()
 
     // ------ //
 
-    val widthAdjustmentChangeListener = Slider.OnChangeListener { _, value, _ ->
-        setting.value = setting.value?.copy(widthAdjustment = value)
+    private var initialized = false
+
+    init {
+        setting.value!!.alsoAs<WaterDropNotchSetting> {
+            widthAdjustment.value = it.widthAdjustment
+            heightAdjustment.value = it.heightAdjustment
+            topRadius.value = it.topRadius
+            waterDropRadius.value = it.waterDropRadius
+            topDegree.value = it.topDegree
+            waterDropDegree.value = it.waterDropDegree
+        }
+        initialized = true
     }
 
-    val heightAdjustmentChangeListener = Slider.OnChangeListener { _, value, _ ->
-        setting.value = setting.value?.copy(heightAdjustment = value)
-    }
+    private fun <T> mutableLiveData() =
+        MutableLiveData<T>().apply {
+            observeForever {
+                if (initialized) {
+                    updateNotchSetting()
+                }
+            }
+        }
 
-    val topRadiusChangeListener = Slider.OnChangeListener { _, value, _ ->
-        setting.value = setting.value?.copy(topRadius = value)
-    }
+    @MainThread
+    private fun updateNotchSetting() {
+        if (!initialized) return
 
-    val waterDropRadiusChangeListener = Slider.OnChangeListener { _, value, _ ->
-        setting.value = setting.value?.copy(waterDropRadius = value)
-    }
-
-    val topDegreeChangeListener = Slider.OnChangeListener { _, value, _ ->
-        setting.value = setting.value?.copy(topDegree = value)
-    }
-
-    val waterDropDegreeChangeListener = Slider.OnChangeListener { _, value, _ ->
-        setting.value = setting.value?.copy(waterDropDegree = value)
+        setting.value = WaterDropNotchSetting(
+            widthAdjustment = widthAdjustment.value!!,
+            heightAdjustment = heightAdjustment.value!!,
+            topRadius = topRadius.value!!,
+            waterDropRadius = waterDropRadius.value!!,
+            topDegree = topDegree.value!!,
+            waterDropDegree = waterDropDegree.value!!,
+        )
     }
 }

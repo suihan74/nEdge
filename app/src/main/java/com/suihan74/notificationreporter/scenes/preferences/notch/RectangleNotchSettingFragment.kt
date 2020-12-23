@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.databinding.FragmentRectangleNotchSettingBinding
+import com.suihan74.notificationreporter.scenes.preferences.PreferencesActivity
+import com.suihan74.notificationreporter.scenes.preferences.PreferencesViewModel
 import com.suihan74.utilities.fragment.withArguments
 import com.suihan74.utilities.lazyProvideViewModel
 
@@ -21,10 +23,22 @@ class RectangleNotchSettingFragment : Fragment() {
 
     // ------ //
 
+    private val preferencesActivity : PreferencesActivity
+        get() = requireActivity() as PreferencesActivity
+
+    private val preferencesViewModel : PreferencesViewModel
+        get() = preferencesActivity.viewModel
+
+    // ------ //
+
     private val viewModel by lazyProvideViewModel {
         val settingKey = requireArguments().getString(ARG_SETTING_KEY)!!
         val app = Application.instance
-        RectangleNotchSettingViewModel(app.preferencesRepository, settingKey)
+        RectangleNotchSettingViewModel(
+            preferencesViewModel,
+            app.preferencesRepository,
+            settingKey
+        )
     }
 
     // ------ //
@@ -38,18 +52,6 @@ class RectangleNotchSettingFragment : Fragment() {
             it.vm = viewModel
             it.lifecycleOwner = viewLifecycleOwner
         }
-
-        binding.widthAdjustmentSlider.addOnChangeListener(viewModel.widthAdjustmentChangeListener)
-
-        binding.heightAdjustmentSlider.addOnChangeListener(viewModel.heightAdjustmentChangeListener)
-
-        binding.leftTopRadiusSlider.addOnChangeListener(viewModel.leftTopRadiusChangeListener)
-
-        binding.rightTopRadiusSlider.addOnChangeListener(viewModel.rightTopRadiusChangeListener)
-
-        binding.leftBottomRadiusSlider.addOnChangeListener(viewModel.leftBottomRadiusChangeListener)
-
-        binding.rightBottomRadiusSlider.addOnChangeListener(viewModel.rightBottomRadiusChangeListener)
 
         return binding.root
     }

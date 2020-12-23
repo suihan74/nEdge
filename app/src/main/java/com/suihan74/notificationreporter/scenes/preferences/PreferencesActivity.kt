@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
@@ -19,8 +20,6 @@ import com.suihan74.notificationreporter.database.notification.NotificationEntit
 import com.suihan74.notificationreporter.databinding.ActivityPreferencesBinding
 import com.suihan74.notificationreporter.models.NotchSetting
 import com.suihan74.notificationreporter.models.NotchType
-import com.suihan74.notificationreporter.models.RectangleNotchSetting
-import com.suihan74.notificationreporter.models.WaterDropNotchSetting
 import com.suihan74.notificationreporter.scenes.lockScreen.LockScreenActivity
 import com.suihan74.notificationreporter.scenes.preferences.notch.RectangleNotchSettingFragment
 import com.suihan74.notificationreporter.scenes.preferences.notch.WaterDropNotchSettingFragment
@@ -35,7 +34,7 @@ import kotlinx.coroutines.launch
  */
 class PreferencesActivity : AppCompatActivity() {
 
-    private val viewModel by lazyProvideViewModel {
+    val viewModel by lazyProvideViewModel {
         val app = Application.instance
         PreferencesViewModel(app.preferencesRepository)
     }
@@ -83,65 +82,24 @@ class PreferencesActivity : AppCompatActivity() {
             }
         }
 
-        binding.lineWidthSlider.addOnChangeListener { _, value, _ ->
-            viewModel.notificationSetting.value?.let { prev ->
-                viewModel.notificationSetting.value = prev.copy(thickness = value)
-            }
-        }
-
-        binding.leftTopCornerRadiusSlider.addOnChangeListener { _, value, _ ->
-            viewModel.notificationSetting.value =
-                viewModel.notificationSetting.value?.let {
-                    it.copy(outlinesSetting = it.outlinesSetting.copy(
-                        leftTopCornerRadius = value
-                    ))
-                }
-        }
-
-        binding.rightTopCornerRadiusSlider.addOnChangeListener { _, value, _ ->
-            viewModel.notificationSetting.value =
-                viewModel.notificationSetting.value?.let {
-                    it.copy(outlinesSetting = it.outlinesSetting.copy(
-                        rightTopCornerRadius = value
-                    ))
-                }
-        }
-
-        binding.leftBottomCornerRadiusSlider.addOnChangeListener { _, value, _ ->
-            viewModel.notificationSetting.value =
-                viewModel.notificationSetting.value?.let {
-                    it.copy(outlinesSetting = it.outlinesSetting.copy(
-                        leftBottomCornerRadius = value
-                    ))
-                }
-        }
-
-        binding.rightBottomCornerRadiusSlider.addOnChangeListener { _, value, _ ->
-            viewModel.notificationSetting.value =
-                viewModel.notificationSetting.value?.let {
-                    it.copy(outlinesSetting = it.outlinesSetting.copy(
-                        rightBottomCornerRadius = value
-                    ))
-                }
-        }
-
         binding.notchTypeSelectionButton.setOnClickListener {
             val dialog = AlertDialogFragment.Builder()
                 .setTitle(R.string.prefs_notch_type_selection_desc)
                 .setItems(NotchType.values().map { it.name }) { _, which ->
-                    viewModel.notchSetting.value = NotchSetting.createInstance(type = NotchType.values()[which])
+                    viewModel.topNotchSetting.value = NotchSetting.createInstance(type = NotchType.values()[which])
+                    viewModel.topNotchType.value = NotchType.values()[which]
                 }
                 .setNegativeButton(R.string.dialog_cancel)
                 .create()
             dialog.show(supportFragmentManager, null)
         }
 
-        viewModel.notchSetting.observe(this, {
+        viewModel.topNotchType.observe(this, {
             val fragment = when (it) {
-                is RectangleNotchSetting ->
+                NotchType.RECTANGLE ->
                     RectangleNotchSettingFragment.createInstance(NotificationEntity.DEFAULT_SETTING_NAME)
 
-                is WaterDropNotchSetting ->
+                NotchType.WATER_DROP ->
                     WaterDropNotchSettingFragment.createInstance(NotificationEntity.DEFAULT_SETTING_NAME)
 
                 else -> Fragment()
@@ -151,15 +109,36 @@ class PreferencesActivity : AppCompatActivity() {
                 .replace(R.id.notchSettingFragmentArea, fragment)
                 .commit()
         })
+
+        // TODO: インストール済みアプリ一覧の取得
+        val intent = Intent(Intent.ACTION_MAIN, null)
+        intent.addCategory(Intent.CATEGORY_LAUNCHER)
+        val resolveInfoList = packageManager.queryIntentActivities(intent, 0)
+        resolveInfoList.forEach {
+            Log.d("pm", "packageName: " + it.activityInfo.applicationInfo.name)
+            Log.d("pm", "---")
+
+        }
+        /*
+        val packages = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
+        packages.forEach {
+            // it.name == null
+            // it.icon == null
+            Log.d("pm", "packageName: " + it.packageName)
+            Log.d("pm", "---")
+        }
+         */
     }
 
     // スクリーン輪郭線・ノッチ輪郭線の描画がウィンドウアタッチ後でないとできないため
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        lifecycleScope.launch(Dispatchers.Main) {
-            viewModel.init()
-            binding.vm = viewModel
-        }
+        binding.vm = viewModel
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.saveSettings()
     }
 
     // ------ //

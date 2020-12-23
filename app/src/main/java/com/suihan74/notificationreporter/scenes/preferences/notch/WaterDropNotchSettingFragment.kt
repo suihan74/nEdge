@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.databinding.FragmentWaterDropNotchSettingBinding
+import com.suihan74.notificationreporter.scenes.preferences.PreferencesActivity
+import com.suihan74.notificationreporter.scenes.preferences.PreferencesViewModel
 import com.suihan74.utilities.fragment.withArguments
 import com.suihan74.utilities.lazyProvideViewModel
 
@@ -21,10 +23,22 @@ class WaterDropNotchSettingFragment : Fragment() {
 
     // ------ //
 
+    private val preferencesActivity : PreferencesActivity
+        get() = requireActivity() as PreferencesActivity
+
+    private val preferencesViewModel : PreferencesViewModel
+        get() = preferencesActivity.viewModel
+
+    // ------ //
+
     private val viewModel by lazyProvideViewModel {
         val settingKey = requireArguments().getString(ARG_SETTING_KEY)!!
         val app = Application.instance
-        WaterDropNotchSettingViewModel(app.preferencesRepository, settingKey)
+        WaterDropNotchSettingViewModel(
+            preferencesViewModel,
+            app.preferencesRepository,
+            settingKey
+        )
     }
 
     // ------ //
@@ -38,18 +52,6 @@ class WaterDropNotchSettingFragment : Fragment() {
             it.vm = viewModel
             it.lifecycleOwner = viewLifecycleOwner
         }
-
-        binding.widthAdjustmentSlider.addOnChangeListener(viewModel.widthAdjustmentChangeListener)
-
-        binding.heightAdjustmentSlider.addOnChangeListener(viewModel.heightAdjustmentChangeListener)
-
-        binding.topRadiusSlider.addOnChangeListener(viewModel.topRadiusChangeListener)
-
-        binding.waterDropRadiusSlider.addOnChangeListener(viewModel.waterDropRadiusChangeListener)
-
-        binding.topDegreeSlider.addOnChangeListener(viewModel.topDegreeChangeListener)
-
-        binding.waterDropDegreeSlider.addOnChangeListener(viewModel.waterDropDegreeChangeListener)
 
         return binding.root
     }

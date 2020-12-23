@@ -18,8 +18,8 @@ object BindingAdapters {
      */
     @JvmStatic
     @BindingAdapter("notificationSetting")
-    fun setNotificationSetting(imageView: ImageView, notificationSetting: NotificationSetting?) {
-        if (notificationSetting == null) {
+    fun setNotificationSetting(imageView: ImageView, setting: NotificationSetting?) {
+        if (setting == null) {
             imageView.setImageDrawable(null)
             return
         }
@@ -27,7 +27,7 @@ object BindingAdapters {
         try {
             val activity = imageView.context as? Activity ?: return
             val notificationDrawer = NotificationDrawer(activity.window)
-            notificationDrawer.draw(imageView, notificationSetting)
+            notificationDrawer.draw(imageView, setting)
         }
         catch (e: Throwable) {
             Log.e("notificationSetting", Log.getStackTraceString(e))
