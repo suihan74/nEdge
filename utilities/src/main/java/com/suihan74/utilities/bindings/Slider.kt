@@ -19,8 +19,18 @@ object SliderBindingAdapters {
     // "android:value"の双方向バインド
 
     @JvmStatic
-    @BindingAdapter("android:value")
-    fun bindValue(slider: Slider, value: Float?) {
+    @BindingAdapter(value = [
+        "android:value",
+        "android:valueFrom",
+        "android:valueTo",
+        "android:stepSize"],
+        requireAll = false
+    )
+    fun bindValue(slider: Slider, value: Float?, lowerBound: Float?, upperBound: Float?, stepSize: Float?) {
+        lowerBound?.let { slider.valueFrom = it }
+        upperBound?.let { slider.valueFrom = it }
+        stepSize?.let { slider.stepSize = it }
+
         if (value != null && slider.value != value) {
             slider.value = value
         }
