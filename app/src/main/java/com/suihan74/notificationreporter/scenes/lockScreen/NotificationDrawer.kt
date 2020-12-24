@@ -50,7 +50,6 @@ class NotificationDrawer(
             style = Paint.Style.STROKE
             strokeWidth = notificationSetting.thickness
             color = notificationSetting.color
-//            pathEffect = notificationSetting.pathEffect
         }
 
         // スクリーンの輪郭線
@@ -259,11 +258,13 @@ class NotificationDrawer(
         notchSetting: RectangleNotchSetting
     ) {
         val offset = paint.strokeWidth / 2
+        val widthAdjustmentPx = rect.width() * .5f * notchSetting.widthAdjustment
+        val heightAdjustmentPx = rect.height() * notchSetting.heightAdjustment
 
-        val left = rect.left - offset + notchSetting.widthAdjustment
-        val right = rect.right + offset - notchSetting.widthAdjustment
+        val left = rect.left - offset + rect.width() * widthAdjustmentPx
+        val right = rect.right + offset - rect.width() * widthAdjustmentPx
         val top = rect.top + offset
-        val bottom = rect.bottom + offset + notchSetting.heightAdjustment
+        val bottom = rect.bottom + offset + heightAdjustmentPx
 
         val path = Path().apply {
             notchSetting.leftTopRadius.let { r ->
@@ -314,10 +315,12 @@ class NotificationDrawer(
         notchSetting: RectangleNotchSetting
     ) {
         val offset = paint.strokeWidth / 2
+        val widthAdjustmentPx = rect.width() * .5f * notchSetting.widthAdjustment
+        val heightAdjustmentPx = rect.height() * notchSetting.heightAdjustment
 
-        val left = rect.left - offset + notchSetting.widthAdjustment
-        val right = rect.right + offset - notchSetting.widthAdjustment
-        val top = rect.top - offset - notchSetting.heightAdjustment
+        val left = rect.left - offset + widthAdjustmentPx
+        val right = rect.right + offset - widthAdjustmentPx
+        val top = rect.top - offset - heightAdjustmentPx
         val bottom = rect.bottom - offset
 
         val path = Path().apply {
@@ -369,41 +372,52 @@ class NotificationDrawer(
         notchSetting: WaterDropNotchSetting
     ) {
         val offset = paint.strokeWidth / 2
+        val widthAdjustmentPx = rect.width() * .5f * notchSetting.widthAdjustment
+        val heightAdjustmentPx = rect.height() * notchSetting.heightAdjustment
 
-        val left = rect.left - offset + notchSetting.widthAdjustment
-        val right = rect.right + offset - notchSetting.widthAdjustment
+        val topRadius = notchSetting.topRadius
+        val topDegree = notchSetting.topDegree
+        val waterDropRadius = notchSetting.waterDropRadius
+
+        val left = rect.left - offset + widthAdjustmentPx
+        val right = rect.right + offset - widthAdjustmentPx
         val top = rect.top + offset
-        val bottom = rect.bottom + offset + notchSetting.heightAdjustment
+        val bottom = rect.bottom + offset + heightAdjustmentPx
 
-        val path = Path().apply {
-            notchSetting.topRadius.let { r ->
+        Path().apply {
+            topRadius.let { r ->
                 // top left
-                moveTo(left - NOTCH_SURPLUS, top)
+                moveTo(left - r - NOTCH_SURPLUS, top)
                 lineTo(left - r, top)
-                arcTo(left - r * 2, top, left, top + r * 2, 270f, notchSetting.topDegree, false)
+                arcTo(left - r * 2, top, left, top + r * 2, 270f, topDegree, false)
             }
 
-            notchSetting.waterDropRadius.let { r ->
+            waterDropRadius.let { r ->
                 // water drop
                 val degree = notchSetting.waterDropDegree
                 val cx = screenWidth * .5f
                 arcTo(cx - r, bottom - r * 2, cx + r, bottom, 90f + degree, -degree * 2, false)
             }
 
-            notchSetting.topRadius.let { r ->
+            topRadius.let { r ->
                 // top right
                 val degree = notchSetting.topDegree
                 arcTo(right, top, right + r * 2, top + r * 2, 270f - degree, degree, false)
-                lineTo(right + NOTCH_SURPLUS, top)
+                lineTo(right + r + NOTCH_SURPLUS, top)
             }
-        }
 
-        // ノッチ部分に被るスクリーン輪郭線を消す
-        RectF(left + offset - NOTCH_SURPLUS, top - offset, right - offset + NOTCH_SURPLUS, bottom).toRect().let {
-            canvas.eraseRect(it)
-        }
+            // ノッチ部分に被るスクリーン輪郭線を消す
+            RectF(
+                left - topRadius,
+                top - offset,
+                right + topRadius,
+                bottom
+            ).toRect().let {
+                canvas.eraseRect(it)
+            }
 
-        canvas.drawPath(path, paint)
+            canvas.drawPath(this, paint)
+        }
     }
 
     /**
@@ -417,10 +431,12 @@ class NotificationDrawer(
         notchSetting: WaterDropNotchSetting
     ) {
         val offset = paint.strokeWidth / 2
+        val widthAdjustmentPx = rect.width() * .5f * notchSetting.widthAdjustment
+        val heightAdjustmentPx = rect.height() * notchSetting.heightAdjustment
 
-        val left = rect.left - offset + notchSetting.widthAdjustment
-        val right = rect.right + offset - notchSetting.widthAdjustment
-        val top = rect.top - offset - notchSetting.heightAdjustment
+        val left = rect.left - offset + widthAdjustmentPx
+        val right = rect.right + offset - widthAdjustmentPx
+        val top = rect.top - offset - heightAdjustmentPx
         val bottom = rect.bottom - offset
 
         val path = Path().apply {
@@ -447,7 +463,7 @@ class NotificationDrawer(
         }
 
         // ノッチ部分に被るスクリーン輪郭線を消す
-        RectF(left + offset - NOTCH_SURPLUS, top, right - offset + NOTCH_SURPLUS, bottom + offset).toRect().let {
+        RectF(left - NOTCH_SURPLUS, top, right + NOTCH_SURPLUS, bottom + offset).toRect().let {
             canvas.eraseRect(it)
         }
 

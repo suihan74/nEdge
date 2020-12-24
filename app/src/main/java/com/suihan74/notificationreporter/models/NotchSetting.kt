@@ -74,10 +74,10 @@ data class WaterDropNotchSetting(
     val waterDropRadius: Float = 0f,
 
     /** 左上角丸の角度 */
-    val topDegree: Float = 90f,
+    val topDegree: Float = 0f,
 
     /** 水滴の角度 */
-    val waterDropDegree: Float = 90f,
+    val waterDropDegree: Float = 0f,
 
     /** 水滴の高さ */
     val height: Float = 0f,

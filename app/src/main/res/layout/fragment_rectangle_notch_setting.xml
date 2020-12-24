@@ -19,9 +19,9 @@
 
         <com.google.android.material.slider.Slider
             android:id="@+id/widthAdjustmentSlider"
-            android:valueFrom="-100.0"
-            android:valueTo="100.0"
-            android:stepSize="1.0"
+            android:valueFrom="-1.0"
+            android:valueTo="1.0"
+            android:stepSize="0.01"
             android:value="@={vm.widthAdjustment}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
@@ -33,9 +33,9 @@
 
         <com.google.android.material.slider.Slider
             android:id="@+id/heightAdjustmentSlider"
-            android:valueFrom="-100.0"
-            android:valueTo="100.0"
-            android:stepSize="1.0"
+            android:valueFrom="-1.0"
+            android:valueTo="1.0"
+            android:stepSize="0.01"
             android:value="@={vm.heightAdjustment}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
