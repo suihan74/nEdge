@@ -50,6 +50,7 @@ class WaterDropNotchSettingFragment : Fragment() {
     ): View {
         val binding = FragmentWaterDropNotchSettingBinding.inflate(inflater, container, false).also {
             it.vm = viewModel
+            it.prefVm = preferencesViewModel
             it.lifecycleOwner = viewLifecycleOwner
         }
 

@@ -81,6 +81,7 @@
                     android:valueTo="200.0"
                     android:stepSize="1.0"
                     android:value="@={vm.leftTopCornerRadius}"
+                    editing="@={vm.editingLeftTopCornerRadius}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
 
@@ -94,6 +95,7 @@
                     android:valueTo="200.0"
                     android:stepSize="1.0"
                     android:value="@={vm.rightTopCornerRadius}"
+                    editing="@={vm.editingRightTopCornerRadius}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
 
@@ -107,6 +109,7 @@
                     android:valueTo="200.0"
                     android:stepSize="1.0"
                     android:value="@={vm.leftBottomCornerRadius}"
+                    editing="@={vm.editingLeftBottomCornerRadius}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
 
@@ -120,6 +123,7 @@
                     android:valueTo="200.0"
                     android:stepSize="1.0"
                     android:value="@={vm.rightBottomCornerRadius}"
+                    editing="@={vm.editingRightBottomCornerRadius}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
 
@@ -156,6 +160,50 @@
             </LinearLayout>
 
         </ScrollView>
+
+        <!-- はみ出し確認用の背景 -->
+        <View
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:visibility="@{vm.editingLeftTopCornerRadius}"
+            android:background="#ff00ff"
+            android:layout_width="48dp"
+            android:layout_height="48dp"/>
+
+        <View
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:visibility="@{vm.editingRightTopCornerRadius}"
+            android:background="#ff00ff"
+            android:layout_width="48dp"
+            android:layout_height="48dp"/>
+
+        <View
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:visibility="@{vm.editingLeftBottomCornerRadius}"
+            android:background="#ff00ff"
+            android:layout_width="48dp"
+            android:layout_height="48dp"/>
+
+        <View
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:visibility="@{vm.editingRightBottomCornerRadius}"
+            android:background="#ff00ff"
+            android:layout_width="48dp"
+            android:layout_height="48dp"/>
+
+        <View
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintWidth_percent="0.5"
+            android:visibility="@{vm.editingTopNotch}"
+            android:background="#ff00ff"
+            android:layout_width="0dp"
+            android:layout_height="64dp"/>
+        <!-- はみ出し確認用の背景ここまで -->
 
         <ImageView
             android:id="@+id/notificationBar"

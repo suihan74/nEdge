@@ -261,8 +261,8 @@ class NotificationDrawer(
         val widthAdjustmentPx = rect.width() * .5f * notchSetting.widthAdjustment
         val heightAdjustmentPx = rect.height() * notchSetting.heightAdjustment
 
-        val left = rect.left - offset + rect.width() * widthAdjustmentPx
-        val right = rect.right + offset - rect.width() * widthAdjustmentPx
+        val left = rect.left - offset + widthAdjustmentPx
+        val right = rect.right + offset - widthAdjustmentPx
         val top = rect.top + offset
         val bottom = rect.bottom + offset + heightAdjustmentPx
 

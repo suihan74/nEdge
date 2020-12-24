@@ -50,6 +50,7 @@ class RectangleNotchSettingFragment : Fragment() {
     ): View {
         val binding = FragmentRectangleNotchSettingBinding.inflate(inflater, container, false).also {
             it.vm = viewModel
+            it.prefVm = preferencesViewModel
             it.lifecycleOwner = viewLifecycleOwner
         }
 

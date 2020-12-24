@@ -48,6 +48,21 @@ class PreferencesViewModel(
     /** ノッチ種類 */
     val topNotchType = mutableLiveData<NotchType>()
 
+    /** 輪郭線の左上角丸を編集中 */
+    val editingLeftTopCornerRadius = MutableLiveData(false)
+
+    /** 輪郭線の右上角丸を編集中 */
+    val editingRightTopCornerRadius = MutableLiveData(false)
+
+    /** 輪郭線の左下角丸を編集中 */
+    val editingLeftBottomCornerRadius = MutableLiveData(false)
+
+    /** 輪郭線の右下角丸を編集中 */
+    val editingRightBottomCornerRadius = MutableLiveData(false)
+
+    /** 上部ノッチを編集中 */
+    val editingTopNotch = MutableLiveData(false)
+
     // ------ //
 
     private fun <T> mutableLiveData() =
