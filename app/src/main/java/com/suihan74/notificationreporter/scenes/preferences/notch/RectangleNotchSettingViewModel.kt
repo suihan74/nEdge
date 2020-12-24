@@ -13,7 +13,6 @@ class RectangleNotchSettingViewModel(
     prefRepo: PreferencesRepository,
     private val settingKey : String
 ) : ViewModel() {
-    // TODO: 任意の設定を対象にできるようにする
     val setting = preferencesViewModel.topNotchSetting
 
     val widthAdjustment = mutableLiveData<Float>()

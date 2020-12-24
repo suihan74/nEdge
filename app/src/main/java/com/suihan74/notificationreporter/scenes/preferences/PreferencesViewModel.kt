@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.suihan74.notificationreporter.database.notification.NotificationEntity
 import com.suihan74.notificationreporter.models.NotchSetting
 import com.suihan74.notificationreporter.models.NotchType
 import com.suihan74.notificationreporter.models.NotificationSetting
@@ -16,6 +17,10 @@ import kotlinx.coroutines.launch
 class PreferencesViewModel(
     private val prefRepo: PreferencesRepository
 ) : ViewModel() {
+    companion object {
+        const val DEFAULT_SETTING_NAME = NotificationEntity.DEFAULT_SETTING_NAME
+    }
+
     /** バックライト消灯後の画面をさらに暗くする度合い */
     val lightLevel : MutableLiveData<Float> = prefRepo.lightLevel
 
@@ -49,46 +54,58 @@ class PreferencesViewModel(
         MutableLiveData<T>().apply {
             observeForever {
                 if (initialized) {
-                    updateDefaultNotificationSetting()
+                    updateNotificationSetting()
                 }
             }
         }
+
+    init {
+        setCurrentTarget(DEFAULT_SETTING_NAME)
+    }
 
     private var initialized = false
 
-    init {
-        viewModelScope.launch(Dispatchers.Main) {
-            prefRepo.init()
-            prefRepo.defaultNotificationSetting.value!!.let { setting ->
-                notificationColor.value = setting.color
-                lineThickness.value = setting.thickness
-                setting.outlinesSetting.let { outlines ->
-                    leftTopCornerRadius.value = outlines.leftTopCornerRadius
-                    rightTopCornerRadius.value = outlines.rightTopCornerRadius
-                    leftBottomCornerRadius.value = outlines.leftBottomCornerRadius
-                    rightBottomCornerRadius.value = outlines.rightBottomCornerRadius
-                }
-                setting.topNotchSetting.let { notch ->
-                    topNotchSetting.value = notch
-                    topNotchType.value = notch.type
-                }
-            }
-            initialized = true
+    /** 編集中の対象アプリ名 */
+    private var targetAppName : String = NotificationEntity.DEFAULT_SETTING_NAME
 
-            updateDefaultNotificationSetting()
+    /** 現在の画面で編集中のアプリ設定をセットする */
+    fun setCurrentTarget(appName: String) = viewModelScope.launch(Dispatchers.Main) {
+        initialized = false
+
+        if (appName == NotificationEntity.DEFAULT_SETTING_NAME) {
+            prefRepo.init()
         }
+
+        prefRepo.getNotificationSetting(appName).let { setting ->
+            notificationColor.value = setting.color
+            lineThickness.value = setting.thickness
+            setting.outlinesSetting.let { outlines ->
+                leftTopCornerRadius.value = outlines.leftTopCornerRadius
+                rightTopCornerRadius.value = outlines.rightTopCornerRadius
+                leftBottomCornerRadius.value = outlines.leftBottomCornerRadius
+                rightBottomCornerRadius.value = outlines.rightBottomCornerRadius
+            }
+            setting.topNotchSetting.let { notch ->
+                topNotchSetting.value = notch
+                topNotchType.value = notch.type
+            }
+        }
+        initialized = true
+
+        updateNotificationSetting()
     }
 
     // ------ //
 
-    private val _defaultNotificationSetting = MutableLiveData<NotificationSetting>()
-    val defaultNotificationSetting : LiveData<NotificationSetting> by lazy { _defaultNotificationSetting }
+    private val _notificationSetting = MutableLiveData<NotificationSetting>()
+    val notificationSetting : LiveData<NotificationSetting> by lazy { _notificationSetting }
 
-    private fun updateDefaultNotificationSetting() {
+    /** 編集中の設定を表示用のサンプルデータに反映する */
+    private fun updateNotificationSetting() {
         if (!initialized) return
 
         val result = runCatching {
-            _defaultNotificationSetting.value = NotificationSetting(
+            _notificationSetting.value = NotificationSetting(
                 color = notificationColor.value!!,
                 thickness = lineThickness.value!!,
                 outlinesSetting = OutlinesSetting(
@@ -106,7 +123,8 @@ class PreferencesViewModel(
         }
     }
 
+    /** 編集中のデータをDBに保存する */
     fun saveSettings() = viewModelScope.launch {
-        prefRepo.updateDefaultNotificationSetting(defaultNotificationSetting.value!!)
+        prefRepo.updateNotificationSetting(targetAppName, notificationSetting.value!!)
     }
 }

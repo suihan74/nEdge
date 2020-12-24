@@ -159,7 +159,7 @@
 
         <ImageView
             android:id="@+id/notificationBar"
-            notificationSetting="@{vm.defaultNotificationSetting}"
+            notificationSetting="@{vm.notificationSetting}"
             android:background="@android:color/transparent"
             android:contentDescription="@null"
             app:layout_constraintTop_toTopOf="parent"

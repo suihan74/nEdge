@@ -3,6 +3,7 @@ package com.suihan74.notificationreporter.repositories
 import androidx.lifecycle.MutableLiveData
 import com.suihan74.notificationreporter.dataStore.PreferencesKey
 import com.suihan74.notificationreporter.database.notification.NotificationDao
+import com.suihan74.notificationreporter.database.notification.NotificationEntity
 import com.suihan74.notificationreporter.models.NotificationSetting
 import com.suihan74.utilities.dataStore.WrappedDataStore
 import kotlinx.coroutines.Dispatchers
@@ -38,7 +39,12 @@ class PreferencesRepository(
         defaultNotificationSetting.value = notificationDao.getDefaultSetting()
     }
 
-    suspend fun updateDefaultNotificationSetting(setting: NotificationSetting) = withContext(Dispatchers.Main) {
-        notificationDao.insertDefaultSetting(setting)
+    suspend fun updateNotificationSetting(appName: String, setting: NotificationSetting) {
+        notificationDao.insert(NotificationEntity(appName, setting))
+    }
+
+    /** 対象アプリ用の通知表示設定を取得する */
+    suspend fun getNotificationSetting(appName: String) : NotificationSetting {
+        return notificationDao.findByAppName(appName)?.setting ?: notificationDao.getDefaultSetting()
     }
 }
