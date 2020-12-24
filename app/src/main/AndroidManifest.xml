@@ -61,6 +61,7 @@
         <!-- 設定画面 -->
         <activity
             android:name=".scenes.preferences.PreferencesActivity"
+            android:windowSoftInputMode="adjustPan"
             android:screenOrientation="sensorPortrait"
             android:launchMode="singleTask">
         </activity>
