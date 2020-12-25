@@ -1,6 +1,7 @@
 package com.suihan74.notificationreporter.scenes.preferences
 
 import android.util.Log
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,8 +12,10 @@ import com.suihan74.notificationreporter.models.NotchType
 import com.suihan74.notificationreporter.models.NotificationSetting
 import com.suihan74.notificationreporter.models.OutlinesSetting
 import com.suihan74.notificationreporter.repositories.PreferencesRepository
+import com.suihan74.notificationreporter.scenes.preferences.dialog.TimePickerDialogFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.threeten.bp.LocalTime
 
 class PreferencesViewModel(
     private val prefRepo: PreferencesRepository
@@ -23,6 +26,12 @@ class PreferencesViewModel(
 
     /** バックライト消灯後の画面をさらに暗くする度合い */
     val lightLevel : MutableLiveData<Float> = prefRepo.lightLevel
+
+    /** 通知を行わない時間帯(開始時刻) */
+    val silentTimezoneStart = prefRepo.silentTimezoneStart
+
+    /** 通知を行わない時間帯(終了時刻) */
+    val silentTimezoneEnd = prefRepo.silentTimezoneEnd
 
     /** 通知表示の輪郭線の色 */
     val notificationColor = mutableLiveData<Int>()
@@ -142,5 +151,24 @@ class PreferencesViewModel(
     /** 編集中のデータをDBに保存する */
     fun saveSettings() = viewModelScope.launch {
         prefRepo.updateNotificationSetting(targetAppName, notificationSetting.value!!)
+    }
+
+    // ------ //
+
+    /**
+     * 通知を行わない時間帯を設定するダイアログを開く
+     */
+    fun openSilentTimezonePickerDialog(liveData: MutableLiveData<Int>, fragmentManager: FragmentManager) {
+        val localTime = liveData.value?.let {
+            LocalTime.ofSecondOfDay(it.toLong())
+        } ?: LocalTime.of(0, 0)
+
+        val dialog = TimePickerDialogFragment.createInstance(localTime.hour, localTime.minute, true)
+
+        dialog.setOnTimeSetListener { _, value ->
+            liveData.value = value.toSecondOfDay()
+        }
+
+        dialog.show(fragmentManager, null)
     }
 }

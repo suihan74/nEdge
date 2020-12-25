@@ -70,6 +70,14 @@ class PreferencesActivity : AppCompatActivity() {
             }
         }
 
+        binding.silentTimezoneStartButton.setOnClickListener {
+            viewModel.openSilentTimezonePickerDialog(viewModel.silentTimezoneStart, supportFragmentManager)
+        }
+
+        binding.silentTimezoneEndButton.setOnClickListener {
+            viewModel.openSilentTimezonePickerDialog(viewModel.silentTimezoneEnd, supportFragmentManager)
+        }
+
         binding.colorEditText.also { editText ->
             // 入力中はナビゲーションバーを表示する
             editText.setOnFocusChangeListener { _, b ->

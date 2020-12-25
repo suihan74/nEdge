@@ -5,12 +5,16 @@ import android.graphics.Color
 import android.util.Log
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.core.widget.doAfterTextChanged
 import androidx.databinding.BindingAdapter
 import androidx.databinding.InverseBindingAdapter
 import androidx.databinding.InverseBindingListener
 import com.suihan74.notificationreporter.models.NotificationSetting
 import com.suihan74.notificationreporter.scenes.lockScreen.NotificationDrawer
+import org.threeten.bp.DateTimeException
+import org.threeten.bp.LocalTime
+import org.threeten.bp.format.DateTimeFormatter
 
 object BindingAdapters {
     /**
@@ -34,6 +38,8 @@ object BindingAdapters {
             imageView.setImageDrawable(null)
         }
     }
+
+    // ------ //
 
     /**
      * `Color`データを色コード文字列に変換して表示
@@ -82,5 +88,22 @@ object BindingAdapters {
                 colorCodeAttrChanged?.onChange()
             }
         }
+    }
+
+    // ------ //
+
+    /** Int値を時刻として表示する */
+    @JvmStatic
+    @BindingAdapter("localTimeInt")
+    fun setLocalTimeInt(textView: TextView, value: Int?) {
+        textView.text =
+            if (value == null) ""
+            else try {
+                LocalTime.ofSecondOfDay(value.toLong()).format(DateTimeFormatter.ofPattern("HH:mm"))
+            }
+            catch (e: DateTimeException) {
+                Log.d("localTimeInt", Log.getStackTraceString(e))
+                ""
+            }
     }
 }

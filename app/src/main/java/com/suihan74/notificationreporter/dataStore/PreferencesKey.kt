@@ -22,10 +22,10 @@ class PreferencesKey<T> private constructor(
         val LIGHT_OFF_INTERVAL = makeKey("LIGHT_OFF_INTERVAL") { 5_000L }
 
         /** 通知を表示しない時間帯(開始時刻) */
-        val DISABLE_TIME_START = makeKey("DISABLE_TIME_START") { LocalTime.of(0, 0).toSecondOfDay() }
+        val SILENT_TIMEZONE_START = makeKey("SILENT_TIMEZONE_START") { LocalTime.of(0, 0).toSecondOfDay() }
 
         /** 通知を表示しない時間帯(終了時刻) */
-        val DISABLE_TIME_END = makeKey("DISABLE_TIME_END") { LocalTime.of(7, 0).toSecondOfDay() }
+        val SILENT_TIMEZONE_END = makeKey("SILENT_TIMEZONE_END") { LocalTime.of(7, 0).toSecondOfDay() }
 
         // ------ //
 

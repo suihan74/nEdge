@@ -1,8 +1,9 @@
 package com.suihan74.notificationreporter.repositories
 
 import android.service.notification.StatusBarNotification
-import androidx.annotation.MainThread
 import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /**
  * 通知を扱うリポジトリ
@@ -18,16 +19,15 @@ class NotificationRepository {
     // ------ //
 
     /** 新しく発生した通知を記録する */
-    @MainThread
-    fun pushNotification(sbn: StatusBarNotification?) {
-        if (sbn?.notification == null) return
-        val oldList = statusBarNotifications.value.orEmpty()
-        statusBarNotifications.value = oldList.plus(sbn)
+    suspend fun pushNotification(sbn: StatusBarNotification?) = withContext(Dispatchers.Default) {
+        if (sbn?.notification != null) {
+            val oldList = statusBarNotifications.value.orEmpty()
+            statusBarNotifications.postValue(oldList.plus(sbn))
+        }
     }
 
     /** 記録した通知をクリアする */
-    @MainThread
-    fun clearNotifications() {
-        statusBarNotifications.value = emptyList()
+    suspend fun clearNotifications() = withContext(Dispatchers.Default) {
+        statusBarNotifications.postValue(emptyList())
     }
 }

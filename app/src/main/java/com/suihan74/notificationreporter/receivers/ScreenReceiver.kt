@@ -6,6 +6,8 @@ import android.content.Intent
 import android.util.Log
 import androidx.annotation.MainThread
 import com.suihan74.notificationreporter.Application
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 /**
  * 画面ON/OFFを検知するレシーバ
@@ -23,7 +25,9 @@ class ScreenReceiver : BroadcastReceiver() {
 
                 // 画面ON中にスタックに追加された通知の対応
                 // TODO: 現段階では暫定的に「無視する」
-                app.notificationRepository.clearNotifications()
+                GlobalScope.launch {
+                    app.notificationRepository.clearNotifications()
+                }
 
                 Log.i("ScreenReceiver", "detected screen off")
             }

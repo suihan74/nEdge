@@ -15,6 +15,8 @@ import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.R
 import com.suihan74.notificationreporter.databinding.ActivityLockScreenBinding
 import com.suihan74.utilities.lazyProvideViewModel
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class LockScreenActivity : AppCompatActivity() {
     private val viewModel by lazyProvideViewModel {
@@ -134,6 +136,8 @@ class LockScreenActivity : AppCompatActivity() {
 
     override fun finish() {
         super.finish()
-        Application.instance.notificationRepository.clearNotifications()
+        GlobalScope.launch {
+            Application.instance.notificationRepository.clearNotifications()
+        }
     }
 }
