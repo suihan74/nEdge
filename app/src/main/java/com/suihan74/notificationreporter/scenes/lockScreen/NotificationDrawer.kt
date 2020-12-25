@@ -5,7 +5,6 @@ import android.os.Build
 import android.view.Window
 import android.widget.ImageView
 import androidx.annotation.RequiresApi
-import androidx.core.graphics.toRect
 import com.suihan74.notificationreporter.models.*
 
 /**
@@ -43,17 +42,21 @@ class NotificationDrawer(
         imageView: ImageView,
         notificationSetting: NotificationSetting
     ) {
+        val thickness = notificationSetting.thickness
+
         val bitmap = Bitmap.createBitmap(screenWidth, screenHeight, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
 
         val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             style = Paint.Style.STROKE
-            strokeWidth = notificationSetting.thickness
+            strokeWidth = thickness
             color = notificationSetting.color
         }
 
+        val path = Path()
+
         // スクリーンの輪郭線
-        drawOutLines(canvas, paint, notificationSetting)
+        drawOutLines(path, thickness, notificationSetting)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             // スクリーン輪郭線とノッチの縁を描画する
@@ -66,13 +69,13 @@ class NotificationDrawer(
                     NotchType.NONE -> {}
 
                     NotchType.RECTANGLE ->
-                        drawTopRectangleNotch(canvas, paint, rect, notchSetting as RectangleNotchSetting)
+                        drawTopRectangleNotch(path, rect, thickness, notchSetting as RectangleNotchSetting)
 
                     NotchType.WATER_DROP ->
-                        drawTopWaterDropNotch(canvas, paint, rect, notchSetting as WaterDropNotchSetting)
+                        drawTopWaterDropNotch(path, rect, thickness, notchSetting as WaterDropNotchSetting)
 
                     NotchType.PUNCH_HOLE ->
-                        drawPunchHoleNotch(canvas, paint, notchSetting as PunchHoleNotchSetting)
+                        drawPunchHoleNotch(path, notchSetting as PunchHoleNotchSetting)
                 }
             }
 
@@ -85,17 +88,18 @@ class NotificationDrawer(
                     NotchType.NONE -> {}
 
                     NotchType.RECTANGLE ->
-                        drawBottomRectangleNotch(canvas, paint, rect, notchSetting as RectangleNotchSetting)
+                        drawBottomRectangleNotch(path, rect, thickness, notchSetting as RectangleNotchSetting)
 
                     NotchType.WATER_DROP ->
-                        drawBottomWaterDropNotch(canvas, paint, rect, notchSetting as WaterDropNotchSetting)
+                        drawBottomWaterDropNotch(path, rect, thickness, notchSetting as WaterDropNotchSetting)
 
                     NotchType.PUNCH_HOLE ->
-                        drawPunchHoleNotch(canvas, paint, notchSetting as PunchHoleNotchSetting)
+                        drawPunchHoleNotch(path, notchSetting as PunchHoleNotchSetting)
                 }
             }
         }
 
+        canvas.drawPath(path, paint)
         imageView.setImageBitmap(bitmap)
     }
 
@@ -105,26 +109,26 @@ class NotificationDrawer(
      * 通知バーの外周のラインを描画する
      */
     private fun drawOutLines(
-        canvas: Canvas,
-        paint: Paint,
+        path: Path,
+        thickness: Float,
         notificationSetting: NotificationSetting
     ) {
         when (notificationSetting.outlinesSetting.type) {
             OutlinesType.NONE -> {}
 
-            OutlinesType.FULL -> drawFullOutLines(canvas, paint, notificationSetting)
+            OutlinesType.FULL -> drawFullOutLines(path, thickness, notificationSetting)
 
-            OutlinesType.TOP -> drawOutLineOnlyTop(canvas, paint, notificationSetting)
+            OutlinesType.TOP -> drawOutLineOnlyTop(path, thickness)
 
-            OutlinesType.BOTTOM -> drawOutLineOnlyBottom(canvas, paint, notificationSetting)
+            OutlinesType.BOTTOM -> drawOutLineOnlyBottom(path, thickness)
 
-            OutlinesType.LEFT -> drawOutLineOnlyLeft(canvas, paint, notificationSetting)
+            OutlinesType.LEFT -> drawOutLineOnlyLeft(path, thickness)
 
-            OutlinesType.RIGHT -> drawOutLineOnlyRight(canvas, paint, notificationSetting)
+            OutlinesType.RIGHT -> drawOutLineOnlyRight(path, thickness)
 
-            OutlinesType.HORIZONTAL -> drawOutLinesHorizontal(canvas, paint, notificationSetting)
+            OutlinesType.HORIZONTAL -> drawOutLinesHorizontal(path, thickness)
 
-            OutlinesType.VERTICAL -> drawOutLinesVertical(canvas, paint, notificationSetting)
+            OutlinesType.VERTICAL -> drawOutLinesVertical(path, thickness)
         }
     }
 
@@ -132,105 +136,101 @@ class NotificationDrawer(
      * 外周を描画
      */
     private fun drawFullOutLines(
-        canvas: Canvas,
-        paint: Paint,
+        path: Path,
+        thickness: Float,
         notificationSetting: NotificationSetting
     ) {
-        val path = Path().apply {
-            val offset = paint.strokeWidth / 2
+        val offset = thickness / 2
 
-            val cornerRadii = notificationSetting.outlinesSetting.run {
-                floatArrayOf(
-                    leftTopCornerRadius, leftTopCornerRadius,
-                    rightTopCornerRadius, rightTopCornerRadius,
-                    rightBottomCornerRadius, rightBottomCornerRadius,
-                    leftBottomCornerRadius, leftBottomCornerRadius,
-                )
-            }
-
-            addRoundRect(
-                offset, // left
-                offset, // top
-                screenWidth - offset, // right
-                screenHeight - offset, // bottom
-                cornerRadii,
-                Path.Direction.CW
+        val cornerRadii = notificationSetting.outlinesSetting.run {
+            floatArrayOf(
+                leftTopCornerRadius, leftTopCornerRadius,
+                rightTopCornerRadius, rightTopCornerRadius,
+                rightBottomCornerRadius, rightBottomCornerRadius,
+                leftBottomCornerRadius, leftBottomCornerRadius,
             )
         }
 
-        canvas.drawPath(path, paint)
+        path.addRoundRect(
+            offset, // left
+            offset, // top
+            screenWidth - offset, // right
+            screenHeight - offset, // bottom
+            cornerRadii,
+            Path.Direction.CW
+        )
     }
 
     /**
      * 上辺のみ描画
      */
     private fun drawOutLineOnlyTop(
-        canvas: Canvas,
-        paint: Paint,
-        notificationSetting: NotificationSetting
+        path: Path,
+        thickness: Float
     ) {
-        val offset = paint.strokeWidth / 2
-        canvas.drawLine(0f, offset, screenWidth.toFloat(), offset, paint)
+        val offset = thickness / 2
+        path.moveTo(offset, offset)
+        path.lineTo(screenWidth - offset, offset)
     }
 
     /**
      * 下辺のみ描画
      */
     private fun drawOutLineOnlyBottom(
-        canvas: Canvas,
-        paint: Paint,
-        notificationSetting: NotificationSetting
+        path: Path,
+        thickness: Float
     ) {
-        val offset = paint.strokeWidth / 2
-        canvas.drawLine(0f, screenHeight - offset, screenWidth.toFloat(), screenHeight - offset, paint)
+        val offset = thickness / 2
+        val y = screenHeight - offset
+        path.moveTo(offset, y)
+        path.lineTo(screenWidth - offset, y)
     }
 
     /**
      * 上下辺のみ描画
      */
     private fun drawOutLinesHorizontal(
-        canvas: Canvas,
-        paint: Paint,
-        notificationSetting: NotificationSetting
+        path: Path,
+        thickness: Float
     ) {
-        drawOutLineOnlyTop(canvas, paint, notificationSetting)
-        drawOutLineOnlyBottom(canvas, paint, notificationSetting)
+        drawOutLineOnlyTop(path, thickness)
+        drawOutLineOnlyBottom(path, thickness)
     }
 
     /**
      * 左辺のみ描画
      */
     private fun drawOutLineOnlyLeft(
-        canvas: Canvas,
-        paint: Paint,
-        notificationSetting: NotificationSetting
+        path: Path,
+        thickness: Float
     ) {
-        val offset = paint.strokeWidth / 2
-        canvas.drawLine(offset, 0f, offset, screenHeight.toFloat(), paint)
+        val offset = thickness / 2
+        path.moveTo(offset, offset)
+        path.lineTo(offset, screenHeight.toFloat() - offset)
     }
 
     /**
      * 右辺のみ描画
      */
     private fun drawOutLineOnlyRight(
-        canvas: Canvas,
-        paint: Paint,
-        notificationSetting: NotificationSetting
+        path: Path,
+        thickness: Float
     ) {
-        val offset = paint.strokeWidth / 2
-        canvas.drawLine(screenWidth - offset, 0f, screenWidth - offset, screenHeight.toFloat(), paint)
+        val offset = thickness / 2
+        val x = screenWidth - offset
+        path.moveTo(x, offset)
+        path.lineTo(x, screenHeight - offset)
     }
 
     /**
      * 左右辺のみ描画
      */
     private fun drawOutLinesVertical(
-        canvas: Canvas,
-        paint: Paint,
-        notificationSetting: NotificationSetting
+        path: Path,
+        thickness: Float
     ) {
-        drawOutLineOnlyLeft(canvas, paint, notificationSetting)
-        drawOutLineOnlyRight(canvas, paint, notificationSetting)
+        drawOutLineOnlyLeft(path, thickness)
+        drawOutLineOnlyRight(path, thickness)
     }
 
     // ------ //
@@ -248,16 +248,35 @@ class NotificationDrawer(
     }
 
     /**
+     * 既に描画した内容を消去する
+     *
+     * ノッチ部分の輪郭線削除を行う用途
+     */
+    private fun Path.eraseRect(rect: RectF) {
+        eraseRect(rect.left, rect.top, rect.right, rect.bottom)
+    }
+
+    private fun Path.eraseRect(left: Float, top: Float, right: Float, bottom: Float) {
+        val p = Path().apply {
+            addRect(RectF(0f, 0f, left, screenHeight.toFloat()), Path.Direction.CW)
+            addRect(RectF(left, 0f, right, top), Path.Direction.CW)
+            addRect(RectF(right, 0f, screenWidth.toFloat(), screenHeight.toFloat()), Path.Direction.CW)
+            addRect(RectF(left, bottom, right, screenHeight.toFloat()), Path.Direction.CW)
+        }
+        this.op(p, Path.Op.REVERSE_DIFFERENCE)
+    }
+
+    /**
      * 通知バーの矩形ノッチ縁を描画する(画面上部)
      */
     @RequiresApi(Build.VERSION_CODES.P)
     private fun drawTopRectangleNotch(
-        canvas: Canvas,
-        paint: Paint,
+        path: Path,
         rect: Rect,
+        thickness: Float,
         notchSetting: RectangleNotchSetting
     ) {
-        val offset = paint.strokeWidth / 2
+        val offset = thickness / 2
         val widthAdjustmentPx = rect.width() * .5f * notchSetting.widthAdjustment
         val heightAdjustmentPx = rect.height() * notchSetting.heightAdjustment
 
@@ -266,7 +285,10 @@ class NotificationDrawer(
         val top = rect.top + offset
         val bottom = rect.bottom + offset + heightAdjustmentPx
 
-        val path = Path().apply {
+        // ノッチ部分に被るスクリーン輪郭線を消す
+        path.eraseRect(left + offset - NOTCH_SURPLUS, top - offset, right - offset + NOTCH_SURPLUS, bottom)
+
+        path.run {
             notchSetting.leftTopRadius.let { r ->
                 // top left
                 moveTo(left - NOTCH_SURPLUS, top)
@@ -295,13 +317,6 @@ class NotificationDrawer(
                 lineTo(right + NOTCH_SURPLUS, top)
             }
         }
-
-        // ノッチ部分に被るスクリーン輪郭線を消す
-        RectF(left + offset - NOTCH_SURPLUS, top - offset, right - offset + NOTCH_SURPLUS, bottom).toRect().let {
-            canvas.eraseRect(it)
-        }
-
-        canvas.drawPath(path, paint)
     }
 
     /**
@@ -309,12 +324,12 @@ class NotificationDrawer(
      */
     @RequiresApi(Build.VERSION_CODES.P)
     private fun drawBottomRectangleNotch(
-        canvas: Canvas,
-        paint: Paint,
+        path: Path,
         rect: Rect,
+        thickness: Float,
         notchSetting: RectangleNotchSetting
     ) {
-        val offset = paint.strokeWidth / 2
+        val offset = thickness / 2
         val widthAdjustmentPx = rect.width() * .5f * notchSetting.widthAdjustment
         val heightAdjustmentPx = rect.height() * notchSetting.heightAdjustment
 
@@ -323,7 +338,10 @@ class NotificationDrawer(
         val top = rect.top - offset - heightAdjustmentPx
         val bottom = rect.bottom - offset
 
-        val path = Path().apply {
+        // ノッチ部分に被るスクリーン輪郭線を消す
+        path.eraseRect(left + offset - NOTCH_SURPLUS, top - offset, right - offset + NOTCH_SURPLUS, bottom)
+
+        path.apply {
             notchSetting.leftTopRadius.let { r ->
                 // bottom left
                 moveTo(left - NOTCH_SURPLUS, bottom)
@@ -352,13 +370,6 @@ class NotificationDrawer(
                 lineTo(right + NOTCH_SURPLUS, bottom)
             }
         }
-
-        // ノッチ部分に被るスクリーン輪郭線を消す
-        RectF(left + offset - NOTCH_SURPLUS, top, right - offset + NOTCH_SURPLUS, bottom + offset).toRect().let {
-            canvas.eraseRect(it)
-        }
-
-        canvas.drawPath(path, paint)
     }
 
     /**
@@ -366,12 +377,12 @@ class NotificationDrawer(
      */
     @RequiresApi(Build.VERSION_CODES.P)
     private fun drawTopWaterDropNotch(
-        canvas: Canvas,
-        paint: Paint,
+        path: Path,
         rect: Rect,
+        thickness: Float,
         notchSetting: WaterDropNotchSetting
     ) {
-        val offset = paint.strokeWidth / 2
+        val offset = thickness / 2
         val widthAdjustmentPx = rect.width() * .5f * notchSetting.widthAdjustment
         val heightAdjustmentPx = rect.height() * notchSetting.heightAdjustment
 
@@ -384,7 +395,15 @@ class NotificationDrawer(
         val top = rect.top + offset
         val bottom = rect.bottom + offset + heightAdjustmentPx
 
-        Path().apply {
+        // ノッチ部分に被るスクリーン輪郭線を消す
+        path.eraseRect(
+            left - topRadius,
+            top - offset,
+            right + topRadius,
+            bottom
+        )
+
+        path.apply {
             topRadius.let { r ->
                 // top left
                 moveTo(left - r - NOTCH_SURPLUS, top)
@@ -405,18 +424,6 @@ class NotificationDrawer(
                 arcTo(right, top, right + r * 2, top + r * 2, 270f - degree, degree, false)
                 lineTo(right + r + NOTCH_SURPLUS, top)
             }
-
-            // ノッチ部分に被るスクリーン輪郭線を消す
-            RectF(
-                left - topRadius,
-                top - offset,
-                right + topRadius,
-                bottom
-            ).toRect().let {
-                canvas.eraseRect(it)
-            }
-
-            canvas.drawPath(this, paint)
         }
     }
 
@@ -425,12 +432,12 @@ class NotificationDrawer(
      */
     @RequiresApi(Build.VERSION_CODES.P)
     private fun drawBottomWaterDropNotch(
-        canvas: Canvas,
-        paint: Paint,
+        path: Path,
         rect: Rect,
+        thickness: Float,
         notchSetting: WaterDropNotchSetting
     ) {
-        val offset = paint.strokeWidth / 2
+        val offset = thickness / 2
         val widthAdjustmentPx = rect.width() * .5f * notchSetting.widthAdjustment
         val heightAdjustmentPx = rect.height() * notchSetting.heightAdjustment
 
@@ -439,7 +446,10 @@ class NotificationDrawer(
         val top = rect.top - offset - heightAdjustmentPx
         val bottom = rect.bottom - offset
 
-        val path = Path().apply {
+        // ノッチ部分に被るスクリーン輪郭線を消す
+        path.eraseRect(left - NOTCH_SURPLUS, top, right + NOTCH_SURPLUS, bottom + offset)
+
+        path.apply {
             notchSetting.topRadius.let { r ->
                 // bottom left
                 moveTo(left - NOTCH_SURPLUS, bottom)
@@ -461,13 +471,6 @@ class NotificationDrawer(
                 lineTo(right + NOTCH_SURPLUS, bottom)
             }
         }
-
-        // ノッチ部分に被るスクリーン輪郭線を消す
-        RectF(left - NOTCH_SURPLUS, top, right + NOTCH_SURPLUS, bottom + offset).toRect().let {
-            canvas.eraseRect(it)
-        }
-
-        canvas.drawPath(path, paint)
     }
 
     /**
@@ -475,10 +478,9 @@ class NotificationDrawer(
      */
     @RequiresApi(Build.VERSION_CODES.P)
     private fun drawPunchHoleNotch(
-        canvas: Canvas,
-        paint: Paint,
+        path: Path,
         notchSetting: PunchHoleNotchSetting
     ) {
-        canvas.drawCircle(notchSetting.cx, notchSetting.cy, notchSetting.radius, paint)
+        path.addCircle(notchSetting.cx, notchSetting.cy, notchSetting.radius, Path.Direction.CW)
     }
 }
