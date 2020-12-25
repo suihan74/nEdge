@@ -6,6 +6,7 @@ import android.view.Window
 import android.widget.ImageView
 import androidx.annotation.RequiresApi
 import com.suihan74.notificationreporter.models.*
+import com.suihan74.utilities.extensions.onNot
 
 /**
  * 通知表示を生成する
@@ -51,6 +52,9 @@ class NotificationDrawer(
             style = Paint.Style.STROKE
             strokeWidth = thickness
             color = notificationSetting.color
+            notificationSetting.blurSize.onNot(0f) {
+                maskFilter = BlurMaskFilter(it, BlurMaskFilter.Blur.SOLID)
+            }
         }
 
         val path = Path()

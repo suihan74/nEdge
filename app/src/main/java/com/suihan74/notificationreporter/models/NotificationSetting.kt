@@ -1,7 +1,6 @@
 package com.suihan74.notificationreporter.models
 
 import android.graphics.Color
-import com.suihan74.utilities.extensions.dp
 import kotlinx.serialization.Serializable
 
 /**
@@ -13,7 +12,10 @@ data class NotificationSetting (
     val color: Int = Color.WHITE,
 
     /** 線の太さ */
-    val thickness: Float = 3.dp,
+    val thickness: Float = 10f,
+
+    /** ブラー効果の太さ(0で無効化) */
+    val blurSize: Float = 0f,
 
     /**
      * 線の効果

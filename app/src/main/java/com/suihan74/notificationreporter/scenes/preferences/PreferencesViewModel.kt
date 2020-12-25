@@ -30,6 +30,9 @@ class PreferencesViewModel(
     /** 輪郭線の太さ */
     val lineThickness = mutableLiveData<Float>()
 
+    /** ブラーの強さ */
+    val blurSize = mutableLiveData<Float>()
+
     /** 輪郭線左上角の角丸半径 */
     val leftTopCornerRadius = mutableLiveData<Float>()
 
@@ -94,6 +97,7 @@ class PreferencesViewModel(
         prefRepo.getNotificationSetting(appName).let { setting ->
             notificationColor.value = setting.color
             lineThickness.value = setting.thickness
+            blurSize.value = setting.blurSize
             setting.outlinesSetting.let { outlines ->
                 leftTopCornerRadius.value = outlines.leftTopCornerRadius
                 rightTopCornerRadius.value = outlines.rightTopCornerRadius
@@ -123,6 +127,7 @@ class PreferencesViewModel(
             _notificationSetting.value = NotificationSetting(
                 color = notificationColor.value!!,
                 thickness = lineThickness.value!!,
+                blurSize = blurSize.value!!,
                 outlinesSetting = OutlinesSetting(
                     leftTopCornerRadius = leftTopCornerRadius.value!!,
                     rightTopCornerRadius = rightTopCornerRadius.value!!,

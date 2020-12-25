@@ -10,6 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/mainLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -72,6 +73,35 @@
                     android:layout_height="wrap_content"/>
 
                 <TextView
+                    android:text="@string/prefs_blur_size_desc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <com.google.android.material.slider.Slider
+                    android:valueFrom="0.0"
+                    android:valueTo="50.0"
+                    android:stepSize="0.1"
+                    android:value="@={vm.blurSize}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:text="@string/prefs_default_notification_color_desc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <EditText
+                    android:id="@+id/colorEditText"
+                    colorCode="@={vm.notificationColor}"
+                    android:hint="color | e.g.) #ff0000 (red)"
+                    android:inputType="text"
+                    android:selectAllOnFocus="true"
+                    android:maxLength="6"
+                    android:importantForAutofill="no"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
                     android:text="@{@string/prefs_corner_radius_desc(`左上`)}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
@@ -125,20 +155,6 @@
                     android:value="@={vm.rightBottomCornerRadius}"
                     editing="@={vm.editingRightBottomCornerRadius}"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-
-                <TextView
-                    android:text="@string/prefs_default_notification_color_desc"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-                <EditText
-                    colorCode="@={vm.notificationColor}"
-                    android:hint="color | e.g.) #ff0000 (red)"
-                    android:inputType="text"
-                    android:maxLength="6"
-                    android:importantForAutofill="no"
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
                 <TextView
