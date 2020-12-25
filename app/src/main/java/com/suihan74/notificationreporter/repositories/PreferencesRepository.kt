@@ -1,13 +1,10 @@
 package com.suihan74.notificationreporter.repositories
 
-import androidx.lifecycle.MutableLiveData
 import com.suihan74.notificationreporter.dataStore.PreferencesKey
 import com.suihan74.notificationreporter.database.notification.NotificationDao
 import com.suihan74.notificationreporter.database.notification.NotificationEntity
 import com.suihan74.notificationreporter.models.NotificationSetting
 import com.suihan74.utilities.dataStore.WrappedDataStore
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 /**
  * アプリ設定を扱うリポジトリ
@@ -18,6 +15,12 @@ class PreferencesRepository(
     dataStore: WrappedDataStore<PreferencesKey<*>>,
     private val notificationDao: NotificationDao
 ) {
+    companion object {
+        private const val DEFAULT_SETTING_NAME = NotificationEntity.DEFAULT_SETTING_NAME
+    }
+
+    // ------ //
+
     /** 画面消灯までの待機時間(ミリ秒) */
     val lightOffInterval = dataStore.getLiveData(PreferencesKey.LIGHT_OFF_INTERVAL)
 
@@ -28,23 +31,27 @@ class PreferencesRepository(
      */
     val lightLevel = dataStore.getLiveData(PreferencesKey.LIGHT_LEVEL)
 
-    /**
-     * デフォルトの通知バー描画設定
-     */
-    val defaultNotificationSetting = MutableLiveData<NotificationSetting>()
+    /** 通知しない時間帯(開始時刻) */
+    val disableTimeStart = dataStore.getLiveData<Int>(PreferencesKey.DISABLE_TIME_START)
+
+    /** 通知しない時間帯(終了時刻) */
+    val disableTimeEnd = dataStore.getLiveData<Int>(PreferencesKey.DISABLE_TIME_END)
 
     // ------ //
 
-    suspend fun init() = withContext(Dispatchers.Main) {
-        defaultNotificationSetting.value = notificationDao.getDefaultSetting()
-    }
-
+    /**
+     * 設定をDBに保存する
+     */
     suspend fun updateNotificationSetting(appName: String, setting: NotificationSetting) {
         notificationDao.insert(NotificationEntity(appName, setting))
     }
 
-    /** 対象アプリ用の通知表示設定を取得する */
-    suspend fun getNotificationSetting(appName: String) : NotificationSetting {
+    /**
+     * 対象アプリ用の通知表示設定を取得する
+     *
+     * @return `appName`に対応する設定か、それが無ければデフォルト設定
+     */
+    suspend fun getNotificationSetting(appName: String = DEFAULT_SETTING_NAME) : NotificationSetting {
         return notificationDao.findByAppName(appName)?.setting ?: notificationDao.getDefaultSetting()
     }
 }

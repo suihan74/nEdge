@@ -87,12 +87,8 @@ class PreferencesViewModel(
     private var targetAppName : String = NotificationEntity.DEFAULT_SETTING_NAME
 
     /** 現在の画面で編集中のアプリ設定をセットする */
-    fun setCurrentTarget(appName: String) = viewModelScope.launch(Dispatchers.Main) {
+    private fun setCurrentTarget(appName: String) = viewModelScope.launch(Dispatchers.Main) {
         initialized = false
-
-        if (appName == NotificationEntity.DEFAULT_SETTING_NAME) {
-            prefRepo.init()
-        }
 
         prefRepo.getNotificationSetting(appName).let { setting ->
             notificationColor.value = setting.color

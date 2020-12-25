@@ -4,6 +4,7 @@ import android.service.notification.StatusBarNotification
 import android.view.MotionEvent
 import android.view.View
 import androidx.lifecycle.*
+import com.suihan74.notificationreporter.models.NotificationSetting
 import com.suihan74.notificationreporter.repositories.BatteryRepository
 import com.suihan74.notificationreporter.repositories.NotificationRepository
 import com.suihan74.notificationreporter.repositories.PreferencesRepository
@@ -22,8 +23,9 @@ class LockScreenViewModel(
     val currentTime : LiveData<LocalDateTime> by lazy { _currentTime }
     private val _currentTime = MutableLiveData<LocalDateTime>()
 
-    /** デフォルトの通知バーの描画設定 */
-    val defaultNotificationSetting = prefRepo.defaultNotificationSetting
+    /** 通知バーの描画設定 */
+    val notificationSetting by lazy { _notificationSetting }
+    private val _notificationSetting = MutableLiveData<NotificationSetting>()
 
     /** バックライト最低レベルまで暗くするか */
     val lightOff : LiveData<Boolean> by lazy { _lightOff }
@@ -59,12 +61,14 @@ class LockScreenViewModel(
 
     fun init(lifecycleOwner: LifecycleOwner) {
         statusBarNotifications.observe(lifecycleOwner, {
-            currentNotice.value = it.lastOrNull()
+            val item = it.lastOrNull() ?: return@observe
+            viewModelScope.launch(Dispatchers.Main) {
+                currentNotice.value = item
+                _notificationSetting.value = prefRepo.getNotificationSetting(item.packageName)
+            }
         })
 
         viewModelScope.launch(Dispatchers.Main) {
-            prefRepo.init()
-
             while (true) {
                 val now = LocalDateTime.now()
                 _currentTime.value = now

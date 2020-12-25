@@ -93,7 +93,7 @@
 
         <TextView
             android:text="@{vm.currentNotice.packageName}"
-            android:textColor="@{vm.defaultNotificationSetting.color}"
+            android:textColor="@{vm.notificationSetting.color}"
             android:layout_marginBottom="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
