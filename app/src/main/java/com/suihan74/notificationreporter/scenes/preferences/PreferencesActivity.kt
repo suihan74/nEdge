@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -23,6 +24,7 @@ import com.suihan74.notificationreporter.models.NotchType
 import com.suihan74.notificationreporter.scenes.lockScreen.LockScreenActivity
 import com.suihan74.notificationreporter.scenes.preferences.notch.RectangleNotchSettingFragment
 import com.suihan74.notificationreporter.scenes.preferences.notch.WaterDropNotchSettingFragment
+import com.suihan74.utilities.extensions.hideSoftInputMethod
 import com.suihan74.utilities.fragment.AlertDialogFragment
 import com.suihan74.utilities.lazyProvideViewModel
 import kotlinx.coroutines.Dispatchers
@@ -47,21 +49,7 @@ class PreferencesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setTheme(R.style.PreferencesActivity)
 
-        // 全画面表示する
-        window.decorView.let { decorView ->
-            val flags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-                    View.SYSTEM_UI_FLAG_FULLSCREEN or
-                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
-                    View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
-                    View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
-                    View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-
-            decorView.systemUiVisibility = flags
-
-            decorView.setOnSystemUiVisibilityChangeListener {
-                decorView.systemUiVisibility = flags
-            }
-        }
+        hideSystemUI()
 
         binding = DataBindingUtil.setContentView<ActivityPreferencesBinding>(
             this,
@@ -82,7 +70,30 @@ class PreferencesActivity : AppCompatActivity() {
             }
         }
 
+        binding.colorEditText.also { editText ->
+            // 入力中はナビゲーションバーを表示する
+            editText.setOnFocusChangeListener { _, b ->
+                if (b) {
+                    window.decorView.systemUiVisibility =
+                        window.decorView.systemUiVisibility xor View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                }
+                else {
+                    hideSoftInputMethod(binding.mainLayout)
+                    hideSystemUI()
+                }
+            }
+
+            // 入力完了時にアンフォーカスする
+            editText.setOnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    editText.clearFocus()
+                }
+                false
+            }
+        }
+
         binding.notchTypeSelectionButton.setOnClickListener {
+            binding.colorEditText.clearFocus()
             val dialog = AlertDialogFragment.Builder()
                 .setTitle(R.string.prefs_notch_type_selection_desc)
                 .setItems(NotchType.values().map { it.name }) { _, which ->
@@ -139,6 +150,28 @@ class PreferencesActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         viewModel.saveSettings()
+    }
+
+    /** ダイアログなどから復帰時にImmersiveモードを再適用する */
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        hideSystemUI()
+    }
+
+    // ------ //
+
+    private fun hideSystemUI() {
+        // 全画面表示する
+        window.decorView.let { decorView ->
+            val flags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+                    View.SYSTEM_UI_FLAG_FULLSCREEN or
+                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
+                    View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
+                    View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
+                    View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+
+            decorView.systemUiVisibility = flags
+        }
     }
 
     // ------ //
