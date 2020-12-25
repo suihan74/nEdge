@@ -10,7 +10,7 @@ import org.threeten.bp.LocalTime
 
 /** アプリ設定の項目 */
 @DataStoreKey("settings", version = 1)
-class PreferencesKey<T>(
+class PreferencesKey<T> private constructor(
     key: Preferences.Key<T>,
     default: ()->T,
 ) : WrappedDataStore.Key<T>(key, default, PreferencesKey::class) {
