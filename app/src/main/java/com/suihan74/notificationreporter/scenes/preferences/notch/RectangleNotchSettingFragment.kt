@@ -5,20 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.databinding.FragmentRectangleNotchSettingBinding
 import com.suihan74.notificationreporter.scenes.preferences.PreferencesActivity
 import com.suihan74.notificationreporter.scenes.preferences.PreferencesViewModel
-import com.suihan74.utilities.fragment.withArguments
 import com.suihan74.utilities.lazyProvideViewModel
 
 class RectangleNotchSettingFragment : Fragment() {
     companion object {
-        fun createInstance(settingKey: String) = RectangleNotchSettingFragment().withArguments {
-            putString(ARG_SETTING_KEY, settingKey)
-        }
-
-        private const val ARG_SETTING_KEY = "ARG_SETTING_KEY"
+        fun createInstance() = RectangleNotchSettingFragment()
     }
 
     // ------ //
@@ -32,13 +26,7 @@ class RectangleNotchSettingFragment : Fragment() {
     // ------ //
 
     private val viewModel by lazyProvideViewModel {
-        val settingKey = requireArguments().getString(ARG_SETTING_KEY)!!
-        val app = Application.instance
-        RectangleNotchSettingViewModel(
-            preferencesViewModel,
-            app.preferencesRepository,
-            settingKey
-        )
+        RectangleNotchSettingViewModel(preferencesViewModel)
     }
 
     // ------ //

@@ -4,14 +4,11 @@ import androidx.annotation.MainThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.suihan74.notificationreporter.models.WaterDropNotchSetting
-import com.suihan74.notificationreporter.repositories.PreferencesRepository
 import com.suihan74.notificationreporter.scenes.preferences.PreferencesViewModel
 import com.suihan74.utilities.extensions.alsoAs
 
 class WaterDropNotchSettingViewModel(
     preferencesViewModel: PreferencesViewModel,
-    prefRepo: PreferencesRepository,
-    private val settingKey : String
 ) : ViewModel() {
     val setting = preferencesViewModel.topNotchSetting
 

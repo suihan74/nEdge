@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.R
-import com.suihan74.notificationreporter.database.notification.NotificationEntity
 import com.suihan74.notificationreporter.databinding.FragmentGeneralPrefsBinding
 import com.suihan74.notificationreporter.models.NotchSetting
 import com.suihan74.notificationreporter.models.NotchType
@@ -114,10 +113,10 @@ class GeneralPrefsFragment : Fragment() {
         viewModel.topNotchType.observe(viewLifecycleOwner, {
             val fragment = when (it) {
                 NotchType.RECTANGLE ->
-                    RectangleNotchSettingFragment.createInstance(NotificationEntity.DEFAULT_SETTING_NAME)
+                    RectangleNotchSettingFragment.createInstance()
 
                 NotchType.WATER_DROP ->
-                    WaterDropNotchSettingFragment.createInstance(NotificationEntity.DEFAULT_SETTING_NAME)
+                    WaterDropNotchSettingFragment.createInstance()
 
                 else -> Fragment()
             }
