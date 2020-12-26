@@ -19,11 +19,13 @@ import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.R
 import com.suihan74.notificationreporter.database.notification.NotificationEntity
 import com.suihan74.notificationreporter.databinding.ActivityPreferencesBinding
+import com.suihan74.notificationreporter.databinding.ListItemPreferencesMenuBinding
 import com.suihan74.notificationreporter.models.NotchSetting
 import com.suihan74.notificationreporter.models.NotchType
 import com.suihan74.notificationreporter.scenes.lockScreen.LockScreenActivity
 import com.suihan74.notificationreporter.scenes.preferences.notch.RectangleNotchSettingFragment
 import com.suihan74.notificationreporter.scenes.preferences.notch.WaterDropNotchSettingFragment
+import com.suihan74.utilities.BindingListAdapter
 import com.suihan74.utilities.extensions.hideSoftInputMethod
 import com.suihan74.utilities.fragment.AlertDialogFragment
 import com.suihan74.utilities.lazyProvideViewModel
@@ -56,6 +58,18 @@ class PreferencesActivity : AppCompatActivity() {
             R.layout.activity_preferences
         ).also {
             it.lifecycleOwner = this
+        }
+
+        binding.menuRecyclerView.also { list ->
+            val adapter = BindingListAdapter<MenuItem, ListItemPreferencesMenuBinding>(
+                R.layout.list_item_preferences_menu,
+                this,
+                MenuItem.DiffCallback(),
+            ) { binding, item -> binding.item = item }
+
+            list.adapter = adapter.apply {
+                submitList(MenuItem.values().toList())
+            }
         }
 
         binding.previewButton.setOnClickListener {

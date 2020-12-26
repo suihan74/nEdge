@@ -14,211 +14,254 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ScrollView
-            android:paddingHorizontal="30dp"
-            android:paddingTop="80dp"
+        <androidx.constraintlayout.motion.widget.MotionLayout
+            android:id="@+id/motionLayout"
+            android:background="@android:color/transparent"
+            app:layoutDescription="@xml/motion_menu_open"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            android:layout_weight="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             android:layout_width="0dp"
             android:layout_height="0dp">
 
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            <ScrollView
+                android:id="@+id/contentArea"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:paddingHorizontal="16dp"
+                android:paddingTop="80dp"
+                android:layout_marginLeft="48dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-                <Button
-                    android:id="@+id/previewButton"
-                    android:text="@string/prefs_preview_button_text"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-                <Button
-                    android:id="@+id/notifyButton"
-                    android:text="@string/prefs_notify_button_text"
-                    android:layout_marginTop="40dp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-                <TextView
-                    android:text="@string/prefs_silent_timezone_desc"
-                    android:layout_marginTop="40dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:orientation="horizontal"
-                    android:paddingHorizontal="42dp"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
                     <Button
-                        android:id="@+id/silentTimezoneStartButton"
-                        localTimeInt="@{vm.silentTimezoneStart}"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:id="@+id/previewButton"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="@string/prefs_preview_button_text" />
+
+                    <Button
+                        android:id="@+id/notifyButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="40dp"
+                        android:text="@string/prefs_notify_button_text" />
 
                     <TextView
-                        android:id="@+id/silentTimezoneEndDesc"
-                        android:text="@string/prefs_silent_timezone_separator"
-                        android:textSize="20sp"
-                        app:layout_constraintStart_toEndOf="@id/silentTimezoneStartButton"
-                        app:layout_constraintEnd_toStartOf="@id/silentTimezoneEndButton"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="40dp"
+                        android:text="@string/prefs_silent_timezone_desc" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingHorizontal="16dp">
+
+                        <Button
+                            android:id="@+id/silentTimezoneStartButton"
+                            localTimeInt="@{vm.silentTimezoneStart}"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/silentTimezoneEndDesc"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/prefs_silent_timezone_separator"
+                            android:textSize="20sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/silentTimezoneEndButton"
+                            app:layout_constraintStart_toEndOf="@id/silentTimezoneStartButton"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <Button
+                            android:id="@+id/silentTimezoneEndButton"
+                            localTimeInt="@{vm.silentTimezoneEnd}"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="40dp"
+                        android:text="@string/prefs_light_level_desc" />
+
+                    <com.google.android.material.slider.Slider
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:stepSize="0.02"
+                        android:value="@={vm.lightLevel}"
+                        android:valueFrom="0.0"
+                        android:valueTo="1.0" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/prefs_line_width_desc" />
+
+                    <com.google.android.material.slider.Slider
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:stepSize="0.1"
+                        android:value="@={vm.lineThickness}"
+                        android:valueFrom="0.0"
+                        android:valueTo="20.0" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/prefs_blur_size_desc" />
+
+                    <com.google.android.material.slider.Slider
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:stepSize="0.1"
+                        android:value="@={vm.blurSize}"
+                        android:valueFrom="0.0"
+                        android:valueTo="50.0" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/prefs_default_notification_color_desc" />
+
+                    <EditText
+                        android:id="@+id/colorEditText"
+                        colorCode="@={vm.notificationColor}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="color | e.g.) #ff0000 (red)"
+                        android:importantForAutofill="no"
+                        android:inputType="text"
+                        android:maxLength="6"
+                        android:selectAllOnFocus="true" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{@string/prefs_corner_radius_desc(`左上`)}" />
+
+                    <com.google.android.material.slider.Slider
+                        editing="@={vm.editingLeftTopCornerRadius}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:stepSize="1.0"
+                        android:value="@={vm.leftTopCornerRadius}"
+                        android:valueFrom="0.0"
+                        android:valueTo="200.0" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{@string/prefs_corner_radius_desc(`右上`)}" />
+
+                    <com.google.android.material.slider.Slider
+                        editing="@={vm.editingRightTopCornerRadius}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:stepSize="1.0"
+                        android:value="@={vm.rightTopCornerRadius}"
+                        android:valueFrom="0.0"
+                        android:valueTo="200.0" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{@string/prefs_corner_radius_desc(`左下`)}" />
+
+                    <com.google.android.material.slider.Slider
+                        editing="@={vm.editingLeftBottomCornerRadius}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:stepSize="1.0"
+                        android:value="@={vm.leftBottomCornerRadius}"
+                        android:valueFrom="0.0"
+                        android:valueTo="200.0" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{@string/prefs_corner_radius_desc(`右下`)}" />
+
+                    <com.google.android.material.slider.Slider
+                        editing="@={vm.editingRightBottomCornerRadius}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:stepSize="1.0"
+                        android:value="@={vm.rightBottomCornerRadius}"
+                        android:valueFrom="0.0"
+                        android:valueTo="200.0" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/prefs_notch_type_selection_desc" />
 
                     <Button
-                        android:id="@+id/silentTimezoneEndButton"
-                        localTimeInt="@{vm.silentTimezoneEnd}"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:id="@+id/notchTypeSelectionButton"
+                        android:layout_width="128dp"
+                        android:layout_height="wrap_content" />
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                    <FrameLayout
+                        android:id="@+id/notchSettingFragmentArea"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
 
-                <TextView
-                    android:text="@string/prefs_light_level_desc"
-                    android:layout_marginTop="40dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                </LinearLayout>
+            </ScrollView>
 
-                <com.google.android.material.slider.Slider
-                    android:valueFrom="0.0"
-                    android:valueTo="1.0"
-                    android:stepSize="0.02"
-                    android:value="@={vm.lightLevel}"
+            <!-- メニュー表示中の背景 -->
+            <View
+                android:id="@+id/clickGuard"
+                android:background="#99000000"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_width="0dp"
+                android:layout_height="0dp"/>
+
+            <!-- メニュー部分 -->
+            <FrameLayout
+                android:id="@+id/menuArea"
+                android:background="#ff333333"
+                android:elevation="16dp"
+                android:paddingVertical="64dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_width="48dp"
+                android:layout_height="0dp">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/menuRecyclerView"
+                    style="@style/RecyclerView.Linear"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content">
+                </androidx.recyclerview.widget.RecyclerView>
 
-                <TextView
-                    android:text="@string/prefs_line_width_desc"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-                <com.google.android.material.slider.Slider
-                    android:valueFrom="0.0"
-                    android:valueTo="20.0"
-                    android:stepSize="0.1"
-                    android:value="@={vm.lineThickness}"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-
-                <TextView
-                    android:text="@string/prefs_blur_size_desc"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-                <com.google.android.material.slider.Slider
-                    android:valueFrom="0.0"
-                    android:valueTo="50.0"
-                    android:stepSize="0.1"
-                    android:value="@={vm.blurSize}"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-
-                <TextView
-                    android:text="@string/prefs_default_notification_color_desc"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-                <EditText
-                    android:id="@+id/colorEditText"
-                    colorCode="@={vm.notificationColor}"
-                    android:hint="color | e.g.) #ff0000 (red)"
-                    android:inputType="text"
-                    android:selectAllOnFocus="true"
-                    android:maxLength="6"
-                    android:importantForAutofill="no"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-                <TextView
-                    android:text="@{@string/prefs_corner_radius_desc(`左上`)}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-                <com.google.android.material.slider.Slider
-                    android:valueFrom="0.0"
-                    android:valueTo="200.0"
-                    android:stepSize="1.0"
-                    android:value="@={vm.leftTopCornerRadius}"
-                    editing="@={vm.editingLeftTopCornerRadius}"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-
-                <TextView
-                    android:text="@{@string/prefs_corner_radius_desc(`右上`)}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-                <com.google.android.material.slider.Slider
-                    android:valueFrom="0.0"
-                    android:valueTo="200.0"
-                    android:stepSize="1.0"
-                    android:value="@={vm.rightTopCornerRadius}"
-                    editing="@={vm.editingRightTopCornerRadius}"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-
-                <TextView
-                    android:text="@{@string/prefs_corner_radius_desc(`左下`)}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-                <com.google.android.material.slider.Slider
-                    android:valueFrom="0.0"
-                    android:valueTo="200.0"
-                    android:stepSize="1.0"
-                    android:value="@={vm.leftBottomCornerRadius}"
-                    editing="@={vm.editingLeftBottomCornerRadius}"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-
-                <TextView
-                    android:text="@{@string/prefs_corner_radius_desc(`右下`)}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-                <com.google.android.material.slider.Slider
-                    android:valueFrom="0.0"
-                    android:valueTo="200.0"
-                    android:stepSize="1.0"
-                    android:value="@={vm.rightBottomCornerRadius}"
-                    editing="@={vm.editingRightBottomCornerRadius}"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-
-                <TextView
-                    android:text="@string/prefs_notch_type_selection_desc"
-                    android:layout_marginTop="8dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-                <Button
-                    android:id="@+id/notchTypeSelectionButton"
-                    android:layout_width="128dp"
-                    android:layout_height="wrap_content"/>
-
-                <FrameLayout
-                    android:id="@+id/notchSettingFragmentArea"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-
-            </LinearLayout>
-
-        </ScrollView>
+            </FrameLayout>
+        </androidx.constraintlayout.motion.widget.MotionLayout>
 
         <!-- はみ出し確認用の背景 -->
         <View
@@ -276,6 +319,5 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             tools:visibility="gone"/>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

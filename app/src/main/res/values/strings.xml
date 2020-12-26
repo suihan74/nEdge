@@ -16,6 +16,13 @@
     <string name="prefs_default_notification_color_desc">線の色</string>
     <string name="prefs_notch_type_selection_desc">ノッチタイプ</string>
 
+    <!-- Preferences Menus -->
+    <string name="prefs_menu_label_generals">全体設定</string>
+    <string name="prefs_menu_label_applications">アプリ一覧</string>
+    <string name="prefs_menu_label_while_list">設定済みアプリ</string>
+    <string name="prefs_menu_label_black_list">ブラックリスト</string>
+    <string name="prefs_menu_label_information">情報</string>
+
     <!-- RectangleNotchSettingFragment -->
     <string name="prefs_rectangle_notch_width_adjustment_desc">幅の調整</string>
     <string name="prefs_rectangle_notch_height_adjustment_desc">高さの調整</string>
