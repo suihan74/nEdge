@@ -2,8 +2,8 @@
     <!-- Base application theme. -->
     <style name="Theme.NotificationReporter" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorPrimary">@color/blue_500</item>
+        <item name="colorPrimaryVariant">@color/blue_700</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
@@ -32,9 +32,33 @@
     <!-- ====== -->
 
     <style name="PreferencesActivity" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/purple_700</item>
+        <item name="colorPrimary">@color/blue_700</item>
+        <item name="colorOnPrimary">@color/white</item>
+
         <item name="android:background">@color/preferencesBackgroundColor</item>
         <item name="android:textColor">@color/preferencesTextColor</item>
+        <item name="android:textColorPrimary">@color/preferencesTextColor</item>
+        <item name="colorOnSurface">@color/preferencesTextColor</item>
+
+        <item name="alertDialogTheme">@style/AlertDialog</item>
+    </style>
+
+    <style name="SearchAppsTextInputLayout" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="android:textColorHint">@color/preferencesTextColor</item>
+        <item name="hintTextColor">@color/preferencesTextColor</item>
+    </style>
+
+    <style name="SearchAppsTextInputEditText">
+        <item name="android:textColor">@color/preferencesTextColor</item>
+    </style>
+
+    <style name="AlertDialog" parent="Theme.MaterialComponents.DayNight.Dialog.Alert">
+        <item name="colorPrimary">@color/blue_700</item>
+        <item name="colorSecondary">@color/blue_700</item>
+        <item name="android:textColorPrimary">@color/gray_300</item>
+        <item name="android:textColor">@color/gray_300</item>
+        <item name="android:textColorSecondary">@color/gray_300</item>
+        <item name="textColorAlertDialogListItem">@color/gray_300</item>
     </style>
 
     <!-- ====== -->

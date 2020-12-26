@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.suihan74.notificationreporter.R
 import com.suihan74.notificationreporter.database.notification.NotificationEntity
 import com.suihan74.notificationreporter.models.NotchSetting
 import com.suihan74.notificationreporter.models.NotchType
@@ -13,6 +14,7 @@ import com.suihan74.notificationreporter.models.NotificationSetting
 import com.suihan74.notificationreporter.models.OutlinesSetting
 import com.suihan74.notificationreporter.repositories.PreferencesRepository
 import com.suihan74.notificationreporter.scenes.preferences.dialog.TimePickerDialogFragment
+import com.suihan74.utilities.fragment.AlertDialogFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.threeten.bp.LocalTime
@@ -172,6 +174,30 @@ class PreferencesViewModel(
             liveData.value = value.toSecondOfDay()
         }
 
+        dialog.show(fragmentManager, null)
+    }
+
+    /**
+     * ノッチタイプを選択するダイアログを開く
+     */
+    fun openNotchTypeSelectionDialog(notchType: MutableLiveData<NotchType>, fragmentManager: FragmentManager) {
+        val labels = NotchType.values().map { it.name }
+        val initialSelected = labels.indexOf(notchType.value?.name)
+
+        val dialog = AlertDialogFragment.Builder()
+            .setTitle(R.string.prefs_notch_type_selection_desc)
+            .setSingleChoiceItems(labels, initialSelected) { _, which ->
+                val type = NotchType.values()[which]
+                if (notchType.value == type) return@setSingleChoiceItems
+
+                when (notchType) {
+                    topNotchType ->
+                        topNotchSetting.value = NotchSetting.createInstance(type)
+                }
+                notchType.value = type
+            }
+            .setNegativeButton(R.string.dialog_cancel)
+            .create()
         dialog.show(fragmentManager, null)
     }
 }

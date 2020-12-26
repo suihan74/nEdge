@@ -11,14 +11,12 @@ import androidx.lifecycle.lifecycleScope
 import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.R
 import com.suihan74.notificationreporter.databinding.FragmentGeneralPrefsBinding
-import com.suihan74.notificationreporter.models.NotchSetting
 import com.suihan74.notificationreporter.models.NotchType
 import com.suihan74.notificationreporter.scenes.lockScreen.LockScreenActivity
 import com.suihan74.notificationreporter.scenes.preferences.PreferencesActivity
 import com.suihan74.notificationreporter.scenes.preferences.notch.RectangleNotchSettingFragment
 import com.suihan74.notificationreporter.scenes.preferences.notch.WaterDropNotchSettingFragment
 import com.suihan74.utilities.extensions.hideSoftInputMethod
-import com.suihan74.utilities.fragment.AlertDialogFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -99,15 +97,7 @@ class GeneralPrefsFragment : Fragment() {
 
         binding.notchTypeSelectionButton.setOnClickListener {
             binding.colorEditText.clearFocus()
-            val dialog = AlertDialogFragment.Builder()
-                .setTitle(R.string.prefs_notch_type_selection_desc)
-                .setItems(NotchType.values().map { it.name }) { _, which ->
-                    viewModel.topNotchSetting.value = NotchSetting.createInstance(type = NotchType.values()[which])
-                    viewModel.topNotchType.value = NotchType.values()[which]
-                }
-                .setNegativeButton(R.string.dialog_cancel)
-                .create()
-            dialog.show(childFragmentManager, null)
+            viewModel.openNotchTypeSelectionDialog(viewModel.topNotchType, childFragmentManager)
         }
 
         viewModel.topNotchType.observe(viewLifecycleOwner, {
