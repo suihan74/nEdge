@@ -262,10 +262,15 @@ class NotificationDrawer(
 
     private fun Path.eraseRect(left: Float, top: Float, right: Float, bottom: Float) {
         val p = Path().apply {
-            addRect(RectF(0f, 0f, left, screenHeight.toFloat()), Path.Direction.CW)
-            addRect(RectF(left, 0f, right, top), Path.Direction.CW)
-            addRect(RectF(right, 0f, screenWidth.toFloat(), screenHeight.toFloat()), Path.Direction.CW)
-            addRect(RectF(left, bottom, right, screenHeight.toFloat()), Path.Direction.CW)
+            val surplus = 50f
+            val scLeft = -surplus
+            val scRight = screenWidth + surplus
+            val scTop = -surplus
+            val scBottom = screenHeight + surplus
+            addRect(RectF(scLeft, scTop, left, scBottom), Path.Direction.CW)
+            addRect(RectF(left, scTop, right, top), Path.Direction.CW)
+            addRect(RectF(right, scTop, scRight, scBottom), Path.Direction.CW)
+            addRect(RectF(left, bottom, right, scBottom), Path.Direction.CW)
         }
         this.op(p, Path.Op.REVERSE_DIFFERENCE)
     }
