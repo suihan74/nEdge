@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.R
 import com.suihan74.notificationreporter.database.notification.NotificationEntity
 import com.suihan74.notificationreporter.databinding.FragmentGeneralPrefsBinding
@@ -62,7 +63,7 @@ class GeneralPrefsFragment : Fragment() {
         binding.notifyButton.setOnClickListener {
             lifecycleScope.launch(Dispatchers.Main) {
                 delay(5_000L)
-                preferencesActivity.notifyDummy()
+                Application.instance.notifyDummy()
             }
         }
 

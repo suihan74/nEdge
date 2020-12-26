@@ -1,16 +1,10 @@
 package com.suihan74.notificationreporter.scenes.preferences
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import androidx.databinding.DataBindingUtil
 import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.R
@@ -118,39 +112,5 @@ class PreferencesActivity : AppCompatActivity() {
 
             decorView.systemUiVisibility = flags
         }
-    }
-
-    // ------ //
-
-    /** ダミーの通知を発生させる */
-    fun notifyDummy() {
-        val channelId = "DummyNotificationChannel"
-        val notificationId = 334
-
-        createNotificationChannel(channelId)
-
-        val builder = NotificationCompat.Builder(this, channelId)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setContentTitle("dummy")
-            .setContentText("dummy")
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-
-        with(NotificationManagerCompat.from(this)) {
-            notify(notificationId, builder.build())
-        }
-    }
-
-    /** 通知チャンネルを作成する */
-    private fun createNotificationChannel(channelId: String) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
-
-        val name = "dummy"
-        val description = "dummy notifications for test"
-        val channel = NotificationChannel(channelId, name, NotificationManager.IMPORTANCE_DEFAULT).also {
-            it.description = description
-        }
-
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.createNotificationChannel(channel)
     }
 }
