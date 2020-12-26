@@ -1,4 +1,4 @@
-package com.suihan74.utilities.bindings
+package com.suihan74.utilities.dataBinding
 
 import android.widget.ImageView
 import androidx.annotation.DrawableRes

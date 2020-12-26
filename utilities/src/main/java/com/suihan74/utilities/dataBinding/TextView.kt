@@ -1,4 +1,4 @@
-package com.suihan74.utilities.bindings
+package com.suihan74.utilities.dataBinding
 
 import android.widget.TextView
 import androidx.annotation.StringRes
