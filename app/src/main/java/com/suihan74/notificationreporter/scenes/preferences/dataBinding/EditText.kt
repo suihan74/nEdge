@@ -35,7 +35,7 @@ object EditTextBindingAdapters {
 
     @JvmStatic
     @InverseBindingAdapter(attribute = "colorCode")
-    fun setColorCodeTextInverse(editText: EditText) : Int {
+    fun getColorCodeText(editText: EditText) : Int {
         val code = editText.text.toString()
         if (code.length != 6) return Color.WHITE
 
