@@ -8,6 +8,7 @@ import android.content.IntentFilter
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.pm.PackageInfoCompat
 import androidx.room.Room
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.suihan74.notificationreporter.dataStore.PreferencesKey
@@ -18,6 +19,7 @@ import com.suihan74.notificationreporter.repositories.BatteryRepository
 import com.suihan74.notificationreporter.repositories.NotificationRepository
 import com.suihan74.notificationreporter.repositories.PreferencesRepository
 import com.suihan74.notificationreporter.repositories.ScreenRepository
+import com.suihan74.utilities.VersionUtil
 import kotlinx.coroutines.runBlocking
 
 /**
@@ -78,6 +80,32 @@ class Application : android.app.Application() {
 
     // ------ //
 
+    /** アプリのバージョン番号 */
+    val versionCode: Long by lazy {
+        val packageInfo = packageManager.getPackageInfo(packageName, 0)
+        PackageInfoCompat.getLongVersionCode(packageInfo)
+    }
+
+    /** アプリのバージョン名 */
+    val versionName: String by lazy {
+        val packageInfo = packageManager.getPackageInfo(packageName, 0)
+        packageInfo.versionName
+    }
+
+    /** アプリのメジャーバージョン */
+    val majorVersionCode: Long by lazy { VersionUtil.getMajorVersion(versionCode) }
+
+    /** アプリのマイナーバージョン */
+    val minorVersionCode: Long by lazy { VersionUtil.getMinorVersion(versionCode) }
+
+    /** アプリの修正バージョン */
+    val fixVersionCode: Long by lazy { VersionUtil.getFixVersion(versionCode) }
+
+    /** アプリの開発バージョン */
+    val developVersionCode: Long by lazy { VersionUtil.getDevelopVersion(versionCode) }
+
+    // ------ //
+
     override fun onCreate() {
         super.onCreate()
         instance = this
@@ -126,6 +154,7 @@ class Application : android.app.Application() {
     }
 
     /** 通知チャンネルを作成する */
+    @Suppress("SameParameterValue")
     private fun createNotificationChannel(channelId: String) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
 
