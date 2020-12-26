@@ -65,9 +65,16 @@ class PreferencesActivity : AppCompatActivity() {
                 R.layout.list_item_preferences_menu,
                 this,
                 MenuItem.DiffCallback(),
-            ) { binding, item -> binding.item = item }
+            ) { binding, item ->
+                binding.item = item
+                binding.selectedItem = viewModel.selectedMenuItem
+            }
 
             list.adapter = adapter.apply {
+                setOnClickItemListener { binding ->
+                    viewModel.selectedMenuItem.value = binding.item
+                }
+
                 submitList(MenuItem.values().toList())
             }
         }

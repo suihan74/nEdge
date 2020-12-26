@@ -16,5 +16,7 @@
     <!-- PreferencesActivity -->
     <color name="preferencesBackgroundColor">#292929</color>
     <color name="preferencesTextColor">#dedede</color>
+    <color name="preferencesMenuBackground">#333</color>
+    <color name="preferencesSelectedMenuItemBackground">#25252C</color>
 
 </resources>

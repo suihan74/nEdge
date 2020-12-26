@@ -29,11 +29,10 @@ object ViewBindingAdapters {
     @SuppressLint("ClickableViewAccessibility")
     @JvmStatic
     @BindingAdapter("android:onTouch")
-    fun bindOnTouchListener(view: View, listener: ((View, MotionEvent)->Boolean)?) {
+    fun bindOnTouchListener(view: View, listener: ((View, MotionEvent) -> Boolean)?) {
         if (listener == null) {
             view.setOnTouchListener(null)
-        }
-        else {
+        } else {
             view.setOnTouchListener { _, motionEvent ->
                 if (motionEvent == null) true
                 else listener(view, motionEvent)

@@ -1,49 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
     <data>
+        <import type="androidx.lifecycle.LiveData"/>
+        <import type="com.suihan74.notificationreporter.scenes.preferences.MenuItem"/>
+
         <variable
             name="item"
-            type="com.suihan74.notificationreporter.scenes.preferences.MenuItem"/>
+            type="MenuItem"/>
+
+        <variable
+            name="selectedItem"
+            type="LiveData&lt;MenuItem&gt;"/>
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <FrameLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:background="?selectableItemBackground"
-        android:paddingHorizontal="12dp"
-        android:paddingVertical="18dp"
+        android:background="@{selectedItem == item ? @color/preferencesSelectedMenuItemBackground : @android:color/transparent}"
+        android:elevation="@{selectedItem == item ? 48f : 0f}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/icon"
-            src="@{item.iconId}"
-            app:tint="?android:textColor"
-            android:background="@android:color/transparent"
-            android:contentDescription="@null"
-            tools:src="@drawable/ic_info"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_width="24dp"
-            android:layout_height="24dp"/>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:background="?selectableItemBackground"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/label"
-            textId="@{item.labelId}"
-            android:background="@android:color/transparent"
-            android:textSize="18sp"
-            android:singleLine="true"
-            android:ellipsize="none"
-            tools:text="@string/prefs_menu_label_applications"
-            app:layout_constraintStart_toEndOf="@id/icon"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginStart="12dp"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"/>
+            <ImageView
+                android:id="@+id/icon"
+                src="@{item.iconId}"
+                app:tint="?android:textColor"
+                android:background="@android:color/transparent"
+                android:contentDescription="@null"
+                tools:src="@drawable/ic_info"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_width="24dp"
+                android:layout_height="24dp"/>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/label"
+                textId="@{item.labelId}"
+                android:background="@android:color/transparent"
+                android:textSize="18sp"
+                android:singleLine="true"
+                android:ellipsize="none"
+                tools:text="@string/prefs_menu_label_applications"
+                app:layout_constraintStart_toEndOf="@id/icon"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginStart="12dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </FrameLayout>
 </layout>

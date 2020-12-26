@@ -24,6 +24,9 @@ class PreferencesViewModel(
         const val DEFAULT_SETTING_NAME = NotificationEntity.DEFAULT_SETTING_NAME
     }
 
+    /** 選択中のメニュー項目 */
+    val selectedMenuItem = MutableLiveData(MenuItem.GENERALS)
+
     /** バックライト消灯後の画面をさらに暗くする度合い */
     val lightLevel : MutableLiveData<Float> = prefRepo.lightLevel
 
