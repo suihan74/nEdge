@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import com.suihan74.notificationreporter.R
 import com.suihan74.notificationreporter.scenes.preferences.page.GeneralPrefsFragment
 import com.suihan74.notificationreporter.scenes.preferences.page.InformationFragment
+import com.suihan74.notificationreporter.scenes.preferences.page.InstalledApplicationsFragment
 
 /**
  * 設定画面ページ遷移用メニュー項目
@@ -25,7 +26,7 @@ enum class MenuItem(
     APPLICATIONS(
         R.string.prefs_menu_label_applications,
         R.drawable.ic_apps,
-        { Fragment() }
+        { InstalledApplicationsFragment.createInstance() }
     ),
 
     WHITE_LIST(

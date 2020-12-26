@@ -8,7 +8,9 @@ import org.threeten.bp.LocalTime
 import org.threeten.bp.format.DateTimeFormatter
 
 object TextViewBindingAdapters {
-    /** Int値を時刻として表示する */
+    /**
+     * Int値を時刻として表示する
+     */
     @JvmStatic
     @BindingAdapter("localTimeInt")
     fun setLocalTimeInt(textView: TextView, value: Int?) {

@@ -49,10 +49,19 @@ class PreferencesRepository(
     /**
      * 対象アプリ用の通知表示設定を取得する
      *
-     * @return `appName`に対応する設定か、それが無ければデフォルト設定
+     * @return `appName`に対応する設定か、見つからなければデフォルト設定
      */
     suspend fun getNotificationSetting(appName: String = DEFAULT_SETTING_NAME) : NotificationSetting {
-        return notificationDao.findByAppName(appName)?.setting ?: notificationDao.getDefaultSetting()
+        return getNotificationSettingOrNull(appName) ?: notificationDao.getDefaultSetting()
+    }
+
+    /**
+     * 対象アプリ用の通知表示設定を取得する
+     *
+     * @return `appName`に対応する設定か、見つからなければnull
+     */
+    suspend fun getNotificationSettingOrNull(appName: String = DEFAULT_SETTING_NAME) : NotificationSetting? {
+        return notificationDao.findByAppName(appName)?.setting
     }
 
     /**

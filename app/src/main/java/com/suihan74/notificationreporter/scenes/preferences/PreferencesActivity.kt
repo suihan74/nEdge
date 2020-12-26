@@ -1,8 +1,6 @@
 package com.suihan74.notificationreporter.scenes.preferences
 
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -65,25 +63,6 @@ class PreferencesActivity : AppCompatActivity() {
             pager.adapter = PageStateAdapter(supportFragmentManager, lifecycle)
             pager.fakeDragBy(0.2f)
         }
-
-        // TODO: インストール済みアプリ一覧の取得
-        val intent = Intent(Intent.ACTION_MAIN, null)
-        intent.addCategory(Intent.CATEGORY_LAUNCHER)
-        val resolveInfoList = packageManager.queryIntentActivities(intent, 0)
-        resolveInfoList.forEach {
-            Log.d("pm", "packageName: " + it.activityInfo.applicationInfo.name)
-            Log.d("pm", "---")
-
-        }
-        /*
-        val packages = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
-        packages.forEach {
-            // it.name == null
-            // it.icon == null
-            Log.d("pm", "packageName: " + it.packageName)
-            Log.d("pm", "---")
-        }
-         */
     }
 
     // スクリーン輪郭線・ノッチ輪郭線の描画がウィンドウアタッチ後でないとできないため

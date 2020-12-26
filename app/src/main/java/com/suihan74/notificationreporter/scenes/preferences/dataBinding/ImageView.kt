@@ -1,6 +1,7 @@
 package com.suihan74.notificationreporter.scenes.preferences.dataBinding
 
 import android.app.Activity
+import android.content.pm.ApplicationInfo
 import android.util.Log
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
@@ -28,5 +29,14 @@ object ImageViewBindingAdapters {
             Log.e("notificationSetting", Log.getStackTraceString(e))
             imageView.setImageDrawable(null)
         }
+    }
+
+    /**
+     * 他のアプリのアイコンを読み込む
+     */
+    @JvmStatic
+    @BindingAdapter("applicationIcon")
+    fun setApplicationIcon(imageView: ImageView, appInfo: ApplicationInfo?) {
+        imageView.setImageDrawable(appInfo?.loadIcon(imageView.context.packageManager))
     }
 }
