@@ -31,7 +31,7 @@ object ViewPager2BindingAdapters {
     @JvmStatic
     @BindingAdapter("currentItemAttrChanged")
     fun bindListeners(viewPager: ViewPager2, listener: InverseBindingListener) {
-        viewPager.setPageTransformer { page, position ->
+        viewPager.setPageTransformer { _, _ ->
             listener.onChange()
         }
     }
