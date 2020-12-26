@@ -1,10 +1,22 @@
 <resources>
     <string name="app_name">NotificationReporter</string>
+    <string name="copyright">Copyright \u00A9 %s &lt;a href=&quot;https://suihan74.github.io&quot;&gt;suihan&lt;/a&gt;</string>
 
     <!-- dialog -->
     <string name="dialog_cancel">Cancel</string>
 
+    <!-- ====== -->
+
     <!-- PreferencesActivity -->
+
+    <!-- Preferences Menus -->
+    <string name="prefs_menu_label_generals">全体設定</string>
+    <string name="prefs_menu_label_applications">アプリ一覧</string>
+    <string name="prefs_menu_label_while_list">設定済みアプリ</string>
+    <string name="prefs_menu_label_black_list">ブラックリスト</string>
+    <string name="prefs_menu_label_information">情報</string>
+
+    <!-- GeneralPrefsFragment -->
     <string name="prefs_preview_button_text">プレビュー</string>
     <string name="prefs_notify_button_text">5秒後に通知する</string>
     <string name="prefs_silent_timezone_desc">通知を行わない時間帯</string>
@@ -16,13 +28,6 @@
     <string name="prefs_default_notification_color_desc">線の色</string>
     <string name="prefs_notch_type_selection_desc">ノッチタイプ</string>
 
-    <!-- Preferences Menus -->
-    <string name="prefs_menu_label_generals">全体設定</string>
-    <string name="prefs_menu_label_applications">アプリ一覧</string>
-    <string name="prefs_menu_label_while_list">設定済みアプリ</string>
-    <string name="prefs_menu_label_black_list">ブラックリスト</string>
-    <string name="prefs_menu_label_information">情報</string>
-
     <!-- RectangleNotchSettingFragment -->
     <string name="prefs_rectangle_notch_width_adjustment_desc">幅の調整</string>
     <string name="prefs_rectangle_notch_height_adjustment_desc">高さの調整</string>
@@ -33,4 +38,8 @@
     <string name="prefs_water_drop_notch_height_adjustment_desc">高さの調整</string>
     <string name="prefs_water_drop_notch_radius_desc">%sの角丸半径</string>
     <string name="prefs_water_drop_notch_degree_desc">%sの角度</string>
+
+    <!-- InformationFragment -->
+    <string name="pref_information_release_notes_desc">更新履歴</string>
+    <string name="pref_information_licenses_desc">ライセンス</string>
 </resources>

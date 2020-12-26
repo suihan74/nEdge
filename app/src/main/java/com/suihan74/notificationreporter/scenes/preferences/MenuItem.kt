@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
 import com.suihan74.notificationreporter.R
 import com.suihan74.notificationreporter.scenes.preferences.page.GeneralPrefsFragment
+import com.suihan74.notificationreporter.scenes.preferences.page.InformationFragment
 
 /**
  * 設定画面ページ遷移用メニュー項目
@@ -42,7 +43,7 @@ enum class MenuItem(
     INFORMATION(
         R.string.prefs_menu_label_information,
         R.drawable.ic_info,
-        { Fragment() }
+        { InformationFragment.createInstance() }
     ),
 
     ;
