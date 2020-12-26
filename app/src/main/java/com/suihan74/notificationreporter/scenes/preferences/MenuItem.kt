@@ -5,6 +5,7 @@ import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
 import com.suihan74.notificationreporter.R
+import com.suihan74.notificationreporter.scenes.preferences.page.GeneralPrefsFragment
 
 /**
  * 設定画面ページ遷移用メニュー項目
@@ -14,10 +15,10 @@ enum class MenuItem(
     @DrawableRes val iconId : Int,
     val fragment : ()->Fragment
 ) {
-    GENERALS(
+    GENERAL(
         R.string.prefs_menu_label_generals,
         R.drawable.ic_settings,
-        { Fragment() }
+        { GeneralPrefsFragment.createInstance() }
     ),
 
     APPLICATIONS(

@@ -8,30 +8,16 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.R
-import com.suihan74.notificationreporter.database.notification.NotificationEntity
 import com.suihan74.notificationreporter.databinding.ActivityPreferencesBinding
 import com.suihan74.notificationreporter.databinding.ListItemPreferencesMenuBinding
-import com.suihan74.notificationreporter.models.NotchSetting
-import com.suihan74.notificationreporter.models.NotchType
-import com.suihan74.notificationreporter.scenes.lockScreen.LockScreenActivity
-import com.suihan74.notificationreporter.scenes.preferences.notch.RectangleNotchSettingFragment
-import com.suihan74.notificationreporter.scenes.preferences.notch.WaterDropNotchSettingFragment
 import com.suihan74.utilities.BindingListAdapter
-import com.suihan74.utilities.extensions.hideSoftInputMethod
-import com.suihan74.utilities.fragment.AlertDialogFragment
 import com.suihan74.utilities.lazyProvideViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 /**
  * 設定画面
@@ -60,6 +46,7 @@ class PreferencesActivity : AppCompatActivity() {
             it.lifecycleOwner = this
         }
 
+        // ページ選択メニュー
         binding.menuRecyclerView.also { list ->
             val adapter = BindingListAdapter<MenuItem, ListItemPreferencesMenuBinding>(
                 R.layout.list_item_preferences_menu,
@@ -79,76 +66,11 @@ class PreferencesActivity : AppCompatActivity() {
             }
         }
 
-        binding.previewButton.setOnClickListener {
-            val intent = Intent(this, LockScreenActivity::class.java)
-            startActivity(intent)
+        // ページビュー
+        binding.contentPager.also { pager ->
+            pager.adapter = PageStateAdapter(supportFragmentManager, lifecycle)
+            pager.fakeDragBy(0.2f)
         }
-
-        binding.notifyButton.setOnClickListener {
-            lifecycleScope.launch(Dispatchers.Main) {
-                delay(5_000L)
-                notifyDummy()
-            }
-        }
-
-        binding.silentTimezoneStartButton.setOnClickListener {
-            viewModel.openSilentTimezonePickerDialog(viewModel.silentTimezoneStart, supportFragmentManager)
-        }
-
-        binding.silentTimezoneEndButton.setOnClickListener {
-            viewModel.openSilentTimezonePickerDialog(viewModel.silentTimezoneEnd, supportFragmentManager)
-        }
-
-        binding.colorEditText.also { editText ->
-            // 入力中はナビゲーションバーを表示する
-            editText.setOnFocusChangeListener { _, b ->
-                if (b) {
-                    window.decorView.systemUiVisibility =
-                        window.decorView.systemUiVisibility xor View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                }
-                else {
-                    hideSoftInputMethod(binding.mainLayout)
-                    hideSystemUI()
-                }
-            }
-
-            // 入力完了時にアンフォーカスする
-            editText.setOnEditorActionListener { _, actionId, _ ->
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    editText.clearFocus()
-                }
-                false
-            }
-        }
-
-        binding.notchTypeSelectionButton.setOnClickListener {
-            binding.colorEditText.clearFocus()
-            val dialog = AlertDialogFragment.Builder()
-                .setTitle(R.string.prefs_notch_type_selection_desc)
-                .setItems(NotchType.values().map { it.name }) { _, which ->
-                    viewModel.topNotchSetting.value = NotchSetting.createInstance(type = NotchType.values()[which])
-                    viewModel.topNotchType.value = NotchType.values()[which]
-                }
-                .setNegativeButton(R.string.dialog_cancel)
-                .create()
-            dialog.show(supportFragmentManager, null)
-        }
-
-        viewModel.topNotchType.observe(this, {
-            val fragment = when (it) {
-                NotchType.RECTANGLE ->
-                    RectangleNotchSettingFragment.createInstance(NotificationEntity.DEFAULT_SETTING_NAME)
-
-                NotchType.WATER_DROP ->
-                    WaterDropNotchSettingFragment.createInstance(NotificationEntity.DEFAULT_SETTING_NAME)
-
-                else -> Fragment()
-            }
-
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.notchSettingFragmentArea, fragment)
-                .commit()
-        })
 
         // TODO: インストール済みアプリ一覧の取得
         val intent = Intent(Intent.ACTION_MAIN, null)
@@ -176,11 +98,6 @@ class PreferencesActivity : AppCompatActivity() {
         binding.vm = viewModel
     }
 
-    override fun onPause() {
-        super.onPause()
-        viewModel.saveSettings()
-    }
-
     /** ダイアログなどから復帰時にImmersiveモードを再適用する */
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
@@ -189,7 +106,7 @@ class PreferencesActivity : AppCompatActivity() {
 
     // ------ //
 
-    private fun hideSystemUI() {
+    fun hideSystemUI() {
         // 全画面表示する
         window.decorView.let { decorView ->
             val flags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
@@ -206,7 +123,7 @@ class PreferencesActivity : AppCompatActivity() {
     // ------ //
 
     /** ダミーの通知を発生させる */
-    private fun notifyDummy() {
+    fun notifyDummy() {
         val channelId = "DummyNotificationChannel"
         val notificationId = 334
 

@@ -25,7 +25,7 @@ class PreferencesViewModel(
     }
 
     /** 選択中のメニュー項目 */
-    val selectedMenuItem = MutableLiveData(MenuItem.GENERALS)
+    val selectedMenuItem = MutableLiveData(MenuItem.GENERAL)
 
     /** バックライト消灯後の画面をさらに暗くする度合い */
     val lightLevel : MutableLiveData<Float> = prefRepo.lightLevel
