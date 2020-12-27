@@ -232,7 +232,7 @@ class WrappedDataStore<KeyT : WrappedDataStore.Key<*>> private constructor (
      *     set(key, value)
      * }
      */
-    suspend fun edit(transform: suspend Editor.()->Unit) = withContext(Dispatchers.Default) {
+    suspend fun edit(transform: suspend Editor.()->Unit) = withContext(Dispatchers.Main) {
         dataStore.edit { prefs ->
             val result = runCatching {
                 transform.invoke(Editor(prefs))
@@ -259,7 +259,7 @@ class WrappedDataStore<KeyT : WrappedDataStore.Key<*>> private constructor (
             liveDataCacheMutex.withLock {
                 liveDataCache[key.key.name]?.get()?.alsoAs<MutableLiveData<T>> { liveData ->
                     if (liveData.value != value) {
-                        liveData.postValue(value)
+                        liveData.value = value
                     }
                 }
             }
