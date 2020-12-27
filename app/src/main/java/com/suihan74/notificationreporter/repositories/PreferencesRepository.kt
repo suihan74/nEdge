@@ -37,6 +37,9 @@ class PreferencesRepository(
     /** 通知しない時間帯(終了時刻) */
     val silentTimezoneEnd = dataStore.getLiveData<Int>(PreferencesKey.SILENT_TIMEZONE_END)
 
+    /** 通知するのに最低限必要なバッテリレベル */
+    val requiredBatteryLevel = dataStore.getLiveData(PreferencesKey.REQUIRED_BATTERY_LEVEL)
+
     // ------ //
 
     /**

@@ -81,6 +81,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
+                android:text="@string/prefs_required_battery_level_desc" />
+
+            <com.google.android.material.slider.Slider
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:stepSize="1"
+                intValue="@={vm.requiredBatteryLevel}"
+                android:valueFrom="0"
+                android:valueTo="100" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
                 android:text="@string/prefs_light_level_desc" />
 
             <com.google.android.material.slider.Slider

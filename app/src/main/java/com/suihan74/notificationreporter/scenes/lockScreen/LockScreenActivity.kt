@@ -5,6 +5,7 @@ import android.app.KeyguardManager
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import android.service.notification.StatusBarNotification
 import android.view.KeyEvent
 import android.view.View
 import android.view.WindowManager
@@ -13,12 +14,66 @@ import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.databinding.DataBindingUtil
 import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.R
+import com.suihan74.notificationreporter.dataStore.PreferencesKey
 import com.suihan74.notificationreporter.databinding.ActivityLockScreenBinding
 import com.suihan74.utilities.lazyProvideViewModel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.threeten.bp.LocalTime
 
 class LockScreenActivity : AppCompatActivity() {
+    companion object {
+        /**
+         * `LockScreenActivity`に遷移するべきかをチェックする
+         *
+         * 遷移を拒否する条件
+         * - 通知が不正(=null)
+         * - 画面が点灯中
+         * - バッテリレベルが指定値未満
+         * - 通知を行わない時間帯
+         *
+         * @return 遷移できる: true, 遷移できない: false
+         */
+        suspend fun checkNotifiable(sbn: StatusBarNotification?) : Boolean {
+            val app = Application.instance
+            val prefRepo = app.preferencesRepository
+            val batteryRepo = app.batteryRepository
+            val screenRepo = app.screenRepository
+
+            // 通知が不正, 画面が点いている
+            if (sbn?.notification == null || screenRepo.screenOn.value == true) {
+                return false
+            }
+
+            // バッテリレベルが指定値未満
+            val batteryLevel = batteryRepo.batteryLevel.value ?: 0
+            val requiredBatteryLevel = prefRepo.getGeneralSetting(PreferencesKey.REQUIRED_BATTERY_LEVEL)
+            if (batteryLevel < requiredBatteryLevel && batteryRepo.batteryCharging.value != true) {
+                return false
+            }
+
+            // 通知を行わない時間帯
+            val silentTimeZoneStart = prefRepo.getGeneralSetting(PreferencesKey.SILENT_TIMEZONE_START)
+            val silentTimeZoneEnd = prefRepo.getGeneralSetting(PreferencesKey.SILENT_TIMEZONE_END)
+            val now = LocalTime.now().toSecondOfDay()
+            val considerDateChange = silentTimeZoneStart > silentTimeZoneEnd
+            if (considerDateChange) {
+                if (now >= silentTimeZoneStart || now <= silentTimeZoneEnd) {
+                    return false
+                }
+            }
+            else {
+                if (now in silentTimeZoneStart..silentTimeZoneEnd) {
+                    return false
+                }
+            }
+
+            return true
+        }
+    }
+
+    // ------ //
+
     private val viewModel by lazyProvideViewModel {
         val app = Application.instance
         LockScreenViewModel(

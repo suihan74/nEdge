@@ -38,6 +38,9 @@ class PreferencesViewModel(
     /** 通知を行わない時間帯(終了時刻) */
     val silentTimezoneEnd = prefRepo.silentTimezoneEnd
 
+    /** 通知を行うのに必要な最低バッテリレベル */
+    val requiredBatteryLevel = prefRepo.requiredBatteryLevel
+
     /** 通知表示の輪郭線の色 */
     val notificationColor = mutableLiveData<Int>()
 

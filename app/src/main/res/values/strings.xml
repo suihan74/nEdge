@@ -21,7 +21,8 @@
     <string name="prefs_notify_button_text">5秒後に通知する</string>
     <string name="prefs_silent_timezone_desc">通知を行わない時間帯</string>
     <string name="prefs_silent_timezone_separator">~</string>
-    <string name="prefs_light_level_desc">バックライトを消灯したときの画面の暗さ</string>
+    <string name="prefs_required_battery_level_desc">バッテリ充電量が指定値未満のとき通知を行わない(0で常に通知)</string>
+    <string name="prefs_light_level_desc">消灯時に画面をさらに暗くする</string>
     <string name="prefs_line_width_desc">線の太さ</string>
     <string name="prefs_blur_size_desc">ブラー効果の強さ (0で無効化)</string>
     <string name="prefs_corner_radius_desc">%sの角丸半径</string>

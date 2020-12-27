@@ -27,6 +27,9 @@ class PreferencesKey<T> private constructor(
         /** 通知を表示しない時間帯(終了時刻) */
         val SILENT_TIMEZONE_END = makeKey("SILENT_TIMEZONE_END") { LocalTime.of(7, 0).toSecondOfDay() }
 
+        /** 指定値未満のバッテリレベルでは通知を表示しない */
+        val REQUIRED_BATTERY_LEVEL = makeKey("REQUIRED_BATTERY_LEVEL") { 15 }
+
         // ------ //
 
         suspend fun dataStore(context: Context) =
