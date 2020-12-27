@@ -8,8 +8,6 @@ import com.suihan74.utilities.dataStore.WrappedDataStore
 
 /**
  * アプリ設定を扱うリポジトリ
- *
- * TODO: `SharedPreferences`または`DataStore`を扱うようにする
  */
 class PreferencesRepository(
     private val dataStore: WrappedDataStore<PreferencesKey<*>>,
