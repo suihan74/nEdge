@@ -51,7 +51,7 @@ object SliderBindingAdapters {
         "editing"],
         requireAll = false
     )
-    fun bindValue(
+    fun bindFloatValue(
         slider: Slider,
         value: Float?,
         lowerBound: Float?,
@@ -70,9 +70,44 @@ object SliderBindingAdapters {
 
     @JvmStatic
     @InverseBindingAdapter(attribute = "android:value")
-    fun bindValueInverse(slider: Slider) : Float {
+    fun bindFloatValueInverse(slider: Slider) : Float {
         return slider.value
     }
+
+    @JvmStatic
+    @BindingAdapter(value = [
+        "intValue",
+        "android:valueFrom",
+        "android:valueTo",
+        "android:stepSize",
+        "editing"],
+        requireAll = false
+    )
+    fun bindIntValue(
+        slider: Slider,
+        value: Int?,
+        lowerBound: Int?,
+        upperBound: Int?,
+        stepSize: Int?,
+        editing: Boolean?
+    ) {
+        bindFloatValue(
+            slider,
+            value?.toFloat(),
+            lowerBound?.toFloat(),
+            upperBound?.toFloat(),
+            stepSize?.toFloat(),
+            editing
+        )
+    }
+
+    @JvmStatic
+    @InverseBindingAdapter(attribute = "intValue", event="android:valueAttrChanged")
+    fun bindIntValueInverse(slider: Slider) : Int {
+        return slider.value.toInt()
+    }
+
+    // ------ //
 
     @JvmStatic
     @InverseBindingAdapter(attribute = "editing")
