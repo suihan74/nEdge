@@ -10,10 +10,11 @@ import androidx.lifecycle.MutableLiveData
 import com.suihan74.utilities.dataStore.exception.InvalidKeyException
 import com.suihan74.utilities.dataStore.exception.MigrationFailureException
 import com.suihan74.utilities.extensions.firstByType
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.withContext
 import java.io.File
-import java.util.*
 import kotlin.reflect.KClass
 
 /**
@@ -125,7 +126,7 @@ class WrappedDataStore<KeyT : WrappedDataStore.Key<*>> private constructor (
      * 最後に記録した`Key`バージョンを取得する
      */
     suspend fun version() : Int =
-        dataStore.data.first()[versionKey] ?: currentKeyVersion
+        dataStore.data.firstOrNull()?.get(versionKey) ?: currentKeyVersion
 
     // ------ //
 
@@ -178,28 +179,6 @@ class WrappedDataStore<KeyT : WrappedDataStore.Key<*>> private constructor (
         }
     }
 
-    /**
-     * 値の変更を監視する`MutableLiveData`を取得する
-     *
-     * これに対して値変更を行うと自動的に`DataStore`側の値も更新される
-     */
-    fun <T> getMutableLiveData(key: Key<T>, coroutineScope: CoroutineScope) : MutableLiveData<T> {
-        checkKey(key)
-
-        return MutableLiveData<T>().also { liveData ->
-            liveData.observeForever {
-                if (liveData.value == it) return@observeForever
-                coroutineScope.launch {
-                    edit { set(key, it) }
-                }
-            }
-
-            getFlow(key)
-                .onEach { liveData.value = it }
-                .launchIn(coroutineScope)
-        }
-    }
-
     // ------ //
     // 値更新
 
@@ -231,6 +210,10 @@ class WrappedDataStore<KeyT : WrappedDataStore.Key<*>> private constructor (
         fun <T> set(key: Key<T>, value: T) {
             checkKey(key)
             prefs[key.key] = value
+        }
+
+        fun <T> set(key: Key<T>, liveData: LiveData<T>) {
+            set(key, liveData.value ?: key.default())
         }
 
         /**

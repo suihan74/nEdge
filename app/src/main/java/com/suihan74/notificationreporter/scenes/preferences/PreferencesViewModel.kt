@@ -17,7 +17,11 @@ import com.suihan74.notificationreporter.repositories.PreferencesRepository
 import com.suihan74.notificationreporter.scenes.preferences.dialog.TimePickerDialogFragment
 import com.suihan74.utilities.fragment.AlertDialogFragment
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import org.threeten.bp.LocalTime
 
 class PreferencesViewModel(
@@ -33,20 +37,16 @@ class PreferencesViewModel(
     // ------ //
 
     /** バックライト消灯後の画面をさらに暗くする度合い */
-    val lightLevel =
-        prefRepo.getMutableLiveData(PreferencesKey.LIGHT_LEVEL, viewModelScope)
+    val lightLevel = MutableLiveData<Float>()
 
     /** 通知を行わない時間帯(開始時刻) */
-    val silentTimezoneStart =
-        prefRepo.getMutableLiveData(PreferencesKey.SILENT_TIMEZONE_START, viewModelScope)
+    val silentTimezoneStart = MutableLiveData<Int>()
 
     /** 通知を行わない時間帯(終了時刻) */
-    val silentTimezoneEnd =
-        prefRepo.getMutableLiveData(PreferencesKey.SILENT_TIMEZONE_END, viewModelScope)
+    val silentTimezoneEnd = MutableLiveData<Int>()
 
     /** 通知を行うのに必要な最低バッテリレベル */
-    val requiredBatteryLevel =
-        prefRepo.getMutableLiveData(PreferencesKey.REQUIRED_BATTERY_LEVEL, viewModelScope)
+    val requiredBatteryLevel = MutableLiveData<Int>()
 
     // ------ //
 
@@ -94,56 +94,98 @@ class PreferencesViewModel(
 
     // ------ //
 
-    private fun <T> mutableLiveData() =
-        MutableLiveData<T>().apply {
-            observeForever {
-                if (initialized) {
-                    updateNotificationSetting()
-                }
-            }
-        }
-
+    /**
+     * 初期値をセットする
+     */
     init {
+        bindFlow(PreferencesKey.LIGHT_LEVEL, lightLevel)
+        bindFlow(PreferencesKey.SILENT_TIMEZONE_START, silentTimezoneStart)
+        bindFlow(PreferencesKey.SILENT_TIMEZONE_END, silentTimezoneEnd)
+        bindFlow(PreferencesKey.REQUIRED_BATTERY_LEVEL, requiredBatteryLevel)
+
         setCurrentTarget(DEFAULT_SETTING_NAME)
     }
 
-    private var initialized = false
+    /**
+     * 編集したデータを保存する
+     */
+    fun saveSettings() = viewModelScope.launch {
+        prefRepo.editPreferences {
+            set(PreferencesKey.LIGHT_LEVEL, lightLevel)
+            set(PreferencesKey.SILENT_TIMEZONE_START, silentTimezoneStart)
+            set(PreferencesKey.SILENT_TIMEZONE_END, silentTimezoneEnd)
+            set(PreferencesKey.REQUIRED_BATTERY_LEVEL, requiredBatteryLevel)
+        }
+        prefRepo.updateNotificationSetting(targetAppName, notificationSetting.value!!)
+    }
+
+    // ------ //
+
+    /**
+     * 輪郭線用の各設定値の変更をビュー表示用の`LiveData`に反映させる
+     */
+    private fun <T> mutableLiveData() =
+        MutableLiveData<T>().apply {
+            observeForever {
+                updateNotificationSetting()
+            }
+        }
+
+    /**
+     * `Flow`で流れてくる設定値と`LiveData`を紐づける
+     */
+    private fun <T> bindFlow(key: PreferencesKey<T>, liveData: MutableLiveData<T>) {
+        prefRepo.getPreferenceFlow(key)
+            .onEach { liveData.value = it }
+            .launchIn(viewModelScope)
+    }
+
+    // ------ //
+
+    /**
+     * 設定値すべての更新が完了してからプレビューに反映するためのロック
+     */
+    private val currentTargetMutex = Mutex()
 
     /** 編集中の対象アプリ名 */
     private var targetAppName : String = NotificationEntity.DEFAULT_SETTING_NAME
 
     /** 現在の画面で編集中のアプリ設定をセットする */
     private fun setCurrentTarget(appName: String) = viewModelScope.launch(Dispatchers.Main) {
-        initialized = false
-
-        prefRepo.getNotificationSetting(appName).let { setting ->
-            notificationColor.value = setting.color
-            lineThickness.value = setting.thickness
-            blurSize.value = setting.blurSize
-            setting.outlinesSetting.let { outlines ->
-                leftTopCornerRadius.value = outlines.leftTopCornerRadius
-                rightTopCornerRadius.value = outlines.rightTopCornerRadius
-                leftBottomCornerRadius.value = outlines.leftBottomCornerRadius
-                rightBottomCornerRadius.value = outlines.rightBottomCornerRadius
-            }
-            setting.topNotchSetting.let { notch ->
-                topNotchSetting.value = notch
-                topNotchType.value = notch.type
+        currentTargetMutex.withLock {
+            prefRepo.getNotificationSetting(appName).let { setting ->
+                notificationColor.value = setting.color
+                lineThickness.value = setting.thickness
+                blurSize.value = setting.blurSize
+                setting.outlinesSetting.let { outlines ->
+                    leftTopCornerRadius.value = outlines.leftTopCornerRadius
+                    rightTopCornerRadius.value = outlines.rightTopCornerRadius
+                    leftBottomCornerRadius.value = outlines.leftBottomCornerRadius
+                    rightBottomCornerRadius.value = outlines.rightBottomCornerRadius
+                }
+                setting.topNotchSetting.let { notch ->
+                    topNotchSetting.value = notch
+                    topNotchType.value = notch.type
+                }
             }
         }
-        initialized = true
 
         updateNotificationSetting()
     }
 
     // ------ //
 
-    private val _notificationSetting = MutableLiveData<NotificationSetting>()
+    /**
+     * 編集中の各設定値を反映した`NotificationSetting`
+     *
+     * プレビューの表示、データ保存に使用
+     */
     val notificationSetting : LiveData<NotificationSetting> by lazy { _notificationSetting }
+    private val _notificationSetting = MutableLiveData<NotificationSetting>()
 
     /** 編集中の設定を表示用のサンプルデータに反映する */
     private fun updateNotificationSetting() {
-        if (!initialized) return
+        if (!currentTargetMutex.tryLock()) return
 
         val result = runCatching {
             _notificationSetting.value = NotificationSetting(
@@ -163,11 +205,8 @@ class PreferencesViewModel(
         result.onFailure {
             Log.e("PreferencesViewModel", Log.getStackTraceString(it))
         }
-    }
 
-    /** 編集中のデータをDBに保存する */
-    fun saveSettings() = viewModelScope.launch {
-        prefRepo.updateNotificationSetting(targetAppName, notificationSetting.value!!)
+        currentTargetMutex.unlock()
     }
 
     // ------ //
