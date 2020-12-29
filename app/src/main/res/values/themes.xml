@@ -7,8 +7,8 @@
         <item name="colorOnPrimary">@color/white</item>
         <item name="colorPrimaryDark">@android:color/transparent</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_700</item>
+        <item name="colorSecondary">@color/blue_500</item>
+        <item name="colorSecondaryVariant">@color/blue_700</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Customize your theme here. -->
         <item name="android:statusBarColor">@android:color/transparent</item>
@@ -80,6 +80,9 @@
 
         <!-- ダイアログ下部ボタン(Positive,Negative,Neutral...分けるなら別々に作る) -->
         <item name="android:buttonBarButtonStyle">@style/TimePickerDialogButtonStyle</item>
+        <!-- ダイアログ下部ボタンのタップ時背景色 -->
+        <item name="colorPrimary">@color/black</item>
+
         <!-- 入力モード切替ボタンのアイコン色 -->
         <item name="imageButtonStyle">@style/TimePickerDialogImageButtonStyle</item>
 
