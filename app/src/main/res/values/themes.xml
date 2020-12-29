@@ -5,16 +5,19 @@
         <item name="colorPrimary">@color/blue_500</item>
         <item name="colorPrimaryVariant">@color/blue_700</item>
         <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryDark">@android:color/transparent</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
         <item name="colorSecondaryVariant">@color/teal_700</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Customize your theme here. -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
     </style>
 
     <!-- ====== -->
 
-    <style name="LockScreenActivity" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="LockScreenActivity" parent="Theme.NotificationReporter">
         <item name="android:background">@color/black</item>
         <item name="android:textColor">@color/white</item>
     </style>
@@ -31,7 +34,7 @@
 
     <!-- ====== -->
 
-    <style name="PreferencesActivity" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="PreferencesActivity" parent="Theme.NotificationReporter">
         <item name="colorPrimary">@color/blue_700</item>
         <item name="colorOnPrimary">@color/white</item>
 
@@ -57,6 +60,7 @@
     <!-- AlertDialog -->
     <style name="AlertDialog" parent="Theme.MaterialComponents.DayNight.Dialog">
         <item name="colorPrimary">@color/blue_700</item>
+        <item name="colorPrimaryDark">@android:color/transparent</item>
         <item name="colorSecondary">@color/blue_700</item>
         <item name="android:textColorPrimary">@color/gray_300</item>
         <item name="android:textColor">@color/gray_300</item>

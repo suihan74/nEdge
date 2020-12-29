@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="LockScreenActivity" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="LockScreenActivity" parent="Theme.NotificationReporter">
         <item name="android:background">@color/black</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:windowLayoutInDisplayCutoutMode">
@@ -10,7 +10,7 @@
 
     <!-- ====== -->
 
-    <style name="PreferencesActivity" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="PreferencesActivity" parent="Theme.NotificationReporter">
         <item name="colorPrimary">@color/blue_700</item>
         <item name="colorOnPrimary">@color/white</item>
 
