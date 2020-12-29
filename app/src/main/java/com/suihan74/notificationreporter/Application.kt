@@ -24,6 +24,8 @@ import com.suihan74.notificationreporter.repositories.NotificationRepository
 import com.suihan74.notificationreporter.repositories.PreferencesRepository
 import com.suihan74.notificationreporter.repositories.ScreenRepository
 import com.suihan74.utilities.VersionUtil
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.util.concurrent.TimeUnit
 
@@ -44,7 +46,9 @@ class Application : android.app.Application() {
     /** バッテリー関係の情報を扱うリポジトリ */
     val batteryRepository by lazy {
         BatteryRepository().also {
-            it.setBatterLevel(this)
+            GlobalScope.launch {
+                it.setBatterLevel(this@Application)
+            }
         }
     }
 

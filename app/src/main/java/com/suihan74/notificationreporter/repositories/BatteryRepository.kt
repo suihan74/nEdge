@@ -4,35 +4,49 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.BatteryManager
-import androidx.annotation.MainThread
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /**
  * バッテリに関する情報を扱うリポジトリ
  */
 class BatteryRepository {
     /** 充電中かどうか */
-    var batteryCharging = MutableLiveData<Boolean>()
+    val batteryCharging = MutableLiveData<Boolean>()
 
     /** バッテリー残量(%) */
-    var batteryLevel = MutableLiveData<Int>()
+    val batteryLevel = MutableLiveData<Int>()
 
     // ------ //
 
     /** バッテリ残量を読み込む */
-    @MainThread
-    fun setBatteryLevel(intent: Intent) {
+    suspend fun setBatteryLevel(intent: Intent) = withContext(Dispatchers.Main) {
         val rawLevel = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
         val scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
         if (rawLevel != -1 && scale != -1) {
             val level = (rawLevel * 100 / scale.toFloat()).toInt()
             batteryLevel.value = level
         }
+
+        when (intent.action) {
+            Intent.ACTION_POWER_CONNECTED -> {
+                batteryCharging.value = true
+                Log.i("Power", "connected")
+            }
+
+            Intent.ACTION_POWER_DISCONNECTED -> {
+                batteryCharging.value = false
+                Log.i("Power", "disconnected")
+            }
+
+            else -> {}
+        }
     }
 
     /** バッテリ残量を読み込む */
-    @MainThread
-    fun setBatterLevel(context: Context) {
+    suspend fun setBatterLevel(context: Context) = withContext(Dispatchers.Main) {
         val batteryStatus: Intent? = IntentFilter(Intent.ACTION_BATTERY_CHANGED).let {
             context.registerReceiver(null, it)
         }
@@ -41,11 +55,13 @@ class BatteryRepository {
             setBatteryLevel(it)
 
             // 充電状態
-            val chargePlug = it.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1)
             batteryCharging.value =
-                chargePlug == BatteryManager.BATTERY_PLUGGED_AC or
-                        BatteryManager.BATTERY_PLUGGED_USB or
-                        BatteryManager.BATTERY_PLUGGED_WIRELESS
+                when (it.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1)) {
+                    BatteryManager.BATTERY_PLUGGED_AC,
+                    BatteryManager.BATTERY_PLUGGED_USB,
+                    BatteryManager.BATTERY_PLUGGED_WIRELESS -> true
+                    else -> false
+                }
         }
     }
 }
