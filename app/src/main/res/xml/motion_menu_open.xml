@@ -8,30 +8,23 @@
 
     <Transition
         motion:constraintSetStart="@id/start"
-        motion:constraintSetEnd="@id/end"
-        motion:duration="500">
+        motion:constraintSetEnd="@id/end">
 
         <OnSwipe
-            motion:touchAnchorId="@+id/menuArea"
+            motion:touchRegionId="@+id/menuRecyclerView"
+            motion:onTouchUp="autoComplete"
+            motion:touchAnchorSide="right"
             motion:dragDirection="dragRight" />
     </Transition>
 
     <Transition
-        motion:constraintSetStart="@id/end"
-        motion:constraintSetEnd="@id/start"
-        motion:duration="350">
-        <OnClick motion:targetId="@+id/clickGuard" />
+        motion:constraintSetEnd="@id/start">
+        <OnClick
+            motion:targetId="@+id/clickGuard"
+            motion:clickAction="transitionToEnd" />
     </Transition>
 
     <ConstraintSet android:id="@+id/start">
-        <Constraint
-            android:id="@id/menuArea"
-            android:layout_width="48dp"
-            android:layout_height="0dp"
-            motion:layout_constraintTop_toTopOf="parent"
-            motion:layout_constraintBottom_toBottomOf="parent"
-            motion:layout_constraintStart_toStartOf="parent" />
-
         <Constraint
             android:id="@id/clickGuard"
             android:visibility="invisible"
@@ -41,17 +34,17 @@
             motion:layout_constraintBottom_toBottomOf="parent"
             motion:layout_constraintStart_toStartOf="parent"
             motion:layout_constraintEnd_toEndOf="parent" />
-    </ConstraintSet>
 
-    <ConstraintSet android:id="@+id/end">
         <Constraint
-            android:id="@id/menuArea"
-            android:layout_width="256dp"
+            android:id="@id/menuRecyclerView"
+            android:layout_width="@dimen/prefMenuWidthCompact"
             android:layout_height="0dp"
             motion:layout_constraintTop_toTopOf="parent"
             motion:layout_constraintBottom_toBottomOf="parent"
             motion:layout_constraintStart_toStartOf="parent" />
+    </ConstraintSet>
 
+    <ConstraintSet android:id="@+id/end">
         <Constraint
             android:id="@id/clickGuard"
             android:visibility="visible"
@@ -61,6 +54,14 @@
             motion:layout_constraintBottom_toBottomOf="parent"
             motion:layout_constraintStart_toStartOf="parent"
             motion:layout_constraintEnd_toEndOf="parent" />
+
+        <Constraint
+            android:id="@id/menuRecyclerView"
+            android:layout_width="@dimen/prefMenuWidthFull"
+            android:layout_height="0dp"
+            motion:layout_constraintTop_toTopOf="parent"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintStart_toStartOf="parent" />
     </ConstraintSet>
 
 </MotionScene>

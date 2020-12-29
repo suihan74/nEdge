@@ -50,25 +50,19 @@
                 android:layout_height="0dp"/>
 
             <!-- メニュー部分 -->
-            <FrameLayout
-                android:id="@+id/menuArea"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/menuRecyclerView"
+                style="@style/RecyclerView.Linear"
                 android:background="@color/preferencesMenuBackground"
                 android:elevation="16dp"
                 android:paddingVertical="64dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_width="48dp"
+                android:layout_width="@dimen/prefMenuWidthCompact"
                 android:layout_height="0dp">
+            </androidx.recyclerview.widget.RecyclerView>
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/menuRecyclerView"
-                    style="@style/RecyclerView.Linear"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                </androidx.recyclerview.widget.RecyclerView>
-
-            </FrameLayout>
         </androidx.constraintlayout.motion.widget.MotionLayout>
 
         <!-- はみ出し確認用の背景 -->

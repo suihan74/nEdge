@@ -1,9 +1,11 @@
 package com.suihan74.notificationreporter.scenes.preferences
 
 import android.os.Bundle
+import android.view.MotionEvent
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.RecyclerView
 import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.R
 import com.suihan74.notificationreporter.databinding.ActivityPreferencesBinding
@@ -56,6 +58,18 @@ class PreferencesActivity : AppCompatActivity() {
 
                 submitList(MenuItem.values().toList())
             }
+
+            list.setOnTouchListener { view, motionEvent ->
+                binding.motionLayout.onTouchEvent(motionEvent)
+                return@setOnTouchListener false
+            }
+
+            list.addOnItemTouchListener(object : RecyclerView.SimpleOnItemTouchListener() {
+                override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
+                    binding.motionLayout.onTouchEvent(e)
+                    return false
+                }
+            })
         }
 
         // ページビュー

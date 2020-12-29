@@ -1,6 +1,7 @@
 package com.suihan74.utilities
 
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
@@ -24,12 +25,18 @@ class BindingListAdapter<ItemT, BindingT : ViewDataBinding>(
 
     private var onLongClickItem : Listener<BindingT>? = null
 
+    private var onTouchItem : ((binding: BindingT, motionEvent: MotionEvent)->Boolean)? = null
+
     fun setOnClickItemListener(l : Listener<BindingT>?) {
         onClickItem = l
     }
 
     fun setOnLongClickItemListener(l : Listener<BindingT>?) {
         onLongClickItem = l
+    }
+
+    fun setOnTouchItemListener(l : ((binding: BindingT, motionEvent: MotionEvent)->Boolean)?) {
+        onTouchItem = l
     }
 
     // ------ //
@@ -52,6 +59,10 @@ class BindingListAdapter<ItemT, BindingT : ViewDataBinding>(
             it.itemView.setOnLongClickListener {
                 onLongClickItem?.invoke(binding)
                 onLongClickItem != null
+            }
+
+            it.itemView.setOnTouchListener { view, motionEvent ->
+                onTouchItem?.invoke(binding, motionEvent) == true
             }
         }
     }

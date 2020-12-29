@@ -1,3 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- PreferencesActivity -->
+    <!-- メニュー部分を閉じているときの横幅 -->
+    <dimen name="prefMenuWidthCompact">48dp</dimen>
+    <!-- メニュー部分を開いているときの横幅 -->
+    <dimen name="prefMenuWidthFull">256dp</dimen>
 </resources>
