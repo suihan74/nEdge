@@ -21,7 +21,11 @@ class BatteryRepository {
 
     // ------ //
 
-    /** バッテリ残量を読み込む */
+    /**
+     * バッテリ残量を読み込む
+     *
+     * `BatteryStateReceiver`で得られる`Intent`から情報を得るパターン
+     */
     suspend fun setBatteryLevel(intent: Intent) = withContext(Dispatchers.Main) {
         val rawLevel = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
         val scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
@@ -45,7 +49,11 @@ class BatteryRepository {
         }
     }
 
-    /** バッテリ残量を読み込む */
+    /**
+     * バッテリ残量を読み込む
+     *
+     * 即時にバッテリ残量と充電状態の現在値を取得するパターン
+     */
     suspend fun setBatterLevel(context: Context) = withContext(Dispatchers.Main) {
         val batteryStatus: Intent? = IntentFilter(Intent.ACTION_BATTERY_CHANGED).let {
             context.registerReceiver(null, it)
