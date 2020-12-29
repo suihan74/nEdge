@@ -11,10 +11,12 @@
         motion:constraintSetEnd="@id/end">
 
         <OnSwipe
+            motion:touchAnchorId="@+id/menuRecyclerView"
             motion:touchRegionId="@+id/menuRecyclerView"
             motion:onTouchUp="autoComplete"
-            motion:touchAnchorSide="right"
-            motion:dragDirection="dragRight" />
+            motion:maxAcceleration="80"
+            motion:touchAnchorSide="end"
+            motion:dragDirection="dragEnd" />
     </Transition>
 
     <Transition
