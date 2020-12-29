@@ -41,36 +41,7 @@ class PreferencesActivity : AppCompatActivity() {
         }
 
         // ページ選択メニュー
-        binding.menuRecyclerView.also { list ->
-            val adapter = BindingListAdapter<MenuItem, ListItemPreferencesMenuBinding>(
-                R.layout.list_item_preferences_menu,
-                this,
-                MenuItem.DiffCallback(),
-            ) { binding, item ->
-                binding.item = item
-                binding.selectedItem = viewModel.selectedMenuItem
-            }
-
-            list.adapter = adapter.apply {
-                setOnClickItemListener { binding ->
-                    viewModel.selectedMenuItem.value = binding.item
-                }
-
-                submitList(MenuItem.values().toList())
-            }
-
-            list.setOnTouchListener { view, motionEvent ->
-                binding.motionLayout.onTouchEvent(motionEvent)
-                return@setOnTouchListener false
-            }
-
-            list.addOnItemTouchListener(object : RecyclerView.SimpleOnItemTouchListener() {
-                override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
-                    binding.motionLayout.onTouchEvent(e)
-                    return false
-                }
-            })
-        }
+        initializeMenu(binding)
 
         // ページビュー
         binding.contentPager.also { pager ->
@@ -89,6 +60,47 @@ class PreferencesActivity : AppCompatActivity() {
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         hideSystemUI()
+    }
+
+    // ------ //
+
+    /** ページ選択メニューの準備 */
+    @Suppress("ClickableViewAccessibility")
+    private fun initializeMenu(binding: ActivityPreferencesBinding) {
+        val list = binding.menuRecyclerView.also { list ->
+            val adapter = BindingListAdapter<MenuItem, ListItemPreferencesMenuBinding>(
+                R.layout.list_item_preferences_menu,
+                this,
+                MenuItem.DiffCallback(),
+            ) { binding, item ->
+                binding.item = item
+                binding.selectedItem = viewModel.selectedMenuItem
+            }
+
+            list.adapter = adapter.apply {
+                setOnClickItemListener { binding ->
+                    viewModel.selectedMenuItem.value = binding.item
+                }
+
+                submitList(MenuItem.values().toList())
+            }
+        }
+
+        // `MotionLayout`にタッチイベントを伝播させる
+        // リスト、各項目のタッチイベント処理で伝播が止まってしまうので、
+        // その前に明示的に`MotionLayout`にもイベントを送り付けるようにしている
+
+        list.setOnTouchListener { _, motionEvent ->
+            binding.motionLayout.onTouchEvent(motionEvent)
+            return@setOnTouchListener false
+        }
+
+        list.addOnItemTouchListener(object : RecyclerView.SimpleOnItemTouchListener() {
+            override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
+                binding.motionLayout.onTouchEvent(e)
+                return false
+            }
+        })
     }
 
     // ------ //
