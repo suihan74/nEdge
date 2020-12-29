@@ -29,7 +29,7 @@ class BatteryRepository {
     suspend fun setBatteryLevel(intent: Intent) = withContext(Dispatchers.Main) {
         val rawLevel = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
         val scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
-        if (rawLevel != -1 && scale != -1) {
+        if (rawLevel != -1 && scale != -1 && scale != 0) {
             val level = (rawLevel * 100 / scale.toFloat()).toInt()
             batteryLevel.value = level
         }
