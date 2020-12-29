@@ -59,7 +59,9 @@ class PreferencesActivity : AppCompatActivity() {
     /** ダイアログなどから復帰時にImmersiveモードを再適用する */
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        hideSystemUI()
+        if (hasFocus) {
+            hideSystemUI()
+        }
     }
 
     // ------ //
