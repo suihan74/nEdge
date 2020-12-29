@@ -136,7 +136,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/prefs_default_notification_color_desc" />
 
-            <EditText
+            <com.suihan74.utilities.view.UnFocusableEditText
                 android:id="@+id/colorEditText"
                 colorCode="@={vm.notificationColor}"
                 android:layout_width="wrap_content"

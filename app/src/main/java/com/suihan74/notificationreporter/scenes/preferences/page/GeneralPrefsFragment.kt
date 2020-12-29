@@ -76,9 +76,7 @@ class GeneralPrefsFragment : Fragment() {
             // 入力中はナビゲーションバーを表示する
             editText.setOnFocusChangeListener { _, b ->
                 if (b) {
-                    preferencesActivity.window.decorView.let {
-                        it.systemUiVisibility = it.systemUiVisibility xor View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                    }
+                    preferencesActivity.showSystemUI()
                 }
                 else {
                     preferencesActivity.hideSoftInputMethod(binding.mainLayout)

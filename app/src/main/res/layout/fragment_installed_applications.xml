@@ -9,23 +9,28 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/mainLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/searchEditText"
+            android:id="@+id/searchTextInputLayout"
             style="@style/SearchAppsTextInputLayout"
             android:hint="検索クエリ"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintWidth_percent="0.55"
+            app:layout_constraintWidth_percent="0.6"
             android:layout_width="0dp"
             android:layout_height="wrap_content">
 
-            <com.google.android.material.textfield.TextInputEditText
+            <com.suihan74.utilities.view.UnFocusableTextInputEditText
+                android:id="@+id/searchEditText"
                 style="@style/SearchAppsTextInputEditText"
                 android:inputType="text"
+                android:imeOptions="actionSearch"
+                android:selectAllOnFocus="true"
+                android:importantForAutofill="no"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
@@ -35,7 +40,7 @@
             android:id="@+id/recyclerView"
             style="@style/RecyclerView.Linear"
             applications="@{vm.applications}"
-            app:layout_constraintTop_toBottomOf="@id/searchEditText"
+            app:layout_constraintTop_toBottomOf="@id/searchTextInputLayout"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
