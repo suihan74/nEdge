@@ -10,6 +10,10 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.pm.PackageInfoCompat
 import androidx.room.Room
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.Worker
+import androidx.work.WorkerParameters
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.suihan74.notificationreporter.dataStore.PreferencesKey
 import com.suihan74.notificationreporter.database.AppDatabase
@@ -21,6 +25,7 @@ import com.suihan74.notificationreporter.repositories.PreferencesRepository
 import com.suihan74.notificationreporter.repositories.ScreenRepository
 import com.suihan74.utilities.VersionUtil
 import kotlinx.coroutines.runBlocking
+import java.util.concurrent.TimeUnit
 
 /**
  * アプリ情報
@@ -136,8 +141,17 @@ class Application : android.app.Application() {
 
     // ------ //
 
+    fun notifyDummy(delay: Long) {
+        val request = OneTimeWorkRequestBuilder<DummyNotifyWorker>()
+            .setInitialDelay(delay, TimeUnit.SECONDS)
+            .build()
+
+        WorkManager.getInstance(this)
+            .enqueue(request)
+    }
+
     /** ダミーの通知を発生させる */
-    fun notifyDummy() {
+    private fun notifyDummyImpl() {
         val notificationId = 334
 
         createNotificationChannel(NOTIFICATION_CHANNEL_DUMMY)
@@ -167,4 +181,15 @@ class Application : android.app.Application() {
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
     }
+
+    class DummyNotifyWorker(
+        appContext: Context,
+        params: WorkerParameters
+    ) : Worker(appContext, params) {
+        override fun doWork(): Result {
+            Application.instance.notifyDummyImpl()
+            return Result.success()
+        }
+    }
 }
+
