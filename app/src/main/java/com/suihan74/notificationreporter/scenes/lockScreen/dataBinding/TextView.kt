@@ -42,7 +42,8 @@ object TextViewBindingAdapters {
                 val (title, text) = sbn.notification.extras.run {
                     getString(Notification.EXTRA_TITLE) to getString(Notification.EXTRA_TEXT)
                 }
-                "$title : $text"
+                if (title == null || text == null) ""
+                else "$title : $text"
             }
     }
 }

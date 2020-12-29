@@ -99,6 +99,37 @@
             android:layout_height="0dp"
             tools:visibility="gone"/>
 
+        <TextView
+            notificationAppName="@{vm.currentNotice}"
+            android:textColor="@{vm.notificationSetting.color}"
+            android:textAlignment="center"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:layout_marginBottom="2dp"
+            tools:text="com.suihan74.notificationreporter"
+            app:layout_constraintBottom_toTopOf="@id/notificationText"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:paddingHorizontal="30dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/notificationText"
+            notificationText="@{vm.currentNotice}"
+            android:textColor="@{vm.notificationSetting.color}"
+            android:textAlignment="center"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:layout_marginBottom="16dp"
+            tools:text="dummy : dummy"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:paddingHorizontal="30dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"/>
+
         <ImageView
             android:id="@+id/notificationBar"
             android:background="@android:color/transparent"
@@ -111,33 +142,6 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             tools:visibility="gone"/>
-
-        <TextView
-            notificationAppName="@{vm.currentNotice}"
-            android:textColor="@{vm.notificationSetting.color}"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:layout_marginBottom="2dp"
-            tools:text="com.suihan74.notificationreporter"
-            app:layout_constraintBottom_toTopOf="@id/notificationText"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <TextView
-            android:id="@+id/notificationText"
-            notificationText="@{vm.currentNotice}"
-            android:textColor="@{vm.notificationSetting.color}"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:layout_marginBottom="16dp"
-            tools:text="dummy : dummy"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
