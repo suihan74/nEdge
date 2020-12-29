@@ -150,7 +150,7 @@ class WrappedDataStore<KeyT : WrappedDataStore.Key<*>> private constructor (
      */
     suspend fun <T> get(key: Key<T>) : T {
         checkKey(key)
-        return dataStore.data.first()[key.key] ?: key.default()
+        return dataStore.data.firstOrNull()?.get(key.key) ?: key.default()
     }
 
     /**
