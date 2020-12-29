@@ -7,6 +7,7 @@ import android.widget.TimePicker
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
+import com.suihan74.notificationreporter.R
 import com.suihan74.utilities.DialogListener
 import com.suihan74.utilities.fragment.withArguments
 import com.suihan74.utilities.lazyProvideViewModel
@@ -49,7 +50,7 @@ class TimePickerDialogFragment : DialogFragment(), TimePickerDialog.OnTimeSetLis
             )
         }
 
-        return TimePickerDialog(context, this, hour, minute, is24HourView)
+        return TimePickerDialog(context, R.style.TimePickerDialog, this, hour, minute, is24HourView)
     }
 
     override fun onTimeSet(timePicker: TimePicker?, hour: Int, minute: Int) {
