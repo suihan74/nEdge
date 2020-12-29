@@ -31,10 +31,10 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:paddingTop="80dp"
-                android:layout_marginLeft="48dp"
+                android:layout_marginStart="48dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
             </androidx.viewpager2.widget.ViewPager2>
 
@@ -68,7 +68,7 @@
         <!-- はみ出し確認用の背景 -->
         <View
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             android:visibility="@{vm.editingTopCornerRadius}"
             android:background="#ff00ff"
             android:layout_width="48dp"
@@ -76,7 +76,7 @@
 
         <View
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             android:visibility="@{vm.editingTopCornerRadius}"
             android:background="#ff00ff"
             android:layout_width="48dp"
@@ -84,7 +84,7 @@
 
         <View
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             android:visibility="@{vm.editingBottomCornerRadius}"
             android:background="#ff00ff"
             android:layout_width="48dp"
@@ -92,7 +92,7 @@
 
         <View
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             android:visibility="@{vm.editingBottomCornerRadius}"
             android:background="#ff00ff"
             android:layout_width="48dp"
@@ -100,8 +100,8 @@
 
         <View
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintWidth_percent="0.5"
             android:visibility="@{vm.editingTopNotch}"
             android:background="#ff00ff"
