@@ -150,56 +150,28 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{@string/prefs_corner_radius_desc(`左上`)}" />
+                android:text="@{@string/prefs_corner_radius_desc(`上部`)}" />
 
             <com.google.android.material.slider.Slider
-                editing="@={vm.editingLeftTopCornerRadius}"
+                editing="@={vm.editingTopCornerRadius}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:stepSize="1.0"
-                android:value="@={vm.leftTopCornerRadius}"
+                android:value="@={vm.topCornerRadius}"
                 android:valueFrom="0.0"
                 android:valueTo="200.0" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{@string/prefs_corner_radius_desc(`右上`)}" />
+                android:text="@{@string/prefs_corner_radius_desc(`下部`)}" />
 
             <com.google.android.material.slider.Slider
-                editing="@={vm.editingRightTopCornerRadius}"
+                editing="@={vm.editingBottomCornerRadius}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:stepSize="1.0"
-                android:value="@={vm.rightTopCornerRadius}"
-                android:valueFrom="0.0"
-                android:valueTo="200.0" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{@string/prefs_corner_radius_desc(`左下`)}" />
-
-            <com.google.android.material.slider.Slider
-                editing="@={vm.editingLeftBottomCornerRadius}"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:stepSize="1.0"
-                android:value="@={vm.leftBottomCornerRadius}"
-                android:valueFrom="0.0"
-                android:valueTo="200.0" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{@string/prefs_corner_radius_desc(`右下`)}" />
-
-            <com.google.android.material.slider.Slider
-                editing="@={vm.editingRightBottomCornerRadius}"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:stepSize="1.0"
-                android:value="@={vm.rightBottomCornerRadius}"
+                android:value="@={vm.bottomCornerRadius}"
                 android:valueFrom="0.0"
                 android:valueTo="200.0" />
 

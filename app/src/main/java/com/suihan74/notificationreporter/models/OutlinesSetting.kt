@@ -12,15 +12,9 @@ data class OutlinesSetting (
     @SerialName("outlines_type")
     val type: OutlinesType = OutlinesType.FULL,
 
-    /** 左上の角丸半径 */
-    val leftTopCornerRadius: Float = 0f,
+    /** 画面上部角の角丸半径 */
+    val topCornerRadius: Float = 0f,
 
-    /** 右上の角丸半径 */
-    val rightTopCornerRadius: Float = 0f,
-
-    /** 左下の角丸半径 */
-    val leftBottomCornerRadius: Float = 0f,
-
-    /** 右下の角丸半径 */
-    val rightBottomCornerRadius: Float = 0f,
+    /** 画面下部角の角丸半径 */
+    val bottomCornerRadius: Float = 0f,
 )

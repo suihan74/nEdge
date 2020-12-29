@@ -59,17 +59,11 @@ class PreferencesViewModel(
     /** ブラーの強さ */
     val blurSize = mutableLiveData<Float>()
 
-    /** 輪郭線左上角の角丸半径 */
-    val leftTopCornerRadius = mutableLiveData<Float>()
+    /** 輪郭線の角丸半径(画面上部) */
+    val topCornerRadius = mutableLiveData<Float>()
 
-    /** 輪郭線右上角の角丸半径 */
-    val rightTopCornerRadius = mutableLiveData<Float>()
-
-    /** 輪郭線左下角の角丸半径 */
-    val leftBottomCornerRadius = mutableLiveData<Float>()
-
-    /** 輪郭線右下角の角丸半径 */
-    val rightBottomCornerRadius = mutableLiveData<Float>()
+    /** 輪郭線の角丸半径(画面下部) */
+    val bottomCornerRadius = mutableLiveData<Float>()
 
     /** ノッチ設定 */
     val topNotchSetting = mutableLiveData<NotchSetting>()
@@ -77,17 +71,11 @@ class PreferencesViewModel(
     /** ノッチ種類 */
     val topNotchType = mutableLiveData<NotchType>()
 
-    /** 輪郭線の左上角丸を編集中 */
-    val editingLeftTopCornerRadius = MutableLiveData(false)
+    /** 輪郭線の上部角丸を編集中 */
+    val editingTopCornerRadius = MutableLiveData(false)
 
-    /** 輪郭線の右上角丸を編集中 */
-    val editingRightTopCornerRadius = MutableLiveData(false)
-
-    /** 輪郭線の左下角丸を編集中 */
-    val editingLeftBottomCornerRadius = MutableLiveData(false)
-
-    /** 輪郭線の右下角丸を編集中 */
-    val editingRightBottomCornerRadius = MutableLiveData(false)
+    /** 輪郭線の下部角丸を編集中 */
+    val editingBottomCornerRadius = MutableLiveData(false)
 
     /** 上部ノッチを編集中 */
     val editingTopNotch = MutableLiveData(false)
@@ -158,10 +146,8 @@ class PreferencesViewModel(
                 lineThickness.value = setting.thickness
                 blurSize.value = setting.blurSize
                 setting.outlinesSetting.let { outlines ->
-                    leftTopCornerRadius.value = outlines.leftTopCornerRadius
-                    rightTopCornerRadius.value = outlines.rightTopCornerRadius
-                    leftBottomCornerRadius.value = outlines.leftBottomCornerRadius
-                    rightBottomCornerRadius.value = outlines.rightBottomCornerRadius
+                    topCornerRadius.value = outlines.topCornerRadius
+                    bottomCornerRadius.value = outlines.bottomCornerRadius
                 }
                 setting.topNotchSetting.let { notch ->
                     topNotchSetting.value = notch
@@ -193,10 +179,8 @@ class PreferencesViewModel(
                 thickness = lineThickness.value!!,
                 blurSize = blurSize.value!!,
                 outlinesSetting = OutlinesSetting(
-                    leftTopCornerRadius = leftTopCornerRadius.value!!,
-                    rightTopCornerRadius = rightTopCornerRadius.value!!,
-                    leftBottomCornerRadius = leftBottomCornerRadius.value!!,
-                    rightBottomCornerRadius = rightBottomCornerRadius.value!!
+                    topCornerRadius = topCornerRadius.value!!,
+                    bottomCornerRadius = bottomCornerRadius.value!!,
                 ),
                 topNotchSetting = topNotchSetting.value!!
             )

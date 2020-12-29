@@ -148,10 +148,10 @@ class NotificationDrawer(
 
         val cornerRadii = notificationSetting.outlinesSetting.run {
             floatArrayOf(
-                leftTopCornerRadius, leftTopCornerRadius,
-                rightTopCornerRadius, rightTopCornerRadius,
-                rightBottomCornerRadius, rightBottomCornerRadius,
-                leftBottomCornerRadius, leftBottomCornerRadius,
+                topCornerRadius, topCornerRadius,
+                topCornerRadius, topCornerRadius,
+                bottomCornerRadius, bottomCornerRadius,
+                bottomCornerRadius, bottomCornerRadius,
             )
         }
 

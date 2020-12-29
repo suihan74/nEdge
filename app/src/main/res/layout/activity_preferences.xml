@@ -75,7 +75,7 @@
         <View
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            android:visibility="@{vm.editingLeftTopCornerRadius}"
+            android:visibility="@{vm.editingTopCornerRadius}"
             android:background="#ff00ff"
             android:layout_width="48dp"
             android:layout_height="48dp"/>
@@ -83,7 +83,7 @@
         <View
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            android:visibility="@{vm.editingRightTopCornerRadius}"
+            android:visibility="@{vm.editingTopCornerRadius}"
             android:background="#ff00ff"
             android:layout_width="48dp"
             android:layout_height="48dp"/>
@@ -91,7 +91,7 @@
         <View
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            android:visibility="@{vm.editingLeftBottomCornerRadius}"
+            android:visibility="@{vm.editingBottomCornerRadius}"
             android:background="#ff00ff"
             android:layout_width="48dp"
             android:layout_height="48dp"/>
@@ -99,7 +99,7 @@
         <View
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            android:visibility="@{vm.editingRightBottomCornerRadius}"
+            android:visibility="@{vm.editingBottomCornerRadius}"
             android:background="#ff00ff"
             android:layout_width="48dp"
             android:layout_height="48dp"/>
