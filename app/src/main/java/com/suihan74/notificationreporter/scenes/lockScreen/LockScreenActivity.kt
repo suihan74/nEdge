@@ -47,14 +47,14 @@ class LockScreenActivity : AppCompatActivity() {
 
             // バッテリレベルが指定値未満
             val batteryLevel = batteryRepo.batteryLevel.value ?: 0
-            val requiredBatteryLevel = prefRepo.getGeneralSetting(PreferencesKey.REQUIRED_BATTERY_LEVEL)
+            val requiredBatteryLevel = prefRepo.getPreference(PreferencesKey.REQUIRED_BATTERY_LEVEL)
             if (batteryLevel < requiredBatteryLevel && batteryRepo.batteryCharging.value != true) {
                 return false
             }
 
             // 通知を行わない時間帯
-            val silentTimeZoneStart = prefRepo.getGeneralSetting(PreferencesKey.SILENT_TIMEZONE_START)
-            val silentTimeZoneEnd = prefRepo.getGeneralSetting(PreferencesKey.SILENT_TIMEZONE_END)
+            val silentTimeZoneStart = prefRepo.getPreference(PreferencesKey.SILENT_TIMEZONE_START)
+            val silentTimeZoneEnd = prefRepo.getPreference(PreferencesKey.SILENT_TIMEZONE_END)
             val now = LocalTime.now().toSecondOfDay()
             val considerDateChange = silentTimeZoneStart > silentTimeZoneEnd
             if (considerDateChange) {

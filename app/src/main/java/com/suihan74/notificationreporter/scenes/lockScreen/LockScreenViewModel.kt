@@ -4,6 +4,7 @@ import android.service.notification.StatusBarNotification
 import android.view.MotionEvent
 import android.view.View
 import androidx.lifecycle.*
+import com.suihan74.notificationreporter.dataStore.PreferencesKey
 import com.suihan74.notificationreporter.models.NotificationSetting
 import com.suihan74.notificationreporter.repositories.BatteryRepository
 import com.suihan74.notificationreporter.repositories.NotificationRepository
@@ -41,10 +42,12 @@ class LockScreenViewModel(
     }
 
     /** 画面消灯までの待機時間(ミリ秒) */
-    private val lightOffInterval : LiveData<Long> = prefRepo.lightOffInterval
+    private val lightOffInterval : LiveData<Long> =
+        prefRepo.getLiveData(PreferencesKey.LIGHT_OFF_INTERVAL, viewModelScope)
 
     /** バックライト消灯後の画面をさらに暗くする度合い */
-    val lightLevel : LiveData<Float> = prefRepo.lightLevel
+    val lightLevel : LiveData<Float> =
+        prefRepo.getLiveData(PreferencesKey.LIGHT_LEVEL, viewModelScope)
 
     /** バッテリーレベル */
     val batteryLevel : LiveData<Int> = batteryRepo.batteryLevel

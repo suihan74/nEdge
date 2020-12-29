@@ -1,10 +1,13 @@
 package com.suihan74.notificationreporter.repositories
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.suihan74.notificationreporter.dataStore.PreferencesKey
 import com.suihan74.notificationreporter.database.notification.NotificationDao
 import com.suihan74.notificationreporter.database.notification.NotificationEntity
 import com.suihan74.notificationreporter.models.NotificationSetting
 import com.suihan74.utilities.dataStore.WrappedDataStore
+import kotlinx.coroutines.CoroutineScope
 
 /**
  * アプリ設定を扱うリポジトリ
@@ -16,27 +19,6 @@ class PreferencesRepository(
     companion object {
         private const val DEFAULT_SETTING_NAME = NotificationEntity.DEFAULT_SETTING_NAME
     }
-
-    // ------ //
-
-    /** 画面消灯までの待機時間(ミリ秒) */
-    val lightOffInterval = dataStore.getLiveData(PreferencesKey.LIGHT_OFF_INTERVAL)
-
-    /**
-     * バックライト消灯後の画面をさらに暗くする度合い
-     *
-     * 0.0f ~ 1.0f
-     */
-    val lightLevel = dataStore.getLiveData(PreferencesKey.LIGHT_LEVEL)
-
-    /** 通知しない時間帯(開始時刻) */
-    val silentTimezoneStart = dataStore.getLiveData<Int>(PreferencesKey.SILENT_TIMEZONE_START)
-
-    /** 通知しない時間帯(終了時刻) */
-    val silentTimezoneEnd = dataStore.getLiveData<Int>(PreferencesKey.SILENT_TIMEZONE_END)
-
-    /** 通知するのに最低限必要なバッテリレベル */
-    val requiredBatteryLevel = dataStore.getLiveData(PreferencesKey.REQUIRED_BATTERY_LEVEL)
 
     // ------ //
 
@@ -66,9 +48,23 @@ class PreferencesRepository(
     }
 
     /**
-     * 一般設定の値を取得する
+     * アプリ設定値を取得する
      */
-    suspend fun <T> getGeneralSetting(key: PreferencesKey<T>) : T {
+    suspend fun <T> getPreference(key: PreferencesKey<T>) : T {
         return dataStore.get(key)
+    }
+
+    /**
+     * アプリ設定値の`LiveData`を取得する
+     */
+    fun <T> getLiveData(key: PreferencesKey<T>, coroutineScope: CoroutineScope) : LiveData<T> {
+        return dataStore.getLiveData(key, coroutineScope)
+    }
+
+    /**
+     * アプリ設定値の`MutableLiveData`を取得する
+     */
+    fun <T> getMutableLiveData(key: PreferencesKey<T>, coroutineScope: CoroutineScope) : MutableLiveData<T> {
+        return dataStore.getMutableLiveData(key, coroutineScope)
     }
 }

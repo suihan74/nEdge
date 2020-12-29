@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.suihan74.notificationreporter.R
+import com.suihan74.notificationreporter.dataStore.PreferencesKey
 import com.suihan74.notificationreporter.database.notification.NotificationEntity
 import com.suihan74.notificationreporter.models.NotchSetting
 import com.suihan74.notificationreporter.models.NotchType
@@ -29,17 +30,25 @@ class PreferencesViewModel(
     /** 選択中のメニュー項目 */
     val selectedMenuItem = MutableLiveData(MenuItem.GENERAL)
 
+    // ------ //
+
     /** バックライト消灯後の画面をさらに暗くする度合い */
-    val lightLevel : MutableLiveData<Float> = prefRepo.lightLevel
+    val lightLevel =
+        prefRepo.getMutableLiveData(PreferencesKey.LIGHT_LEVEL, viewModelScope)
 
     /** 通知を行わない時間帯(開始時刻) */
-    val silentTimezoneStart = prefRepo.silentTimezoneStart
+    val silentTimezoneStart =
+        prefRepo.getMutableLiveData(PreferencesKey.SILENT_TIMEZONE_START, viewModelScope)
 
     /** 通知を行わない時間帯(終了時刻) */
-    val silentTimezoneEnd = prefRepo.silentTimezoneEnd
+    val silentTimezoneEnd =
+        prefRepo.getMutableLiveData(PreferencesKey.SILENT_TIMEZONE_END, viewModelScope)
 
     /** 通知を行うのに必要な最低バッテリレベル */
-    val requiredBatteryLevel = prefRepo.requiredBatteryLevel
+    val requiredBatteryLevel =
+        prefRepo.getMutableLiveData(PreferencesKey.REQUIRED_BATTERY_LEVEL, viewModelScope)
+
+    // ------ //
 
     /** 通知表示の輪郭線の色 */
     val notificationColor = mutableLiveData<Int>()
