@@ -1,20 +1,25 @@
 package com.suihan74.notificationreporter.models
 
+import androidx.annotation.DrawableRes
+import com.suihan74.notificationreporter.R
+
 /**
  * ノッチの種類
  */
-enum class NotchType {
+enum class NotchType(
+    @DrawableRes val iconId: Int
+) {
     /** ノッチ無し */
-    NONE,
+    NONE(0),
 
     /** 矩形 */
-    RECTANGLE,
+    RECTANGLE(R.drawable.ic_notch_rect),
 
     /** 水滴 (O型も含む) */
-    WATER_DROP,
+    WATER_DROP(R.drawable.ic_notch_water_drop),
 
     /** ○の切り抜き (辺に接しない) */
-    PUNCH_HOLE,
+    PUNCH_HOLE(R.drawable.ic_notch_punch_hole),
 
     ;
 

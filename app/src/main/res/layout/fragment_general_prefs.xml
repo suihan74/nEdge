@@ -183,6 +183,9 @@
 
             <Button
                 android:id="@+id/notchTypeSelectionButton"
+                android:contentDescription="@null"
+                src="@{vm.topNotchType.iconId}"
+                android:foregroundGravity="center"
                 android:layout_width="128dp"
                 android:layout_height="wrap_content" />
 
