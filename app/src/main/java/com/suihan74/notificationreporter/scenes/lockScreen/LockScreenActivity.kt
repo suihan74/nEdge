@@ -127,20 +127,14 @@ class LockScreenActivity : AppCompatActivity() {
                 }
             })
         }
-
-        // バックライトを最低レベルにする
-        viewModel.lightOff.observe(this, { lightOff ->
-            window.attributes = window.attributes.also { lp ->
-                lp.screenBrightness =
-                        if (lightOff) 0.01f  // 1/256以下の値にするとバグる機種がある
-                        else -1.0f  // システムの値
-            }
-        })
     }
 
     // ノッチ情報の取得はウィンドウアタッチ後でないとできない
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
+
+        // バックライトの制御
+        viewModel.observeScreenBrightness(this, window)
 
         val notificationDrawer = NotificationDrawer(window)
         viewModel.notificationSetting.observe(this, {

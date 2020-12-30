@@ -86,19 +86,6 @@
 
         </androidx.constraintlayout.motion.widget.MotionLayout>
 
-        <View
-            android:id="@+id/clickGuard"
-            lightLevel="@{vm.lightLevel}"
-            android:visibility="@{vm.lightOff}"
-            android:onTouch="@{vm.onTouchScreen}"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            tools:visibility="gone"/>
-
         <TextView
             notificationAppName="@{vm.currentNotice}"
             android:textColor="@{vm.notificationSetting.color}"
@@ -135,6 +122,20 @@
             android:background="@android:color/transparent"
             notifications="@{vm.statusBarNotifications}"
             android:contentDescription="@null"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            tools:visibility="gone"/>
+
+        <View
+            android:id="@+id/clickGuard"
+            lightLevel="@{vm.lightLevelOff}"
+            android:visibility="@{vm.lightOff}"
+            android:onTouch="@{vm.onTouchScreen}"
+            android:background="@color/black"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"

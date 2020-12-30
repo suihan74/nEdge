@@ -3,6 +3,7 @@ package com.suihan74.notificationreporter.scenes.lockScreen
 import android.service.notification.StatusBarNotification
 import android.view.MotionEvent
 import android.view.View
+import android.view.Window
 import androidx.lifecycle.*
 import com.suihan74.notificationreporter.dataStore.PreferencesKey
 import com.suihan74.notificationreporter.models.NotificationSetting
@@ -30,7 +31,7 @@ class LockScreenViewModel(
 
     /** バックライト最低レベルまで暗くするか */
     val lightOff : LiveData<Boolean> by lazy { _lightOff }
-    private val _lightOff = MutableLiveData(false).also { liveData ->
+    private val _lightOff = MutableLiveData<Boolean>().also { liveData ->
         liveData.observeForever {
             if (!it) {
                 viewModelScope.launch(Dispatchers.Main) {
@@ -45,9 +46,13 @@ class LockScreenViewModel(
     private val lightOffInterval : LiveData<Long> =
         prefRepo.getLiveData(PreferencesKey.LIGHT_OFF_INTERVAL, viewModelScope)
 
-    /** バックライト消灯後の画面をさらに暗くする度合い */
-    val lightLevel : LiveData<Float> =
-        prefRepo.getLiveData(PreferencesKey.LIGHT_LEVEL, viewModelScope)
+    /** 画面起動直後の画面の明るさ */
+    private val _lightLevelOn = MutableLiveData<Float>()
+    val lightLevelOn : LiveData<Float> by lazy { _lightLevelOn }
+
+    /** バックライト消灯後の画面の明るさ */
+    private val _lightLevelOff = MutableLiveData<Float>()
+    val lightLevelOff : LiveData<Float> by lazy { _lightLevelOff }
 
     /** バッテリーレベル */
     val batteryLevel : LiveData<Int> = batteryRepo.batteryLevel
@@ -72,6 +77,10 @@ class LockScreenViewModel(
         })
 
         viewModelScope.launch(Dispatchers.Main) {
+            _lightLevelOn.value = prefRepo.getPreference(PreferencesKey.LIGHT_LEVEL_ON)
+            _lightLevelOff.value = prefRepo.getPreference(PreferencesKey.LIGHT_LEVEL_OFF)
+            _lightOff.value = false
+
             while (true) {
                 val now = LocalDateTime.now()
                 _currentTime.value = now
@@ -93,5 +102,30 @@ class LockScreenViewModel(
             }
         }
         true
+    }
+
+    // ------ //
+
+    fun observeScreenBrightness(owner: LifecycleOwner, window: Window) {
+        lightOff.observe(owner, { lightOff ->
+            window.attributes = window.attributes.also { lp ->
+                lp.screenBrightness =
+                    if (lightOff) calcBrightness(lightLevelOff.value)
+                    else calcBrightness(lightLevelOn.value)
+            }
+        })
+    }
+
+    private fun calcBrightness(value: Float?) : Float {
+        return when {
+            // システム設定値(-1.0fよりも小さい値のとき)
+            value == null || value < -1.0f -> -1.0f
+
+            // バックライト0+さらに暗くする
+            value < .0f -> 0.01f
+
+            // バックライト使用
+            else -> 0.01f + (1.0f - 0.01f) * value
+        }
     }
 }

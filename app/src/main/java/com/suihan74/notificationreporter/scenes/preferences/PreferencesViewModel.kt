@@ -36,8 +36,17 @@ class PreferencesViewModel(
 
     // ------ //
 
-    /** バックライト消灯後の画面をさらに暗くする度合い */
-    val lightLevel = MutableLiveData<Float>()
+    /** ロック画面起動直後の画面の明るさ */
+    val lightLevelOn = MutableLiveData<Float>()
+
+    /** バックライト消灯後の画面の明るさ */
+    val lightLevelOff = MutableLiveData<Float>()
+
+    /** ライトレベルを編集中 */
+    val editingLightLevel = MutableLiveData<EditingLightLevel>()
+
+    /** ライトレベルプレビュー時の値 */
+    val previewLightLevel = MutableLiveData<Float>()
 
     /** 通知を行わない時間帯(開始時刻) */
     val silentTimezoneStart = MutableLiveData<Int>()
@@ -47,6 +56,13 @@ class PreferencesViewModel(
 
     /** 通知を行うのに必要な最低バッテリレベル */
     val requiredBatteryLevel = MutableLiveData<Int>()
+
+    /** ライトレベル編集状態 */
+    enum class EditingLightLevel {
+        NONE,
+        ON,
+        OFF
+    }
 
     // ------ //
 
@@ -80,13 +96,23 @@ class PreferencesViewModel(
     /** 上部ノッチを編集中 */
     val editingTopNotch = MutableLiveData(false)
 
+    /** 輪郭線編集状態 */
+    enum class EditingOutline {
+        NONE,
+        TOP,
+        BOTTOM,
+        TOP_NOTCH,
+        BOTTOM_NOTCH
+    }
+
     // ------ //
 
     /**
      * 初期値をセットする
      */
     init {
-        bindFlow(PreferencesKey.LIGHT_LEVEL, lightLevel)
+        bindFlow(PreferencesKey.LIGHT_LEVEL_ON, lightLevelOn)
+        bindFlow(PreferencesKey.LIGHT_LEVEL_OFF, lightLevelOff)
         bindFlow(PreferencesKey.SILENT_TIMEZONE_START, silentTimezoneStart)
         bindFlow(PreferencesKey.SILENT_TIMEZONE_END, silentTimezoneEnd)
         bindFlow(PreferencesKey.REQUIRED_BATTERY_LEVEL, requiredBatteryLevel)
@@ -99,7 +125,8 @@ class PreferencesViewModel(
      */
     fun saveSettings() = viewModelScope.launch {
         prefRepo.editPreferences {
-            set(PreferencesKey.LIGHT_LEVEL, lightLevel)
+            set(PreferencesKey.LIGHT_LEVEL_ON, lightLevelOn)
+            set(PreferencesKey.LIGHT_LEVEL_OFF, lightLevelOff)
             set(PreferencesKey.SILENT_TIMEZONE_START, silentTimezoneStart)
             set(PreferencesKey.SILENT_TIMEZONE_END, silentTimezoneEnd)
             set(PreferencesKey.REQUIRED_BATTERY_LEVEL, requiredBatteryLevel)

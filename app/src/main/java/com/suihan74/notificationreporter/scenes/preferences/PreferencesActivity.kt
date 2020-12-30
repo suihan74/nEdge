@@ -5,6 +5,8 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.R
@@ -54,6 +56,59 @@ class PreferencesActivity : AppCompatActivity() {
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         binding.vm = viewModel
+
+        // 画面明度のプレビュー
+        viewModel.previewLightLevel.observe(this, {
+            window.attributes = window.attributes.also { lp ->
+                lp.screenBrightness =
+                    when {
+                        // システム設定値(-1.0fよりも小さい値のとき)
+                        it == null || it < -1.0f -> -1.0f
+
+                        // バックライト0+さらに暗くする
+                        it < .0f -> 0.01f
+
+                        // バックライト使用
+                        else -> 0.01f + (1.0f - 0.01f) * it
+                    }
+            }
+        })
+
+        viewModel.editingLightLevel.observe(this, {
+            when (it) {
+                PreferencesViewModel.EditingLightLevel.NONE ->
+                    observeScreenBrightness(null)
+
+                PreferencesViewModel.EditingLightLevel.ON ->
+                    observeScreenBrightness(viewModel.lightLevelOn)
+
+                PreferencesViewModel.EditingLightLevel.OFF ->
+                    observeScreenBrightness(viewModel.lightLevelOff)
+
+                else -> {}
+            }
+        })
+    }
+
+    private var previewLightLevelObserver : Observer<Float>? = null
+
+    private fun observeScreenBrightness(liveData: LiveData<Float>?) {
+        previewLightLevelObserver?.let { observer ->
+            viewModel.lightLevelOn.removeObserver(observer)
+            viewModel.lightLevelOff.removeObserver(observer)
+        }
+
+        if (liveData == null) {
+            viewModel.previewLightLevel.value = -100.0f
+            return
+        }
+
+        val observer = Observer<Float> {
+            viewModel.previewLightLevel.value = it
+        }
+        previewLightLevelObserver = observer
+
+        liveData.observe(this, observer)
     }
 
     /** ダイアログなどから復帰時にImmersiveモードを再適用する */

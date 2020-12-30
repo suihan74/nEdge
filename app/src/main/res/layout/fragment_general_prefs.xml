@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
     <data>
+        <import type="com.suihan74.notificationreporter.scenes.preferences.PreferencesViewModel.EditingLightLevel"/>
+
         <variable
             name="vm"
             type="com.suihan74.notificationreporter.scenes.preferences.PreferencesViewModel" />
+
+        <variable
+            name="lifecycle"
+            type="androidx.lifecycle.Lifecycle" />
     </data>
 
     <ScrollView
@@ -94,20 +100,42 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
-                android:text="@string/prefs_light_level_desc" />
+                android:layout_marginTop="10dp"
+                android:text="@string/prefs_light_level_on_desc" />
 
             <com.google.android.material.slider.Slider
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                state="@={vm.editingLightLevel}"
+                onState="@{EditingLightLevel.ON}"
+                offState="@{EditingLightLevel.NONE}"
+                lifecycle="@{lifecycle}"
                 android:stepSize="0.02"
-                android:value="@={vm.lightLevel}"
+                android:value="@={vm.lightLevelOn}"
                 android:valueFrom="0.0"
                 android:valueTo="1.0" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@string/prefs_light_level_off_desc" />
+
+            <com.google.android.material.slider.Slider
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                state="@={vm.editingLightLevel}"
+                onState="@{EditingLightLevel.OFF}"
+                offState="@{EditingLightLevel.NONE}"
+                lifecycle="@{lifecycle}"
+                android:stepSize="0.02"
+                android:value="@={vm.lightLevelOff}"
+                android:valueFrom="-1.0"
+                android:valueTo="1.0" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:text="@string/prefs_line_width_desc" />
 
             <com.google.android.material.slider.Slider

@@ -15,8 +15,26 @@ class PreferencesKey<T> private constructor(
     default: ()->T,
 ) : WrappedDataStore.Key<T>(key, default, PreferencesKey::class) {
     companion object {
-        /** 消灯時のライトレベル */
-        val LIGHT_LEVEL = makeKey("LIGHT_LEVEL") { 1f }
+        /**
+         * 画面を暗くした後の時のライトレベル
+         *
+         * -1.0f ~ 1.0f
+         * マイナス値で黒前景を表示してシステムで設定可能なライトレベル未満にする
+         */
+        val LIGHT_LEVEL_OFF = makeKey("LIGHT_LEVEL_OFF") { 1f }
+
+        /**
+         * アプリが点いてすぐ明るいときのライトレベル
+         *
+         * 0.0f ~ 1.0f
+         * システムで設定可能なライトレベル範囲
+         */
+        val LIGHT_LEVEL_ON = makeKey("LIGHT_LEVEL_ON") { 0f }
+
+        /**
+         * アプリが点いてすぐのライトレベルをシステムの値にする
+         */
+        val SYSTEM_LIGHT_LEVEL_ON = makeKey("SYSTEM_LIGHT_LEVEL_ON") { false }
 
         /** 消灯までの待機時間(ミリ秒) */
         val LIGHT_OFF_INTERVAL = makeKey("LIGHT_OFF_INTERVAL") { 5_000L }

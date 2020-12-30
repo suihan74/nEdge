@@ -13,6 +13,7 @@ import com.suihan74.notificationreporter.databinding.FragmentGeneralPrefsBinding
 import com.suihan74.notificationreporter.models.NotchType
 import com.suihan74.notificationreporter.scenes.lockScreen.LockScreenActivity
 import com.suihan74.notificationreporter.scenes.preferences.PreferencesActivity
+import com.suihan74.notificationreporter.scenes.preferences.dataBinding.SliderBindingAdapters
 import com.suihan74.notificationreporter.scenes.preferences.notch.RectangleNotchSettingFragment
 import com.suihan74.notificationreporter.scenes.preferences.notch.WaterDropNotchSettingFragment
 import com.suihan74.utilities.extensions.hideSoftInputMethod
@@ -46,6 +47,7 @@ class GeneralPrefsFragment : Fragment() {
         _binding = FragmentGeneralPrefsBinding.inflate(inflater, container, false).also {
             it.vm = viewModel
             it.lifecycleOwner = viewLifecycleOwner
+            it.lifecycle = viewLifecycleOwner.lifecycle
         }
 
         binding.previewButton.setOnClickListener {
@@ -118,5 +120,10 @@ class GeneralPrefsFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        SliderBindingAdapters.onTerminateLifecycle(this)
     }
 }

@@ -47,8 +47,7 @@ object SliderBindingAdapters {
         "android:value",
         "android:valueFrom",
         "android:valueTo",
-        "android:stepSize",
-        "editing"],
+        "android:stepSize"],
         requireAll = false
     )
     fun bindFloatValue(
@@ -56,8 +55,7 @@ object SliderBindingAdapters {
         value: Float?,
         lowerBound: Float?,
         upperBound: Float?,
-        stepSize: Float?,
-        editing: Boolean?
+        stepSize: Float?
     ) {
         lowerBound?.let { slider.valueFrom = it }
         upperBound?.let { slider.valueFrom = it }
@@ -79,8 +77,7 @@ object SliderBindingAdapters {
         "intValue",
         "android:valueFrom",
         "android:valueTo",
-        "android:stepSize",
-        "editing"],
+        "android:stepSize"],
         requireAll = false
     )
     fun bindIntValue(
@@ -88,16 +85,14 @@ object SliderBindingAdapters {
         value: Int?,
         lowerBound: Int?,
         upperBound: Int?,
-        stepSize: Int?,
-        editing: Boolean?
+        stepSize: Int?
     ) {
         bindFloatValue(
             slider,
             value?.toFloat(),
             lowerBound?.toFloat(),
             upperBound?.toFloat(),
-            stepSize?.toFloat(),
-            editing
+            stepSize?.toFloat()
         )
     }
 
@@ -108,6 +103,12 @@ object SliderBindingAdapters {
     }
 
     // ------ //
+
+    @JvmStatic
+    @BindingAdapter("editing")
+    fun bindEditing(slider: Slider, editing: Boolean?) {
+        editingStates.add(WeakReference(slider))
+    }
 
     @JvmStatic
     @InverseBindingAdapter(attribute = "editing")

@@ -1,23 +1,24 @@
 package com.suihan74.notificationreporter.scenes.lockScreen.dataBinding
 
-import android.graphics.Color
 import android.service.notification.StatusBarNotification
 import android.view.View
 import androidx.annotation.FloatRange
 import androidx.databinding.BindingAdapter
+import kotlin.math.absoluteValue
 
 object ViewBindingAdapters {
     /** 消灯後の画面の暗さを調節 */
     @JvmStatic
     @BindingAdapter("lightLevel")
-    fun setLightLevel(view: View, @FloatRange(from = 0.0, to = 1.0) lightLevel: Float?) {
+    fun setLightLevel(view: View, @FloatRange(from = -1.0, to = 1.0) lightLevel: Float?) {
         if (lightLevel == null) {
-            view.setBackgroundColor(Color.TRANSPARENT)
+            view.visibility = View.GONE
         }
         else {
-            val alpha = (255 * (1.0f - lightLevel)).toInt()
-            val color = alpha shl 24
-            view.setBackgroundColor(color)
+            view.alpha =
+                if (lightLevel >= .0f) .0f
+                else lightLevel.absoluteValue
+            view.visibility = View.VISIBLE
         }
     }
 
