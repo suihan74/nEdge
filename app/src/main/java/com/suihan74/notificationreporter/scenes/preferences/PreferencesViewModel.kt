@@ -17,12 +17,12 @@ import com.suihan74.notificationreporter.repositories.PreferencesRepository
 import com.suihan74.notificationreporter.scenes.preferences.dialog.TimePickerDialogFragment
 import com.suihan74.utilities.fragment.AlertDialogFragment
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import kotlinx.coroutines.withContext
 import org.threeten.bp.LocalTime
 
 class PreferencesViewModel(
@@ -105,14 +105,13 @@ class PreferencesViewModel(
     init {
         prefRepo.preferencesFlow
             .onEach {
-                withContext(Dispatchers.Default) {
-                    lightLevelOn.postValue(it.lightLevelOn)
-                    lightLevelOff.postValue(it.lightLevelOff)
-                    silentTimezoneStart.postValue(it.silentTimezoneStart)
-                    silentTimezoneEnd.postValue(it.silentTimezoneEnd)
-                    requiredBatteryLevel.postValue(it.requiredBatteryLevel)
-                }
+                lightLevelOn.postValue(it.lightLevelOn)
+                lightLevelOff.postValue(it.lightLevelOff)
+                silentTimezoneStart.postValue(it.silentTimezoneStart)
+                silentTimezoneEnd.postValue(it.silentTimezoneEnd)
+                requiredBatteryLevel.postValue(it.requiredBatteryLevel)
             }
+            .flowOn(Dispatchers.Default)
             .launchIn(viewModelScope)
 
         setCurrentTarget(DEFAULT_SETTING_NAME)
