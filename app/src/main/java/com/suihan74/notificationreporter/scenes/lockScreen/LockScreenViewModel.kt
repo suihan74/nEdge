@@ -32,9 +32,11 @@ class LockScreenViewModel(
     val lightOff : LiveData<Boolean> by lazy { _lightOff }
     private val _lightOff = MutableLiveData<Boolean>().also { liveData ->
         liveData.observeForever {
-            if (!it) {
+            // 待機時間が0に設定されている場合は常に明るくする
+            val interval = lightOffInterval ?: 5_000L
+            if (!it && interval > 0L) {
                 viewModelScope.launch(Dispatchers.Main) {
-                    delay(lightOffInterval ?: 5_000)
+                    delay(interval)
                     liveData.value = true
                 }
             }
