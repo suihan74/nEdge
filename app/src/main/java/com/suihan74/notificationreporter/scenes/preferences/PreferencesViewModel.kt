@@ -49,6 +49,9 @@ class PreferencesViewModel(
     /** ライトレベルプレビュー時の値 */
     val previewLightLevel = MutableLiveData<Float>()
 
+    /** `lightLevelOn`で端末のシステム設定値を使用する */
+    val useSystemLightLevelOn = MutableLiveData<Boolean>()
+
     /** 通知を行わない時間帯(開始時刻) */
     val silentTimezoneStart = MutableLiveData<LocalTime>()
 
@@ -107,6 +110,7 @@ class PreferencesViewModel(
             .onEach {
                 lightLevelOn.postValue(it.lightLevelOn)
                 lightLevelOff.postValue(it.lightLevelOff)
+                useSystemLightLevelOn.postValue(it.useSystemLightLevelOn)
                 silentTimezoneStart.postValue(it.silentTimezoneStart)
                 silentTimezoneEnd.postValue(it.silentTimezoneEnd)
                 requiredBatteryLevel.postValue(it.requiredBatteryLevel)
@@ -125,6 +129,7 @@ class PreferencesViewModel(
             Preferences(
                 lightLevelOff = lightLevelOff.value!!,
                 lightLevelOn = lightLevelOn.value!!,
+                useSystemLightLevelOn = useSystemLightLevelOn.value!!,
                 silentTimezoneStart = silentTimezoneStart.value!!,
                 silentTimezoneEnd = silentTimezoneEnd.value!!,
                 requiredBatteryLevel = requiredBatteryLevel.value!!,

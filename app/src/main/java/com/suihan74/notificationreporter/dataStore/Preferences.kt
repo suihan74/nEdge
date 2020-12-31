@@ -28,7 +28,7 @@ data class Preferences(
     /**
      * アプリが点いてすぐのライトレベルをシステムの値にする
      */
-    val systemLightLevelOn : Boolean = false,
+    val useSystemLightLevelOn : Boolean = false,
 
     /** 消灯までの待機時間(ミリ秒) */
     val lightOffInterval : Long = 5_000L,

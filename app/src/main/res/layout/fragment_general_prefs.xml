@@ -103,6 +103,14 @@
                 android:layout_marginTop="10dp"
                 android:text="@string/prefs_light_level_on_desc" />
 
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:text="@string/prefs_use_system_light_level_on_desc"
+                android:textColor="@color/preferencesTextColor"
+                android:checked="@={vm.useSystemLightLevelOn}"
+                android:paddingHorizontal="6dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
             <com.google.android.material.slider.Slider
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -110,6 +118,7 @@
                 onState="@{EditingLightLevel.ON}"
                 offState="@{EditingLightLevel.NONE}"
                 lifecycle="@{lifecycle}"
+                android:visibility="@{!vm.useSystemLightLevelOn}"
                 android:stepSize="0.02"
                 android:value="@={vm.lightLevelOn}"
                 android:valueFrom="0.0"

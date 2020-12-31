@@ -24,6 +24,7 @@
     <string name="prefs_required_battery_level_desc">バッテリ充電量が指定値未満のとき通知を行わない(0で常に通知)</string>
     <string name="prefs_light_level_off_desc">消灯後の画面の明るさ(マイナス値でさらに暗くする)</string>
     <string name="prefs_light_level_on_desc">ロック画面起動直後の画面の明るさ</string>
+    <string name="prefs_use_system_light_level_on_desc">システムの値を使用</string>
     <string name="prefs_line_width_desc">線の太さ</string>
     <string name="prefs_blur_size_desc">ブラー効果の強さ (0で無効化)</string>
     <string name="prefs_corner_radius_desc">%sの角丸半径</string>

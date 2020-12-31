@@ -44,6 +44,7 @@
         <item name="colorOnSurface">@color/preferencesTextColor</item>
 
         <item name="alertDialogTheme">@style/AlertDialog</item>
+        <item name="switchTextAppearance">@style/SwitchTextAppearance</item>
     </style>
 
     <style name="SearchAppsTextInputLayout" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
@@ -52,6 +53,10 @@
     </style>
 
     <style name="SearchAppsTextInputEditText">
+        <item name="android:textColor">@color/preferencesTextColor</item>
+    </style>
+
+    <style name="SwitchTextAppearance">
         <item name="android:textColor">@color/preferencesTextColor</item>
     </style>
 
@@ -81,7 +86,7 @@
         <!-- ダイアログ下部ボタン(Positive,Negative,Neutral...分けるなら別々に作る) -->
         <item name="android:buttonBarButtonStyle">@style/TimePickerDialogButtonStyle</item>
         <!-- ダイアログ下部ボタンのタップ時背景色 -->
-        <item name="colorPrimary">@color/black</item>
+        <item name="colorPrimary">@color/blue_700</item>
 
         <!-- 入力モード切替ボタンのアイコン色 -->
         <item name="imageButtonStyle">@style/TimePickerDialogImageButtonStyle</item>

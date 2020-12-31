@@ -46,11 +46,15 @@ class LockScreenViewModel(
 
     /** 画面起動直後の画面の明るさ */
     private val _lightLevelOn = MutableLiveData<Float>()
-    val lightLevelOn : LiveData<Float> by lazy { _lightLevelOn }
+    private val lightLevelOn : LiveData<Float> by lazy { _lightLevelOn }
 
     /** バックライト消灯後の画面の明るさ */
     private val _lightLevelOff = MutableLiveData<Float>()
     val lightLevelOff : LiveData<Float> by lazy { _lightLevelOff }
+
+    /** 画面起動直後の画面の明るさをシステム設定値にする */
+    private val _useSystemLightLevelOn = MutableLiveData<Boolean>()
+    private val useSystemLightLevelOn : LiveData<Boolean> by lazy { _useSystemLightLevelOn }
 
     /** バッテリーレベル */
     val batteryLevel : LiveData<Int> = batteryRepo.batteryLevel
@@ -80,6 +84,7 @@ class LockScreenViewModel(
             _lightLevelOff.value = prefs.lightLevelOff
             _lightOff.value = false
             lightOffInterval = prefs.lightOffInterval
+            _useSystemLightLevelOn.value = prefs.useSystemLightLevelOn
 
             while (true) {
                 val now = LocalDateTime.now()
@@ -110,8 +115,16 @@ class LockScreenViewModel(
         lightOff.observe(owner, { lightOff ->
             window.attributes = window.attributes.also { lp ->
                 lp.screenBrightness =
-                    if (lightOff) calcBrightness(lightLevelOff.value)
-                    else calcBrightness(lightLevelOn.value)
+                    when {
+                        // 消灯時
+                        lightOff -> calcBrightness(lightLevelOff.value)
+
+                        // 点灯時システム設定値の明るさを使用
+                        useSystemLightLevelOn.value == true -> calcBrightness(null)
+
+                        // 点灯時
+                        else -> calcBrightness(lightLevelOn.value)
+                    }
             }
         })
     }
