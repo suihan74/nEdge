@@ -1,19 +1,18 @@
 package com.suihan74.notificationreporter.repositories
 
-import androidx.lifecycle.LiveData
-import com.suihan74.notificationreporter.dataStore.PreferencesKey
+import androidx.datastore.core.DataStore
+import com.suihan74.notificationreporter.dataStore.Preferences
 import com.suihan74.notificationreporter.database.notification.NotificationDao
 import com.suihan74.notificationreporter.database.notification.NotificationEntity
 import com.suihan74.notificationreporter.models.NotificationSetting
-import com.suihan74.utilities.dataStore.WrappedDataStore
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 
 /**
  * アプリ設定を扱うリポジトリ
  */
 class PreferencesRepository(
-    private val dataStore: WrappedDataStore<PreferencesKey<*>>,
+    private val dataStore: DataStore<Preferences>,
     private val notificationDao: NotificationDao
 ) {
     companion object {
@@ -50,28 +49,20 @@ class PreferencesRepository(
     /**
      * アプリ設定値を取得する
      */
-    suspend fun <T> getPreference(key: PreferencesKey<T>) : T {
-        return dataStore.get(key)
+    suspend fun getPreferences() : Preferences {
+        return dataStore.data.firstOrNull() ?: Preferences()
     }
 
     /**
      * アプリ設定値を受け取る`Flow`を取得する
      */
-    fun <T> getPreferenceFlow(key: PreferencesKey<T>) : Flow<T> {
-        return dataStore.getFlow(key)
-    }
-
-    /**
-     * アプリ設定値の`LiveData`を取得する
-     */
-    fun <T> getLiveData(key: PreferencesKey<T>, coroutineScope: CoroutineScope) : LiveData<T> {
-        return dataStore.getLiveData(key, coroutineScope)
-    }
+    val preferencesFlow : Flow<Preferences>
+        get() = dataStore.data
 
     /**
      * アプリ設定値を更新する
      */
-    suspend fun editPreferences(transform: suspend WrappedDataStore<PreferencesKey<*>>.Editor.()->Unit) {
-        dataStore.edit(transform)
+    suspend fun updatePreferences(transform: suspend (Preferences)->Preferences) {
+        dataStore.updateData(transform)
     }
 }

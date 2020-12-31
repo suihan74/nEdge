@@ -9,13 +9,14 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.pm.PackageInfoCompat
+import androidx.datastore.createDataStore
 import androidx.room.Room
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.jakewharton.threetenabp.AndroidThreeTen
-import com.suihan74.notificationreporter.dataStore.PreferencesKey
+import com.suihan74.notificationreporter.dataStore.PreferencesSerializer
 import com.suihan74.notificationreporter.database.AppDatabase
 import com.suihan74.notificationreporter.receivers.BatteryStateReceiver
 import com.suihan74.notificationreporter.receivers.ScreenReceiver
@@ -39,6 +40,9 @@ class Application : android.app.Application() {
 
         /** 通知チャンネル: 通知テスト用 */
         private const val NOTIFICATION_CHANNEL_DUMMY = "DummyNotificationChannel"
+
+        /** 設定データストアの保存先ファイル名 */
+        private const val PREFERENCES_DATA_STORE_NAME = "settings.ds"
     }
 
     // ------ //
@@ -134,7 +138,11 @@ class Application : android.app.Application() {
         // 設定リポジトリの用意
         runBlocking {
             preferencesRepository = PreferencesRepository(
-                dataStore = PreferencesKey.dataStore(instance),
+                dataStore =
+                    createDataStore(
+                        fileName = PREFERENCES_DATA_STORE_NAME,
+                        serializer = PreferencesSerializer()
+                    ),
                 notificationDao = db.notificationDao()
             )
         }

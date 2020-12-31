@@ -9,18 +9,19 @@ import org.threeten.bp.format.DateTimeFormatter
 
 object TextViewBindingAdapters {
     /**
-     * Int値を時刻として表示する
+     * 時刻を表示する
      */
     @JvmStatic
-    @BindingAdapter("localTimeInt")
-    fun setLocalTimeInt(textView: TextView, value: Int?) {
+    @BindingAdapter(value = ["localTime", "dateTimeFormat"], requireAll = false)
+    fun setLocalTimeInt(textView: TextView, value: LocalTime?, dateTimeFormat: String?) {
         textView.text =
             if (value == null) ""
             else try {
-                LocalTime.ofSecondOfDay(value.toLong()).format(DateTimeFormatter.ofPattern("HH:mm"))
+                val formatter = DateTimeFormatter.ofPattern(dateTimeFormat ?: "HH:mm")
+                value.format(formatter)
             }
             catch (e: DateTimeException) {
-                Log.d("localTimeInt", Log.getStackTraceString(e))
+                Log.d("localTime", Log.getStackTraceString(e))
                 ""
             }
     }

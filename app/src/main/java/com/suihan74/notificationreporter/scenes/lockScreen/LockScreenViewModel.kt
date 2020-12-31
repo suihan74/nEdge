@@ -5,7 +5,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.Window
 import androidx.lifecycle.*
-import com.suihan74.notificationreporter.dataStore.PreferencesKey
 import com.suihan74.notificationreporter.models.NotificationSetting
 import com.suihan74.notificationreporter.repositories.BatteryRepository
 import com.suihan74.notificationreporter.repositories.NotificationRepository
@@ -35,7 +34,7 @@ class LockScreenViewModel(
         liveData.observeForever {
             if (!it) {
                 viewModelScope.launch(Dispatchers.Main) {
-                    delay(lightOffInterval.value ?: 5_000)
+                    delay(lightOffInterval ?: 5_000)
                     liveData.value = true
                 }
             }
@@ -43,8 +42,7 @@ class LockScreenViewModel(
     }
 
     /** 画面消灯までの待機時間(ミリ秒) */
-    private val lightOffInterval : LiveData<Long> =
-        prefRepo.getLiveData(PreferencesKey.LIGHT_OFF_INTERVAL, viewModelScope)
+    private var lightOffInterval : Long? = null
 
     /** 画面起動直後の画面の明るさ */
     private val _lightLevelOn = MutableLiveData<Float>()
@@ -77,9 +75,11 @@ class LockScreenViewModel(
         })
 
         viewModelScope.launch(Dispatchers.Main) {
-            _lightLevelOn.value = prefRepo.getPreference(PreferencesKey.LIGHT_LEVEL_ON)
-            _lightLevelOff.value = prefRepo.getPreference(PreferencesKey.LIGHT_LEVEL_OFF)
+            val prefs = prefRepo.getPreferences()
+            _lightLevelOn.value = prefs.lightLevelOn
+            _lightLevelOff.value = prefs.lightLevelOff
             _lightOff.value = false
+            lightOffInterval = prefs.lightOffInterval
 
             while (true) {
                 val now = LocalDateTime.now()

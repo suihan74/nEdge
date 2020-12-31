@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.suihan74.notificationreporter.R
-import com.suihan74.notificationreporter.dataStore.PreferencesKey
+import com.suihan74.notificationreporter.dataStore.Preferences
 import com.suihan74.notificationreporter.database.notification.NotificationEntity
 import com.suihan74.notificationreporter.models.NotchSetting
 import com.suihan74.notificationreporter.models.NotchType
@@ -22,6 +22,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
 import org.threeten.bp.LocalTime
 
 class PreferencesViewModel(
@@ -49,10 +50,10 @@ class PreferencesViewModel(
     val previewLightLevel = MutableLiveData<Float>()
 
     /** 通知を行わない時間帯(開始時刻) */
-    val silentTimezoneStart = MutableLiveData<Int>()
+    val silentTimezoneStart = MutableLiveData<LocalTime>()
 
     /** 通知を行わない時間帯(終了時刻) */
-    val silentTimezoneEnd = MutableLiveData<Int>()
+    val silentTimezoneEnd = MutableLiveData<LocalTime>()
 
     /** 通知を行うのに必要な最低バッテリレベル */
     val requiredBatteryLevel = MutableLiveData<Int>()
@@ -96,26 +97,23 @@ class PreferencesViewModel(
     /** 上部ノッチを編集中 */
     val editingTopNotch = MutableLiveData(false)
 
-    /** 輪郭線編集状態 */
-    enum class EditingOutline {
-        NONE,
-        TOP,
-        BOTTOM,
-        TOP_NOTCH,
-        BOTTOM_NOTCH
-    }
-
     // ------ //
 
     /**
      * 初期値をセットする
      */
     init {
-        bindFlow(PreferencesKey.LIGHT_LEVEL_ON, lightLevelOn)
-        bindFlow(PreferencesKey.LIGHT_LEVEL_OFF, lightLevelOff)
-        bindFlow(PreferencesKey.SILENT_TIMEZONE_START, silentTimezoneStart)
-        bindFlow(PreferencesKey.SILENT_TIMEZONE_END, silentTimezoneEnd)
-        bindFlow(PreferencesKey.REQUIRED_BATTERY_LEVEL, requiredBatteryLevel)
+        prefRepo.preferencesFlow
+            .onEach {
+                withContext(Dispatchers.Default) {
+                    lightLevelOn.postValue(it.lightLevelOn)
+                    lightLevelOff.postValue(it.lightLevelOff)
+                    silentTimezoneStart.postValue(it.silentTimezoneStart)
+                    silentTimezoneEnd.postValue(it.silentTimezoneEnd)
+                    requiredBatteryLevel.postValue(it.requiredBatteryLevel)
+                }
+            }
+            .launchIn(viewModelScope)
 
         setCurrentTarget(DEFAULT_SETTING_NAME)
     }
@@ -124,12 +122,14 @@ class PreferencesViewModel(
      * 編集したデータを保存する
      */
     fun saveSettings() = viewModelScope.launch {
-        prefRepo.editPreferences {
-            set(PreferencesKey.LIGHT_LEVEL_ON, lightLevelOn)
-            set(PreferencesKey.LIGHT_LEVEL_OFF, lightLevelOff)
-            set(PreferencesKey.SILENT_TIMEZONE_START, silentTimezoneStart)
-            set(PreferencesKey.SILENT_TIMEZONE_END, silentTimezoneEnd)
-            set(PreferencesKey.REQUIRED_BATTERY_LEVEL, requiredBatteryLevel)
+        prefRepo.updatePreferences {
+            Preferences(
+                lightLevelOff = lightLevelOff.value!!,
+                lightLevelOn = lightLevelOn.value!!,
+                silentTimezoneStart = silentTimezoneStart.value!!,
+                silentTimezoneEnd = silentTimezoneEnd.value!!,
+                requiredBatteryLevel = requiredBatteryLevel.value!!,
+            )
         }
         prefRepo.updateNotificationSetting(targetAppName, notificationSetting.value!!)
     }
@@ -145,15 +145,6 @@ class PreferencesViewModel(
                 updateNotificationSetting()
             }
         }
-
-    /**
-     * `Flow`で流れてくる設定値と`LiveData`を紐づける
-     */
-    private fun <T> bindFlow(key: PreferencesKey<T>, liveData: MutableLiveData<T>) {
-        prefRepo.getPreferenceFlow(key)
-            .onEach { liveData.value = it }
-            .launchIn(viewModelScope)
-    }
 
     // ------ //
 
@@ -225,15 +216,12 @@ class PreferencesViewModel(
     /**
      * 通知を行わない時間帯を設定するダイアログを開く
      */
-    fun openSilentTimezonePickerDialog(liveData: MutableLiveData<Int>, fragmentManager: FragmentManager) {
-        val localTime = liveData.value?.let {
-            LocalTime.ofSecondOfDay(it.toLong())
-        } ?: LocalTime.of(0, 0)
-
+    fun openSilentTimezonePickerDialog(liveData: MutableLiveData<LocalTime>, fragmentManager: FragmentManager) {
+        val localTime = liveData.value!!
         val dialog = TimePickerDialogFragment.createInstance(localTime.hour, localTime.minute, true)
 
         dialog.setOnTimeSetListener { _, value ->
-            liveData.value = value.toSecondOfDay()
+            liveData.value = value
         }
 
         dialog.show(fragmentManager, null)

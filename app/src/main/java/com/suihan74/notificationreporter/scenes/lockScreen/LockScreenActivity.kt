@@ -14,7 +14,6 @@ import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.databinding.DataBindingUtil
 import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.R
-import com.suihan74.notificationreporter.dataStore.PreferencesKey
 import com.suihan74.notificationreporter.databinding.ActivityLockScreenBinding
 import com.suihan74.utilities.lazyProvideViewModel
 import kotlinx.coroutines.GlobalScope
@@ -45,17 +44,19 @@ class LockScreenActivity : AppCompatActivity() {
                 return false
             }
 
+            val prefs = prefRepo.getPreferences()
+
             // バッテリレベルが指定値未満
             val batteryLevel = batteryRepo.batteryLevel.value ?: 0
-            val requiredBatteryLevel = prefRepo.getPreference(PreferencesKey.REQUIRED_BATTERY_LEVEL)
+            val requiredBatteryLevel = prefs.requiredBatteryLevel
             if (batteryLevel < requiredBatteryLevel && batteryRepo.batteryCharging.value != true) {
                 return false
             }
 
             // 通知を行わない時間帯
-            val silentTimeZoneStart = prefRepo.getPreference(PreferencesKey.SILENT_TIMEZONE_START)
-            val silentTimeZoneEnd = prefRepo.getPreference(PreferencesKey.SILENT_TIMEZONE_END)
-            val now = LocalTime.now().toSecondOfDay()
+            val silentTimeZoneStart = prefs.silentTimezoneStart
+            val silentTimeZoneEnd = prefs.silentTimezoneEnd
+            val now = LocalTime.now()
             val considerDateChange = silentTimeZoneStart > silentTimeZoneEnd
             if (considerDateChange) {
                 if (now >= silentTimeZoneStart || now <= silentTimeZoneEnd) {
