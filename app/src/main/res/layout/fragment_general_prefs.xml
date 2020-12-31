@@ -103,6 +103,7 @@
                 android:text="@string/prefs_light_off_interval_desc" />
 
             <com.suihan74.utilities.view.UnFocusableEditText
+                android:id="@+id/lightOffIntervalEditText"
                 android:text="@={vm.lightOffInterval}"
                 android:hint="@string/prefs_light_off_interval_hint"
                 android:inputType="numberDecimal"
