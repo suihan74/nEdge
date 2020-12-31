@@ -1,5 +1,6 @@
 package com.suihan74.notificationreporter.scenes.preferences
 
+import android.graphics.Color
 import android.util.Log
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LiveData
@@ -14,6 +15,7 @@ import com.suihan74.notificationreporter.models.NotchType
 import com.suihan74.notificationreporter.models.NotificationSetting
 import com.suihan74.notificationreporter.models.OutlinesSetting
 import com.suihan74.notificationreporter.repositories.PreferencesRepository
+import com.suihan74.notificationreporter.scenes.preferences.dialog.ColorPickerDialogFragment
 import com.suihan74.notificationreporter.scenes.preferences.dialog.TimePickerDialogFragment
 import com.suihan74.utilities.fragment.AlertDialogFragment
 import kotlinx.coroutines.Dispatchers
@@ -252,6 +254,21 @@ class PreferencesViewModel(
             }
             .setNegativeButton(R.string.dialog_cancel)
             .create()
+        dialog.show(fragmentManager, null)
+    }
+
+    /**
+     * 輪郭線の色を選択するダイアログを開く
+     */
+    fun openOutlinesColorPickerDialog(fragmentManager: FragmentManager) {
+        val dialog = ColorPickerDialogFragment.createInstance(notificationColor.value ?: Color.WHITE)
+        dialog.setOnColorPickedListener { _, value ->
+            // alpha成分の編集は無視して必ず1.0にする
+            val r = Color.red(value)
+            val g = Color.green(value)
+            val b = Color.blue(value)
+            notificationColor.value = Color.argb(255, r, g, b)
+        }
         dialog.show(fragmentManager, null)
     }
 }

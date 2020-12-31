@@ -78,6 +78,9 @@ dependencies {
     implementation "androidx.work:work-runtime:$work_version"
     implementation "androidx.work:work-runtime-ktx:$work_version"
 
+    // AndroidPhotoshopColorPicker
+    implementation 'com.azeesoft.lib.colorpicker:colorpicker:1.0.8@aar'
+
     implementation project(":utilities")
 
     testImplementation 'junit:junit:4.13.1'

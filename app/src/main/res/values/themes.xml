@@ -148,6 +148,23 @@
 
     <!-- ====== -->
 
+    <!-- ColorPickerDialog -->
+    <style name="ColorPickerDialog" parent="ColorPicker.Dark">
+        <!-- 透過度バー表示しない -->
+        <item name="cp_showOpacityBar">false</item>
+        <!-- 色コード文字列部分 -->
+        <item name="cp_hexaDecimalTextColor">@color/preferencesTextColor</item>
+        <!-- 成分情報部分テキスト色 -->
+        <item name="cp_colorComponentsTextColor">@color/preferencesTextColor</item>
+        <!-- 下部ボタンテキスト色 -->
+        <item name="cp_positiveActionTextColor">@color/blue_700</item>
+        <item name="cp_negativeActionTextColor">@color/blue_700</item>
+        <!-- 選択中を示すカーソルの色 -->
+        <item name="cp_sliderThumbColor">#accc</item>
+    </style>
+
+    <!-- ====== -->
+
     <!-- RecyclerView -->
     <style name="RecyclerView">
         <!--

@@ -1,6 +1,7 @@
 package com.suihan74.utilities.dataBinding
 
 import android.annotation.SuppressLint
+import android.content.res.ColorStateList
 import android.view.MotionEvent
 import android.view.View
 import androidx.databinding.BindingAdapter
@@ -38,5 +39,14 @@ object ViewBindingAdapters {
                 else listener(view, motionEvent)
             }
         }
+    }
+
+    /**
+     * 直接`android:backgroundTint`に色intを渡す
+     */
+    @JvmStatic
+    @BindingAdapter("android:backgroundTint")
+    fun bindBackgroundTint(view: View, color: Int?) {
+        view.backgroundTintList = color?.let { ColorStateList.valueOf(it) }
     }
 }

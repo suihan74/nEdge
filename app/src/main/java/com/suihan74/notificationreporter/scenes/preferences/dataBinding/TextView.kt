@@ -1,5 +1,6 @@
 package com.suihan74.notificationreporter.scenes.preferences.dataBinding
 
+import android.graphics.Color
 import android.util.Log
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
@@ -24,5 +25,45 @@ object TextViewBindingAdapters {
                 Log.d("localTime", Log.getStackTraceString(e))
                 ""
             }
+    }
+
+    /**
+     * `Color`データを色コード文字列に変換して表示
+     */
+    @JvmStatic
+    @BindingAdapter(value = ["colorCode", "prefix", "textColorLight", "textColorDark"], requireAll = false)
+    fun setColorCodeText(
+        textView: TextView,
+        color: Int?,
+        prefix: String?,
+        textColorLight: Int?,
+        textColorDark: Int?
+    ) {
+        if (color == null) {
+            textView.text = ""
+            return
+        }
+
+        val r = Color.red(color)
+        val g = Color.green(color)
+        val b = Color.blue(color)
+
+        val rHex = String.format("%02x", r)
+        val gHex = String.format("%02x", g)
+        val bHex = String.format("%02x", b)
+
+        textView.text = buildString {
+            if (prefix != null) {
+                append(prefix)
+            }
+            append(rHex, gHex, bHex)
+        }
+
+        if (r > 127 && g > 127 && b > 127 && textColorDark != null) {
+            textView.setTextColor(textColorDark)
+        }
+        else if (textColorLight != null) {
+            textView.setTextColor(textColorLight)
+        }
     }
 }

@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
 import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.R
@@ -16,7 +15,6 @@ import com.suihan74.notificationreporter.scenes.preferences.PreferencesActivity
 import com.suihan74.notificationreporter.scenes.preferences.dataBinding.SliderBindingAdapters
 import com.suihan74.notificationreporter.scenes.preferences.notch.RectangleNotchSettingFragment
 import com.suihan74.notificationreporter.scenes.preferences.notch.WaterDropNotchSettingFragment
-import com.suihan74.utilities.extensions.hideSoftInputMethod
 
 /**
  * 全般設定画面
@@ -67,29 +65,11 @@ class GeneralPrefsFragment : Fragment() {
             viewModel.openSilentTimezonePickerDialog(viewModel.silentTimezoneEnd, childFragmentManager)
         }
 
-        binding.colorEditText.also { editText ->
-            // 入力中はナビゲーションバーを表示する
-            editText.setOnFocusChangeListener { _, b ->
-                if (b) {
-                    preferencesActivity.showSystemUI()
-                }
-                else {
-                    preferencesActivity.hideSoftInputMethod(binding.mainLayout)
-                    preferencesActivity.hideSystemUI()
-                }
-            }
-
-            // 入力完了時にアンフォーカスする
-            editText.setOnEditorActionListener { _, actionId, _ ->
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    editText.clearFocus()
-                }
-                false
-            }
+        binding.pickOutlinesColorButton.setOnClickListener {
+            viewModel.openOutlinesColorPickerDialog(childFragmentManager)
         }
 
         binding.notchTypeSelectionButton.setOnClickListener {
-            binding.colorEditText.clearFocus()
             viewModel.openNotchTypeSelectionDialog(viewModel.topNotchType, childFragmentManager)
         }
 

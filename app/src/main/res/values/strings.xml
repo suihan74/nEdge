@@ -3,6 +3,7 @@
     <string name="copyright">Copyright \u00A9 %s &lt;a href=&quot;https://suihan74.github.io&quot;&gt;suihan&lt;/a&gt;</string>
 
     <!-- dialog -->
+    <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">Cancel</string>
 
     <!-- ====== -->

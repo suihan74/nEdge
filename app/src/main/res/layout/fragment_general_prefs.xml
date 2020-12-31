@@ -173,20 +173,20 @@
                 android:layout_height="wrap_content"
                 android:text="@string/prefs_default_notification_color_desc" />
 
-            <com.suihan74.utilities.view.UnFocusableEditText
-                android:id="@+id/colorEditText"
-                colorCode="@={vm.notificationColor}"
+            <Button
+                android:id="@+id/pickOutlinesColorButton"
+                colorCode="@{vm.notificationColor}"
+                prefix="@{`#`}"
+                textColorLight="@{@color/white}"
+                textColorDark="@{@color/black}"
+                android:backgroundTint="@{vm.notificationColor}"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:hint="color | e.g.) #ff0000 (red)"
-                android:importantForAutofill="no"
-                android:inputType="text"
-                android:maxLength="6"
-                android:selectAllOnFocus="true" />
+                android:layout_height="wrap_content"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:text="@{@string/prefs_corner_radius_desc(`上部`)}" />
 
             <com.google.android.material.slider.Slider
