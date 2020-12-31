@@ -79,12 +79,13 @@ class LockScreenViewModel(
         })
 
         viewModelScope.launch(Dispatchers.Main) {
-            val prefs = prefRepo.getPreferences()
-            _lightLevelOn.value = prefs.lightLevelOn
-            _lightLevelOff.value = prefs.lightLevelOff
-            _lightOff.value = false
-            lightOffInterval = prefs.lightOffInterval
-            _useSystemLightLevelOn.value = prefs.useSystemLightLevelOn
+            prefRepo.getPreferences().let { prefs ->
+                _lightLevelOn.value = prefs.lightLevelOn
+                _lightLevelOff.value = prefs.lightLevelOff
+                lightOffInterval = prefs.lightOffInterval
+                _useSystemLightLevelOn.value = prefs.useSystemLightLevelOn
+                _lightOff.value = false
+            }
 
             while (true) {
                 val now = LocalDateTime.now()
