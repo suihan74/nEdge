@@ -54,6 +54,9 @@ class PreferencesViewModel(
     /** `lightLevelOn`で端末のシステム設定値を使用する */
     val useSystemLightLevelOn = MutableLiveData<Boolean>()
 
+    /** ライト消灯までの待機時間(秒数で編集してミリ秒で保存する) */
+    val lightOffInterval = MutableLiveData<Long>()
+
     /** 通知を行わない時間帯(開始時刻) */
     val silentTimezoneStart = MutableLiveData<LocalTime>()
 
@@ -105,19 +108,27 @@ class PreferencesViewModel(
     // ------ //
 
     /**
+     * アプリ設定値すべての更新が完了してから保存するためのロック
+     */
+    private val prefsMutex = Mutex()
+
+    /**
      * 初期値をセットする
      */
     init {
         prefRepo.preferencesFlow
             .onEach {
-                lightLevelOn.postValue(it.lightLevelOn)
-                lightLevelOff.postValue(it.lightLevelOff)
-                useSystemLightLevelOn.postValue(it.useSystemLightLevelOn)
-                silentTimezoneStart.postValue(it.silentTimezoneStart)
-                silentTimezoneEnd.postValue(it.silentTimezoneEnd)
-                requiredBatteryLevel.postValue(it.requiredBatteryLevel)
+                prefsMutex.withLock {
+                    lightLevelOn.value = it.lightLevelOn
+                    lightLevelOff.value = it.lightLevelOff
+                    useSystemLightLevelOn.value = it.useSystemLightLevelOn
+                    lightOffInterval.value = it.lightOffInterval / 1_000L
+                    silentTimezoneStart.value = it.silentTimezoneStart
+                    silentTimezoneEnd.value = it.silentTimezoneEnd
+                    requiredBatteryLevel.value = it.requiredBatteryLevel
+                }
             }
-            .flowOn(Dispatchers.Default)
+            .flowOn(Dispatchers.Main)
             .launchIn(viewModelScope)
 
         setCurrentTarget(DEFAULT_SETTING_NAME)
@@ -127,15 +138,18 @@ class PreferencesViewModel(
      * 編集したデータを保存する
      */
     fun saveSettings() = viewModelScope.launch {
-        prefRepo.updatePreferences {
-            Preferences(
-                lightLevelOff = lightLevelOff.value!!,
-                lightLevelOn = lightLevelOn.value!!,
-                useSystemLightLevelOn = useSystemLightLevelOn.value!!,
-                silentTimezoneStart = silentTimezoneStart.value!!,
-                silentTimezoneEnd = silentTimezoneEnd.value!!,
-                requiredBatteryLevel = requiredBatteryLevel.value!!,
-            )
+        prefsMutex.withLock {
+            prefRepo.updatePreferences {
+                Preferences(
+                    lightLevelOff = lightLevelOff.value!!,
+                    lightLevelOn = lightLevelOn.value!!,
+                    useSystemLightLevelOn = useSystemLightLevelOn.value!!,
+                    lightOffInterval = lightOffInterval.value!! * 1_000L,
+                    silentTimezoneStart = silentTimezoneStart.value!!,
+                    silentTimezoneEnd = silentTimezoneEnd.value!!,
+                    requiredBatteryLevel = requiredBatteryLevel.value!!,
+                )
+            }
         }
         prefRepo.updateNotificationSetting(targetAppName, notificationSetting.value!!)
     }
