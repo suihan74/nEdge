@@ -67,20 +67,8 @@ data class RectangleNotchSetting(
  */
 @Serializable
 data class WaterDropNotchSetting(
-    /** 左上の角丸半径 */
+    /** 上部の角丸半径 */
     val topRadius: Float = 0f,
-
-    /** 中央下の角丸半径 */
-    val waterDropRadius: Float = 0f,
-
-    /** 左上角丸の角度 */
-    val topDegree: Float = 0f,
-
-    /** 水滴の角度 */
-    val waterDropDegree: Float = 0f,
-
-    /** 水滴の高さ */
-    val height: Float = 0f,
 
     /** 幅の伸縮調整 */
     val widthAdjustment: Float = 0f,
@@ -88,7 +76,7 @@ data class WaterDropNotchSetting(
     /** 高さの伸縮調整 */
     val heightAdjustment: Float = 0f,
 
-    ) : NotchSetting(NotchType.WATER_DROP)
+) : NotchSetting(NotchType.WATER_DROP)
 
 // ------ //
 

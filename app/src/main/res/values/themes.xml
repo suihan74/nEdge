@@ -25,6 +25,7 @@
     <style name="ClockTextView" parent="Widget.MaterialComponents.TextView">
         <item name="android:textSize">56sp</item>
         <item name="android:textColor">@color/clockTextColor</item>
+        <item name="android:textAlignment">center</item>
     </style>
 
     <style name="DateTextView" parent="Widget.MaterialComponents.TextView">

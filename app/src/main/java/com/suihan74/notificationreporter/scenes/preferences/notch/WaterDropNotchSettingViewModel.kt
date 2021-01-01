@@ -18,12 +18,6 @@ class WaterDropNotchSettingViewModel(
 
     val topRadius = mutableLiveData<Float>()
 
-    val waterDropRadius = mutableLiveData<Float>()
-
-    val topDegree = mutableLiveData<Float>()
-
-    val waterDropDegree = mutableLiveData<Float>()
-
     // ------ //
 
     private var initialized = false
@@ -33,9 +27,6 @@ class WaterDropNotchSettingViewModel(
             widthAdjustment.value = it.widthAdjustment
             heightAdjustment.value = it.heightAdjustment
             topRadius.value = it.topRadius
-            waterDropRadius.value = it.waterDropRadius
-            topDegree.value = it.topDegree
-            waterDropDegree.value = it.waterDropDegree
         }
         initialized = true
     }
@@ -57,9 +48,6 @@ class WaterDropNotchSettingViewModel(
             widthAdjustment = widthAdjustment.value!!,
             heightAdjustment = heightAdjustment.value!!,
             topRadius = topRadius.value!!,
-            waterDropRadius = waterDropRadius.value!!,
-            topDegree = topDegree.value!!,
-            waterDropDegree = waterDropDegree.value!!,
         )
     }
 }
