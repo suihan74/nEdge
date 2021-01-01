@@ -21,13 +21,15 @@ object TextViewBindingAdapters {
     @JvmStatic
     @BindingAdapter("notificationAppName")
     fun setNotificationAppName(textView: TextView, sbn: StatusBarNotification?) {
-        textView.text =
-            if (sbn == null) ""
-            else {
-                val pm = textView.context.packageManager
-                val appInfo = pm.getApplicationInfo(sbn.packageName, 0)
-                pm.getApplicationLabel(appInfo)
-            }
+        ViewBindingAdapters.setNotificationVisibility(textView, sbn) {
+            textView.text =
+                if (sbn == null) ""
+                else {
+                    val pm = textView.context.packageManager
+                    val appInfo = pm.getApplicationInfo(sbn.packageName, 0)
+                    pm.getApplicationLabel(appInfo)
+                }
+        }
     }
 
     /**
@@ -36,14 +38,16 @@ object TextViewBindingAdapters {
     @JvmStatic
     @BindingAdapter("notificationText")
     fun setNotificationText(textView: TextView, sbn: StatusBarNotification?) {
-        textView.text =
-            if (sbn == null) ""
-            else {
-                val (title, text) = sbn.notification.extras.run {
-                    getString(Notification.EXTRA_TITLE) to getString(Notification.EXTRA_TEXT)
+        ViewBindingAdapters.setNotificationVisibility(textView, sbn) {
+            textView.text =
+                if (sbn == null) ""
+                else {
+                    val (title, text) = sbn.notification.extras.run {
+                        getString(Notification.EXTRA_TITLE) to getString(Notification.EXTRA_TEXT)
+                    }
+                    if (title == null || text == null) ""
+                    else "$title : $text"
                 }
-                if (title == null || text == null) ""
-                else "$title : $text"
-            }
+        }
     }
 }

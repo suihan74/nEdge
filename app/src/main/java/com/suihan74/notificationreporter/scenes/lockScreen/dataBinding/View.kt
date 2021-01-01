@@ -22,17 +22,59 @@ object ViewBindingAdapters {
         }
     }
 
-    /** 通知バーの色・表示 */
+    /** 通知バー表示状態切り替え */
     @JvmStatic
-    @BindingAdapter("notifications")
-    fun setNotifications(view: View, notifications: List<StatusBarNotification>?) {
-        if (notifications.isNullOrEmpty()) {
-            view.visibility = View.GONE
+    @BindingAdapter("android:visibility")
+    fun setNotificationVisibility(view: View, notification: StatusBarNotification?) {
+        setNotificationVisibility(view, notification, null)
+    }
+
+    /** 通知バー表示状態切り替え */
+    @JvmStatic
+    fun setNotificationVisibility(view: View, notification: StatusBarNotification?, endAction: (()->Unit)?) {
+        if (notification == null) {
+            if (view.visibility == View.VISIBLE) {
+                view.animate()
+                    .alphaBy(1f)
+                    .alpha(.0f)
+                    .withEndAction {
+                        endAction?.invoke()
+                        view.visibility = View.GONE
+                    }
+                    .setDuration(600L)
+                    .start()
+            }
+            else {
+                view.visibility = View.GONE
+            }
         }
         else {
-            // TODO: 通知ごとに色を設定する
-            //view.setBackgroundColor(Color.GREEN)
-            view.visibility = View.VISIBLE
+            if (view.visibility == View.GONE) {
+                view.animate()
+                    .alphaBy(.0f)
+                    .alpha(1f)
+                    .withStartAction {
+                        view.visibility = View.VISIBLE
+                    }
+                    .setDuration(600L)
+                    .start()
+            }
+            else {
+                view.animate()
+                    .alphaBy(1f)
+                    .alpha(.0f)
+                    .withEndAction {
+                        endAction?.invoke()
+                        view.animate()
+                            .setStartDelay(150L)
+                            .alphaBy(.0f)
+                            .alpha(1f)
+                            .setDuration(600L)
+                            .start()
+                    }
+                    .setDuration(600L)
+                    .start()
+            }
         }
     }
 }

@@ -25,6 +25,7 @@
     <string name="prefs_light_off_interval_desc">画面を暗くするまでの待機秒数(0で暗くしない)</string>
     <string name="prefs_light_off_interval_hint">秒数</string>
     <string name="prefs_required_battery_level_desc">バッテリ充電量が指定値未満のとき通知を行わない(0で常に通知)</string>
+    <string name="prefs_multi_notices_solution_selection_desc">複数通知の表示方法</string>
     <string name="prefs_light_level_off_desc">消灯後の画面の明るさ(マイナス値でさらに暗くする)</string>
     <string name="prefs_light_level_on_desc">ロック画面起動直後の画面の明るさ</string>
     <string name="prefs_use_system_light_level_on_desc">システムの値を使用</string>
@@ -48,4 +49,15 @@
     <!-- InformationFragment -->
     <string name="pref_information_release_notes_desc">更新履歴</string>
     <string name="pref_information_licenses_desc">ライセンス</string>
+
+    <!-- NotchType -->
+    <string name="notch_type_none">なし</string>
+    <string name="notch_type_rectangle">矩形</string>
+    <string name="notch_type_water_drop">水滴</string>
+    <string name="notch_type_punch_hole">ホール</string>
+
+    <!-- MultipleNotificationsSolution -->
+    <string name="multi_notices_solution_latest">最新一件のみ表示</string>
+    <string name="multi_notices_solution_switch_in_order">順番に切り替える</string>
+    <string name="multi_notices_solution_switch_randomly">ランダムに切り替える</string>
 </resources>

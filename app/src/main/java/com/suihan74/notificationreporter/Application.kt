@@ -11,10 +11,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.pm.PackageInfoCompat
 import androidx.datastore.createDataStore
 import androidx.room.Room
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
-import androidx.work.Worker
-import androidx.work.WorkerParameters
+import androidx.work.*
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.suihan74.notificationreporter.dataStore.PreferencesSerializer
 import com.suihan74.notificationreporter.database.AppDatabase
@@ -153,8 +150,14 @@ class Application : android.app.Application() {
 
     // ------ //
 
-    fun notifyDummy(delay: Long) {
+    fun notifyDummy(delay: Long, id: Int, message: String) {
+        val params = Data.Builder()
+            .putInt(DummyNotifyWorker.Arg.ID.name, id)
+            .putString(DummyNotifyWorker.Arg.MESSAGE.name, message)
+            .build()
+
         val request = OneTimeWorkRequestBuilder<DummyNotifyWorker>()
+            .setInputData(params)
             .setInitialDelay(delay, TimeUnit.SECONDS)
             .build()
 
@@ -163,19 +166,17 @@ class Application : android.app.Application() {
     }
 
     /** ダミーの通知を発生させる */
-    private fun notifyDummyImpl() {
-        val notificationId = 334
-
+    private fun notifyDummyImpl(id: Int, message: String) {
         createNotificationChannel(NOTIFICATION_CHANNEL_DUMMY)
 
         val builder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_DUMMY)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentTitle("dummy")
-            .setContentText("dummy")
+            .setContentText(message)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
 
         with(NotificationManagerCompat.from(this)) {
-            notify(notificationId, builder.build())
+            notify(id, builder.build())
         }
     }
 
@@ -194,12 +195,18 @@ class Application : android.app.Application() {
         notificationManager.createNotificationChannel(channel)
     }
 
-    class DummyNotifyWorker(
-        appContext: Context,
-        params: WorkerParameters
-    ) : Worker(appContext, params) {
+    class DummyNotifyWorker(appContext: Context, params: WorkerParameters) : Worker(appContext, params) {
+        enum class Arg {
+            ID,
+            MESSAGE
+        }
+
+        private val id = params.inputData.getInt(Arg.ID.name, 0)
+
+        private val message = params.inputData.getString(Arg.MESSAGE.name) ?: "dummy"
+
         override fun doWork(): Result {
-            Application.instance.notifyDummyImpl()
+            instance.notifyDummyImpl(id, message)
             return Result.success()
         }
     }

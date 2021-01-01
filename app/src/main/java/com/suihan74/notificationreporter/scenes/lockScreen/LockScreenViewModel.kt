@@ -5,14 +5,14 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.Window
 import androidx.lifecycle.*
+import com.suihan74.notificationreporter.models.MultipleNotificationsSolution
 import com.suihan74.notificationreporter.models.NotificationSetting
 import com.suihan74.notificationreporter.repositories.BatteryRepository
 import com.suihan74.notificationreporter.repositories.NotificationRepository
 import com.suihan74.notificationreporter.repositories.PreferencesRepository
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import org.threeten.bp.LocalDateTime
+import kotlin.random.Random
 
 class LockScreenViewModel(
     batteryRepo : BatteryRepository,
@@ -33,10 +33,9 @@ class LockScreenViewModel(
     private val _lightOff = MutableLiveData<Boolean>().also { liveData ->
         liveData.observeForever {
             // 待機時間が0に設定されている場合は常に明るくする
-            val interval = lightOffInterval ?: 5_000L
-            if (!it && interval > 0L) {
+            if (!it && lightOffInterval > 0L) {
                 viewModelScope.launch(Dispatchers.Main) {
-                    delay(interval)
+                    delay(lightOffInterval)
                     liveData.value = true
                 }
             }
@@ -44,7 +43,7 @@ class LockScreenViewModel(
     }
 
     /** 画面消灯までの待機時間(ミリ秒) */
-    private var lightOffInterval : Long? = null
+    private var lightOffInterval : Long = 5_000L
 
     /** 画面起動直後の画面の明るさ */
     private val _lightLevelOn = MutableLiveData<Float>()
@@ -64,33 +63,123 @@ class LockScreenViewModel(
     /** 充電状態 */
     val batteryCharging : LiveData<Boolean> = batteryRepo.batteryCharging
 
-    /** 発生した通知リスト */
-    val statusBarNotifications : LiveData<List<StatusBarNotification>> = notificationRepo.statusBarNotifications
+    /** 複数通知の処理方法 */
+    private lateinit var multipleNotificationsSolution : MultipleNotificationsSolution
 
+    /** 複数通知を切り替える待機時間 */
+    private var switchNotificationsDuration : Long = 5_000L
+
+    /** 発生した通知リスト */
+    private val statusBarNotifications : LiveData<List<StatusBarNotification>> =
+        notificationRepo.statusBarNotifications
+
+    /** 画面に表示中の通知 */
     val currentNotice = MutableLiveData<StatusBarNotification?>()
 
     // ------ //
 
     fun init(lifecycleOwner: LifecycleOwner) {
-        statusBarNotifications.observe(lifecycleOwner, {
-            val item = it.lastOrNull() ?: return@observe
-            viewModelScope.launch(Dispatchers.Main) {
-                currentNotice.value = item
-                _notificationSetting.value = prefRepo.getNotificationSetting(item.packageName)
+        var switchNoticeJob : Job? = null
+
+        currentNotice.observe(lifecycleOwner, {
+            if (it == null) return@observe
+            viewModelScope.launch(Dispatchers.Main.immediate) {
+                _notificationSetting.value = prefRepo.getNotificationSetting(it.packageName)
             }
         })
 
-        viewModelScope.launch(Dispatchers.Main) {
+        statusBarNotifications.observe(lifecycleOwner, {
+            viewModelScope.launch {
+                switchNoticeJob?.cancelAndJoin()
+                switchNoticeJob = launchNotificationsSwitching()
+            }
+        })
+
+        viewModelScope.launch(Dispatchers.Main.immediate) {
             prefRepo.getPreferences().let { prefs ->
                 _lightLevelOn.value = prefs.lightLevelOn
                 _lightLevelOff.value = prefs.lightLevelOff
                 lightOffInterval = prefs.lightOffInterval
                 _useSystemLightLevelOn.value = prefs.useSystemLightLevelOn
                 _lightOff.value = false
+                multipleNotificationsSolution = prefs.multipleNotificationsSolution
+                switchNotificationsDuration = prefs.switchNotificationsDuration
             }
 
-            while (true) {
-                val now = LocalDateTime.now()
+            // 時刻更新開始
+            launchClockUpdating()
+        }
+    }
+
+    // ------ //
+
+    /** 複数通知の表示切替え */
+    private fun launchNotificationsSwitching() = viewModelScope.launch {
+        when (multipleNotificationsSolution) {
+            MultipleNotificationsSolution.LATEST ->
+                showLatestNotification()
+
+            MultipleNotificationsSolution.SWITCH_IN_ORDER ->
+                switchNotificationsInOrder()
+
+            MultipleNotificationsSolution.SWITCH_RANDOMLY ->
+                switchNotificationsRandomly()
+        }
+    }
+
+    /** 最後に受け取った通知を表示する */
+    private suspend fun showLatestNotification() = withContext(Dispatchers.Default) {
+        statusBarNotifications.value?.lastOrNull()?.let {
+            currentNotice.postValue(it)
+        }
+    }
+
+    /** 複数通知を新着から順番に切り替える */
+    private suspend fun switchNotificationsInOrder() = withContext(Dispatchers.Default) {
+        while (true) {
+            val notifications = statusBarNotifications.value
+            if (notifications != null && notifications.size > 1) {
+                val currentIdx = notifications.indexOf(currentNotice.value)
+                val nextIdx =
+                    if (currentIdx <= 0) notifications.size - 1
+                    else currentIdx - 1
+
+                currentNotice.postValue(notifications[nextIdx])
+            }
+
+            delay(switchNotificationsDuration)
+        }
+    }
+
+    /** 複数通知をランダムに切り替える(新しい通知取得直後は必ずその新着をはじめに表示する) */
+    private suspend fun switchNotificationsRandomly() = withContext(Dispatchers.Default) {
+        showLatestNotification()
+        while (true) {
+            val notifications = statusBarNotifications.value
+            if (notifications != null && notifications.size > 1) {
+                val nextIdx = getNextIdxExcludeCurrent(
+                    until = notifications.size,
+                    notifications.indexOf(currentNotice.value)
+                )
+                currentNotice.postValue(notifications[nextIdx])
+            }
+
+            delay(switchNotificationsDuration)
+        }
+    }
+
+    private fun getNextIdxExcludeCurrent(until: Int, current: Int) : Int {
+        if (until == 2 && current >= 0) return current xor 1
+        while (true) {
+            val next = Random.nextInt(until)
+            if (next != current) return next
+        }
+    }
+
+    /** 時計の更新処理 */
+    private fun launchClockUpdating() = viewModelScope.launch(Dispatchers.Main) {
+        while (true) {
+            LocalDateTime.now().let { now ->
                 _currentTime.value = now
 
                 // 1分間隔で時計を更新する

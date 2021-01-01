@@ -17,6 +17,8 @@ import com.suihan74.notificationreporter.scenes.preferences.dataBinding.SliderBi
 import com.suihan74.notificationreporter.scenes.preferences.notch.RectangleNotchSettingFragment
 import com.suihan74.notificationreporter.scenes.preferences.notch.WaterDropNotchSettingFragment
 import com.suihan74.utilities.extensions.hideSoftInputMethod
+import kotlin.math.absoluteValue
+import kotlin.random.Random
 
 /**
  * 全般設定画面
@@ -56,7 +58,8 @@ class GeneralPrefsFragment : Fragment() {
         }
 
         binding.notifyButton.setOnClickListener {
-            Application.instance.notifyDummy(5)
+            val id = Random.nextInt().absoluteValue
+            Application.instance.notifyDummy(5, id, "dummy-$id")
         }
 
         binding.lightOffIntervalEditText.also { editText ->
@@ -83,6 +86,10 @@ class GeneralPrefsFragment : Fragment() {
 
         binding.silentTimezoneEndButton.setOnClickListener {
             viewModel.openSilentTimezonePickerDialog(viewModel.silentTimezoneEnd, childFragmentManager)
+        }
+
+        binding.multiNoticesSolutionSelectionButton.setOnClickListener {
+            viewModel.openMultipleNotificationsSolutionSelectionDialog(childFragmentManager)
         }
 
         binding.pickOutlinesColorButton.setOnClickListener {

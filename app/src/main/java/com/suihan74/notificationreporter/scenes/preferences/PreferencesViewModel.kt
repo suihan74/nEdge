@@ -10,10 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.suihan74.notificationreporter.R
 import com.suihan74.notificationreporter.dataStore.Preferences
 import com.suihan74.notificationreporter.database.notification.NotificationEntity
-import com.suihan74.notificationreporter.models.NotchSetting
-import com.suihan74.notificationreporter.models.NotchType
-import com.suihan74.notificationreporter.models.NotificationSetting
-import com.suihan74.notificationreporter.models.OutlinesSetting
+import com.suihan74.notificationreporter.models.*
 import com.suihan74.notificationreporter.repositories.PreferencesRepository
 import com.suihan74.notificationreporter.scenes.preferences.dialog.ColorPickerDialogFragment
 import com.suihan74.notificationreporter.scenes.preferences.dialog.TimePickerDialogFragment
@@ -73,6 +70,9 @@ class PreferencesViewModel(
         OFF
     }
 
+    /** 複数通知の表示方法 */
+    val multipleNotificationsSolution = MutableLiveData<MultipleNotificationsSolution>()
+
     // ------ //
 
     /** 通知表示の輪郭線の色 */
@@ -126,6 +126,7 @@ class PreferencesViewModel(
                     silentTimezoneStart.value = it.silentTimezoneStart
                     silentTimezoneEnd.value = it.silentTimezoneEnd
                     requiredBatteryLevel.value = it.requiredBatteryLevel
+                    multipleNotificationsSolution.value = it.multipleNotificationsSolution
                 }
             }
             .flowOn(Dispatchers.Main)
@@ -148,6 +149,7 @@ class PreferencesViewModel(
                     silentTimezoneStart = silentTimezoneStart.value!!,
                     silentTimezoneEnd = silentTimezoneEnd.value!!,
                     requiredBatteryLevel = requiredBatteryLevel.value!!,
+                    multipleNotificationsSolution = multipleNotificationsSolution.value!!
                 )
             }
         }
@@ -248,16 +250,38 @@ class PreferencesViewModel(
     }
 
     /**
+     * 複数通知切替え方法を選択するダイアログを開く
+     */
+    fun openMultipleNotificationsSolutionSelectionDialog(fragmentManager: FragmentManager) {
+        val solutions = MultipleNotificationsSolution.values()
+        val labels = solutions.map { it.textId }
+        val initialSelected = solutions.indexOf(multipleNotificationsSolution.value)
+
+        val dialog = AlertDialogFragment.Builder()
+            .setTitle(R.string.prefs_multi_notices_solution_selection_desc)
+            .setSingleChoiceItems(labels, initialSelected) { _, which ->
+                val solution = solutions[which]
+                if (multipleNotificationsSolution.value != solution) {
+                    multipleNotificationsSolution.value = solution
+                }
+            }
+            .setNegativeButton(R.string.dialog_cancel)
+            .create()
+        dialog.show(fragmentManager, null)
+    }
+
+    /**
      * ノッチタイプを選択するダイアログを開く
      */
     fun openNotchTypeSelectionDialog(notchType: MutableLiveData<NotchType>, fragmentManager: FragmentManager) {
-        val labels = NotchType.values().map { it.name }
-        val initialSelected = labels.indexOf(notchType.value?.name)
+        val notchTypes = NotchType.values()
+        val labels = notchTypes.map { it.textId }
+        val initialSelected = notchTypes.indexOf(notchType.value)
 
         val dialog = AlertDialogFragment.Builder()
             .setTitle(R.string.prefs_notch_type_selection_desc)
             .setSingleChoiceItems(labels, initialSelected) { _, which ->
-                val type = NotchType.values()[which]
+                val type = notchTypes[which]
                 if (notchType.value == type) return@setSingleChoiceItems
 
                 when (notchType) {
