@@ -12,10 +12,6 @@ class NotificationRepository {
     /** 通知スタック */
     val statusBarNotifications = MutableLiveData<List<StatusBarNotification>>()
 
-    /** 直近で通知が発生したか */
-    val existNotifications : Boolean
-        get() = statusBarNotifications.value.isNullOrEmpty().not()
-
     // ------ //
 
     /** 新しく発生した通知を記録する */
