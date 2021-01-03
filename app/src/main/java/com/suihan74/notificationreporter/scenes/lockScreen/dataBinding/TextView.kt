@@ -1,9 +1,10 @@
 package com.suihan74.notificationreporter.scenes.lockScreen.dataBinding
 
-import android.app.Notification
 import android.service.notification.StatusBarNotification
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
+import com.suihan74.utilities.extensions.text
+import com.suihan74.utilities.extensions.title
 
 object TextViewBindingAdapters {
     /** バッテリのパーセンテージ表示 */
@@ -40,14 +41,12 @@ object TextViewBindingAdapters {
     fun setNotificationText(textView: TextView, sbn: StatusBarNotification?) {
         ViewBindingAdapters.setNotificationVisibility(textView, sbn) {
             textView.text =
-                if (sbn == null) ""
-                else {
-                    val (title, text) = sbn.notification.extras.run {
-                        getString(Notification.EXTRA_TITLE) to getString(Notification.EXTRA_TEXT)
-                    }
-                    if (title == null || text == null) ""
+                sbn?.notification?.let {
+                    val title = sbn.notification.title
+                    val text = sbn.notification.text
+                    if (title.isBlank() || text.isBlank()) ""
                     else "$title : $text"
-                }
+                } ?: ""
         }
     }
 }
