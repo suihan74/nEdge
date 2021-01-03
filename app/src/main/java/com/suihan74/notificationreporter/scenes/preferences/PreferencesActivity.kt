@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.R
 import com.suihan74.notificationreporter.databinding.ActivityPreferencesBinding
+import com.suihan74.notificationreporter.databinding.ListHeaderPreferencesMenuBinding
 import com.suihan74.notificationreporter.databinding.ListItemPreferencesMenuBinding
 import com.suihan74.utilities.BindingListAdapter
 import com.suihan74.utilities.lazyProvideViewModel
@@ -139,7 +140,15 @@ class PreferencesActivity : AppCompatActivity() {
                     viewModel.selectedMenuItem.value = binding.item
                 }
 
-                submitList(MenuItem.values().toList())
+                submit(
+                    items = MenuItem.values().toList(),
+                    header = { parent ->
+                        ListHeaderPreferencesMenuBinding.inflate(layoutInflater, parent, false).root.also {
+                            it.setOnClickListener {}
+                            it.setOnLongClickListener { false }
+                        }
+                    }
+                )
             }
         }
 

@@ -12,7 +12,7 @@ object RecyclerViewBindingAdapters {
     @BindingAdapter("applications")
     fun setApplications(recyclerView: RecyclerView, items: List<ApplicationItem>?) {
         recyclerView.adapter.alsoAs<BindingListAdapter<ApplicationItem, ListItemApplicationItemsBinding>> { adapter ->
-            adapter.submitList(items)
+            adapter.submit(items)
         }
     }
 }
