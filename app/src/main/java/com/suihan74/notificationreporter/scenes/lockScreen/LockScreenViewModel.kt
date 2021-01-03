@@ -136,35 +136,40 @@ class LockScreenViewModel(
 
     /** 複数通知を新着から順番に切り替える */
     private suspend fun switchNotificationsInOrder() = withContext(Dispatchers.Default) {
+        showLatestNotification()
+
         while (true) {
-            val notifications = statusBarNotifications.value
-            if (notifications != null && notifications.size > 1) {
-                val currentIdx = notifications.indexOf(currentNotice.value)
-                val nextIdx =
-                    if (currentIdx <= 0) notifications.size - 1
-                    else currentIdx - 1
-
-                currentNotice.postValue(notifications[nextIdx])
-            }
-
             delay(switchNotificationsDuration)
+
+            statusBarNotifications.value?.let { n ->
+                if (n.size > 1) {
+                    val currentIdx = n.indexOf(currentNotice.value)
+                    val nextIdx =
+                        if (currentIdx <= 0) n.size - 1
+                        else currentIdx - 1
+
+                    currentNotice.postValue(n[nextIdx])
+                }
+            }
         }
     }
 
     /** 複数通知をランダムに切り替える(新しい通知取得直後は必ずその新着をはじめに表示する) */
     private suspend fun switchNotificationsRandomly() = withContext(Dispatchers.Default) {
         showLatestNotification()
-        while (true) {
-            val notifications = statusBarNotifications.value
-            if (notifications != null && notifications.size > 1) {
-                val nextIdx = getNextIdxExcludeCurrent(
-                    until = notifications.size,
-                    notifications.indexOf(currentNotice.value)
-                )
-                currentNotice.postValue(notifications[nextIdx])
-            }
 
+        while (true) {
             delay(switchNotificationsDuration)
+
+            statusBarNotifications.value?.let { n ->
+                if (n.size > 1) {
+                    val nextIdx = getNextIdxExcludeCurrent(
+                        until = n.size,
+                        n.indexOf(currentNotice.value)
+                    )
+                    currentNotice.postValue(n[nextIdx])
+                }
+            }
         }
     }
 
