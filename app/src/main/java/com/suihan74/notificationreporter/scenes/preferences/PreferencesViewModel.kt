@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.suihan74.notificationreporter.R
 import com.suihan74.notificationreporter.dataStore.Preferences
-import com.suihan74.notificationreporter.database.notification.NotificationEntity
+import com.suihan74.notificationreporter.database.notification.NotificationDao
 import com.suihan74.notificationreporter.models.*
 import com.suihan74.notificationreporter.repositories.PreferencesRepository
 import com.suihan74.notificationreporter.scenes.preferences.dialog.ColorPickerDialogFragment
@@ -28,7 +28,7 @@ class PreferencesViewModel(
     private val prefRepo: PreferencesRepository
 ) : ViewModel() {
     companion object {
-        const val DEFAULT_SETTING_NAME = NotificationEntity.DEFAULT_SETTING_NAME
+        const val DEFAULT_SETTING_NAME = NotificationDao.DEFAULT_SETTING_NAME
     }
 
     /** 選択中のメニュー項目 */
@@ -153,7 +153,10 @@ class PreferencesViewModel(
                 )
             }
         }
-        prefRepo.updateNotificationSetting(targetAppName, notificationSetting.value!!)
+        prefRepo.updateNotificationSetting(
+            targetAppName,
+            setting = notificationSetting.value!!
+        )
     }
 
     // ------ //
@@ -176,12 +179,12 @@ class PreferencesViewModel(
     private val currentTargetMutex = Mutex()
 
     /** 編集中の対象アプリ名 */
-    private var targetAppName : String = NotificationEntity.DEFAULT_SETTING_NAME
+    private var targetAppName : String = NotificationDao.DEFAULT_SETTING_NAME
 
     /** 現在の画面で編集中のアプリ設定をセットする */
     private fun setCurrentTarget(appName: String) = viewModelScope.launch(Dispatchers.Main) {
         currentTargetMutex.withLock {
-            prefRepo.getNotificationSetting(appName).let { setting ->
+            prefRepo.getNotificationSettingOrDefault(appName).let { setting ->
                 notificationColor.value = setting.color
                 lineThickness.value = setting.thickness
                 blurSize.value = setting.blurSize

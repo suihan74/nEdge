@@ -60,4 +60,8 @@
     <string name="multi_notices_solution_latest">最新一件のみ表示</string>
     <string name="multi_notices_solution_switch_in_order">順番に切り替える</string>
     <string name="multi_notices_solution_switch_randomly">ランダムに切り替える</string>
+
+    <!-- UnknownNotificationSolution -->
+    <string name="unknown_notice_solution_default">デフォルト設定で表示</string>
+    <string name="unknown_notice_solution_ignore">通知を表示しない</string>
 </resources>

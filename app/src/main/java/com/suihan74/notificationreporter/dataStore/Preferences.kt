@@ -1,6 +1,7 @@
 package com.suihan74.notificationreporter.dataStore
 
 import com.suihan74.notificationreporter.models.MultipleNotificationsSolution
+import com.suihan74.notificationreporter.models.UnknownNotificationSolution
 import com.suihan74.utilities.serialization.LocalTimeSerializer
 import kotlinx.serialization.Serializable
 import org.threeten.bp.LocalTime
@@ -49,5 +50,8 @@ data class Preferences(
     val multipleNotificationsSolution : MultipleNotificationsSolution = MultipleNotificationsSolution.SWITCH_IN_ORDER,
 
     /** 複数通知を切り替えるまでの待機時間(ミリ秒) */
-    val switchNotificationsDuration : Long = 5_000L
+    val switchNotificationsDuration : Long = 5_000L,
+
+    /** 設定が登録されていない通知の処理方法 */
+    val unknownNotificationSolution : UnknownNotificationSolution = UnknownNotificationSolution.DEFAULT
 )

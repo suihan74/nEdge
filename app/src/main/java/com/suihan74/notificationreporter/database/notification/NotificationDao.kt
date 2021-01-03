@@ -15,13 +15,12 @@ interface NotificationDao {
     @Query("""
         SELECT * FROM NotificationEntity
         WHERE appName = :appName
-        LIMIT 1
     """)
-    suspend fun findByAppName(appName: String) : NotificationEntity?
+    suspend fun findByAppName(appName: String) : List<NotificationEntity>
 
     @Transaction
     suspend fun getDefaultSetting() : NotificationSetting {
-        return findByAppName(DEFAULT_SETTING_NAME)?.setting ?: NotificationSetting()
+        return findByAppName(DEFAULT_SETTING_NAME).firstOrNull()?.setting ?: NotificationSetting()
     }
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

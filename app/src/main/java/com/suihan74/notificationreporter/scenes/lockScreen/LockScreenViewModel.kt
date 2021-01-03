@@ -84,7 +84,7 @@ class LockScreenViewModel(
         currentNotice.observe(lifecycleOwner, {
             if (it == null) return@observe
             viewModelScope.launch(Dispatchers.Main.immediate) {
-                _notificationSetting.value = prefRepo.getNotificationSetting(it.packageName)
+                _notificationSetting.value = prefRepo.getNotificationSettingOrDefault(it)
             }
         })
 

@@ -1,10 +1,13 @@
 package com.suihan74.notificationreporter.repositories
 
+import android.service.notification.StatusBarNotification
 import androidx.datastore.core.DataStore
 import com.suihan74.notificationreporter.dataStore.Preferences
 import com.suihan74.notificationreporter.database.notification.NotificationDao
 import com.suihan74.notificationreporter.database.notification.NotificationEntity
+import com.suihan74.notificationreporter.models.KeywordMatchingType
 import com.suihan74.notificationreporter.models.NotificationSetting
+import com.suihan74.utilities.extensions.contains
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 
@@ -16,7 +19,7 @@ class PreferencesRepository(
     private val notificationDao: NotificationDao
 ) {
     companion object {
-        private const val DEFAULT_SETTING_NAME = NotificationEntity.DEFAULT_SETTING_NAME
+        private const val DEFAULT_SETTING_NAME = NotificationDao.DEFAULT_SETTING_NAME
     }
 
     // ------ //
@@ -24,26 +27,61 @@ class PreferencesRepository(
     /**
      * 設定をDBに保存する
      */
-    suspend fun updateNotificationSetting(appName: String, setting: NotificationSetting) {
-        notificationDao.insert(NotificationEntity(appName, setting))
+    suspend fun updateNotificationSetting(
+        appName: String,
+        keyword: String = "",
+        keywordMatchingType: KeywordMatchingType = KeywordMatchingType.NONE,
+        setting: NotificationSetting = NotificationSetting()
+    ) {
+        NotificationEntity(
+            appName = appName,
+            keyword = keyword,
+            keywordMatchingType = keywordMatchingType,
+            setting = setting
+        ).let {
+            notificationDao.insert(it)
+        }
     }
 
-    /**
-     * 対象アプリ用の通知表示設定を取得する
-     *
-     * @return `appName`に対応する設定か、見つからなければデフォルト設定
-     */
-    suspend fun getNotificationSetting(appName: String = DEFAULT_SETTING_NAME) : NotificationSetting {
-        return getNotificationSettingOrNull(appName) ?: notificationDao.getDefaultSetting()
+    suspend fun getNotificationSettingOrNull(sbn: StatusBarNotification) : NotificationSetting? {
+        return notificationDao.findByAppName(sbn.packageName)
+            .sortedByDescending { it.keywordMatchingType.importance }
+            .firstOrNull {
+                when (it.keywordMatchingType) {
+                    KeywordMatchingType.NONE -> true
+
+                    KeywordMatchingType.INCLUDE ->
+                        sbn.notification?.contains(it.keyword) == true
+
+                    KeywordMatchingType.EXCLUDE ->
+                        sbn.notification?.contains(it.keyword) == false
+                }
+            }
+            ?.setting
     }
 
-    /**
-     * 対象アプリ用の通知表示設定を取得する
-     *
-     * @return `appName`に対応する設定か、見つからなければnull
-     */
-    suspend fun getNotificationSettingOrNull(appName: String = DEFAULT_SETTING_NAME) : NotificationSetting? {
-        return notificationDao.findByAppName(appName)?.setting
+    suspend fun getNotificationSettingOrDefault(sbn: StatusBarNotification) : NotificationSetting =
+        getNotificationSettingOrNull(sbn) ?: notificationDao.getDefaultSetting()
+
+    suspend fun getNotificationSettingOrNull(
+        appName: String,
+        keyword: String = "",
+        keywordMatchingType: KeywordMatchingType = KeywordMatchingType.NONE
+    ) : NotificationSetting? {
+        return notificationDao.findByAppName(appName)
+            .firstOrNull { it.keyword == keyword && it.keywordMatchingType == keywordMatchingType }
+            ?.setting
+    }
+
+    suspend fun getNotificationSettingOrDefault(
+        appName: String,
+        keyword: String = "",
+        keywordMatchingType: KeywordMatchingType = KeywordMatchingType.NONE
+    ) : NotificationSetting {
+        return notificationDao.findByAppName(appName)
+            .firstOrNull { it.keyword == keyword && it.keywordMatchingType == keywordMatchingType }
+            ?.setting
+            ?: notificationDao.getDefaultSetting()
     }
 
     /**
