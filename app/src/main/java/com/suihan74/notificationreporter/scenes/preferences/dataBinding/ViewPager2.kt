@@ -14,7 +14,11 @@ object ViewPager2BindingAdapters {
     @BindingAdapter("currentItem")
     fun setCurrentItem(viewPager: ViewPager2, menuItem: MenuItem?) {
         if (menuItem == null) return
-        viewPager.currentItem = MenuItem.values().indexOf(menuItem)
+
+        val nextIdx = MenuItem.values().indexOf(menuItem)
+        if (viewPager.currentItem != nextIdx) {
+            viewPager.currentItem = nextIdx
+        }
     }
 
     /**
@@ -23,7 +27,7 @@ object ViewPager2BindingAdapters {
     @JvmStatic
     @InverseBindingAdapter(attribute = "currentItem")
     fun getCurrentItem(viewPager: ViewPager2) : MenuItem =
-        MenuItem.values()[viewPager.currentItem]
+        MenuItem.values().getOrElse(viewPager.currentItem) { MenuItem.GENERAL }
 
     /**
      * 双方向バインド用の設定
