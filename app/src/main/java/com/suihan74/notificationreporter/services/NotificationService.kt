@@ -7,7 +7,6 @@ import android.service.notification.StatusBarNotification
 import android.util.Log
 import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.scenes.lockScreen.LockScreenActivity
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 /**
@@ -27,8 +26,8 @@ class NotificationService : NotificationListenerService() {
             return
         }
 
-        GlobalScope.launch {
-            Application.instance.notificationRepository.pushNotification(sbn)
+        Application.instance.let { app -> app.coroutineScope.launch {
+            app.notificationRepository.pushNotification(sbn)
 
             if (LockScreenActivity.checkNotifiable(sbn)) {
                 val intent = Intent(applicationContext, LockScreenActivity::class.java).also {
@@ -37,6 +36,14 @@ class NotificationService : NotificationListenerService() {
                 applicationContext.startActivity(intent)
                 Log.i("Notification", sbn!!.packageName)
             }
-        }
+        } }
+    }
+
+    override fun onNotificationRemoved(sbn: StatusBarNotification?) {
+        super.onNotificationRemoved(sbn)
+
+        Application.instance.let { app -> app.coroutineScope.launch {
+            app.notificationRepository.removeNotification(sbn)
+        } }
     }
 }

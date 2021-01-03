@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.pm.PackageInfoCompat
@@ -22,9 +23,7 @@ import com.suihan74.notificationreporter.repositories.NotificationRepository
 import com.suihan74.notificationreporter.repositories.PreferencesRepository
 import com.suihan74.notificationreporter.repositories.ScreenRepository
 import com.suihan74.utilities.VersionUtil
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import java.util.concurrent.TimeUnit
 
 /**
@@ -32,8 +31,9 @@ import java.util.concurrent.TimeUnit
  */
 class Application : android.app.Application() {
     companion object {
-        lateinit var instance : Application
-            private set
+        private var _instance : Application? = null
+        val instance : Application
+            get() = _instance!!
 
         /** 通知チャンネル: 通知テスト用 */
         private const val NOTIFICATION_CHANNEL_DUMMY = "DummyNotificationChannel"
@@ -47,7 +47,7 @@ class Application : android.app.Application() {
     /** バッテリー関係の情報を扱うリポジトリ */
     val batteryRepository by lazy {
         BatteryRepository().also {
-            GlobalScope.launch {
+            coroutineScope.launch {
                 it.setBatterLevel(this@Application)
             }
         }
@@ -116,9 +116,18 @@ class Application : android.app.Application() {
 
     // ------ //
 
+    /** アプリレベルのコルーチンスコープ */
+    private var _coroutineScope : CoroutineScope? = null
+    val coroutineScope : CoroutineScope
+        get() = _coroutineScope!!
+
+    // ------ //
+
     override fun onCreate() {
         super.onCreate()
-        instance = this
+        _instance = this
+
+        _coroutineScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
 
         // initialize the timezone information
         AndroidThreeTen.init(this)
@@ -146,6 +155,17 @@ class Application : android.app.Application() {
 
         // アプリが使用する通知チャンネルを作成する
         createNotificationChannel(NOTIFICATION_CHANNEL_DUMMY)
+
+        Log.d("Application", "created")
+    }
+
+    override fun onTerminate() {
+        super.onTerminate()
+        _coroutineScope?.cancel()
+        _coroutineScope = null
+        _instance = null
+
+        Log.d("Application", "terminated")
     }
 
     // ------ //

@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import com.suihan74.notificationreporter.Application
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 /**
@@ -12,10 +11,9 @@ import kotlinx.coroutines.launch
  */
 class BatteryStateReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
-        if (intent != null) {
-            GlobalScope.launch {
-                Application.instance.batteryRepository.setBatteryLevel(intent)
-            }
-        }
+        if (intent == null) return
+        Application.instance.let { app -> app.coroutineScope.launch {
+            app.batteryRepository.setBatteryLevel(intent)
+        } }
     }
 }

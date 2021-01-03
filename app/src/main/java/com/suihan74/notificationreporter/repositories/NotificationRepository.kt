@@ -26,6 +26,17 @@ class NotificationRepository {
         }
     }
 
+    /** ステータスバーから削除された通知をリポジトリに反映させる */
+    suspend fun removeNotification(sbn: StatusBarNotification?) = withContext(Dispatchers.Default) {
+        if (sbn?.notification == null) return@withContext
+        val oldList = statusBarNotifications.value.orEmpty()
+        statusBarNotifications.postValue(
+            oldList.filter {
+                it.packageName == sbn.packageName && it.id == sbn.id
+            }
+        )
+    }
+
     /** 記録した通知をクリアする */
     suspend fun clearNotifications() = withContext(Dispatchers.Default) {
         statusBarNotifications.postValue(emptyList())
