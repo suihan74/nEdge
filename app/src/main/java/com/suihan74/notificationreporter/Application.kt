@@ -3,8 +3,6 @@ package com.suihan74.notificationreporter
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
@@ -129,23 +127,18 @@ class Application : android.app.Application() {
 
     override fun onCreate() {
         super.onCreate()
+        // すべての処理に先駆けて初期化するべき項目
         _instance = this
-
         _coroutineScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
 
         // initialize the timezone information
         AndroidThreeTen.init(this)
 
-        // 画面消灯を監視する
-        registerReceiver(screenReceiver, IntentFilter(Intent.ACTION_SCREEN_OFF))
-        registerReceiver(screenReceiver, IntentFilter(Intent.ACTION_SCREEN_ON))
+        // レシーバ有効化
+        screenReceiver.register(this)
+        batteryStateReceiver.register(this)
 
-        // バッテリ残量・充電状態変更を監視する
-        registerReceiver(batteryStateReceiver, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
-        registerReceiver(batteryStateReceiver, IntentFilter(Intent.ACTION_POWER_CONNECTED))
-        registerReceiver(batteryStateReceiver, IntentFilter(Intent.ACTION_POWER_DISCONNECTED))
-
-        // 設定リポジトリの用意
+        // 設定リポジトリ初期化
         runBlocking {
             preferencesRepository = PreferencesRepository(
                 dataStore =

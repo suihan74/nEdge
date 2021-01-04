@@ -3,6 +3,7 @@ package com.suihan74.notificationreporter.receivers
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.util.Log
 import com.suihan74.notificationreporter.Application
 import kotlinx.coroutines.launch
@@ -11,6 +12,12 @@ import kotlinx.coroutines.launch
  * 画面ON/OFFを検知するレシーバ
  */
 class ScreenReceiver : BroadcastReceiver() {
+    /** システムにレシーバを登録 */
+    fun register(context: Context) {
+        context.registerReceiver(this, IntentFilter(Intent.ACTION_SCREEN_OFF))
+        context.registerReceiver(this, IntentFilter(Intent.ACTION_SCREEN_ON))
+    }
+
     override fun onReceive(context: Context?, intent: Intent?) {
         if (context == null) return
         setScreenState(Application.instance, intent)
