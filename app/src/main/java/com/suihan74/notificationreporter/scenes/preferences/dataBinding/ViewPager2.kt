@@ -1,4 +1,4 @@
-package com.suihan74.utilities.dataBinding
+package com.suihan74.notificationreporter.scenes.preferences.dataBinding
 
 import androidx.databinding.BindingAdapter
 import androidx.databinding.InverseBindingAdapter
