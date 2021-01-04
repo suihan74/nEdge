@@ -27,9 +27,8 @@ class NotificationService : NotificationListenerService() {
         }
 
         Application.instance.let { app -> app.coroutineScope.launch {
-            app.notificationRepository.pushNotification(sbn)
-
             if (LockScreenActivity.checkNotifiable(sbn)) {
+                app.notificationRepository.pushNotification(sbn)
                 val intent = Intent(applicationContext, LockScreenActivity::class.java).also {
                     it.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 }

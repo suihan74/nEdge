@@ -60,7 +60,11 @@ class Application : android.app.Application() {
 
     /** 画面状態を扱うリポジトリ */
     val screenRepository by lazy {
-        ScreenRepository()
+        ScreenRepository().also {
+            coroutineScope.launch {
+                it.setScreenState(this@Application)
+            }
+        }
     }
 
     /** アプリ設定を扱うリポジトリ */
