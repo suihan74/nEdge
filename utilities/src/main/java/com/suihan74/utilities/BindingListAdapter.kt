@@ -80,44 +80,45 @@ class BindingListAdapter<ItemT, BindingT : ViewDataBinding>(
 
     // ------ //
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return when (viewType) {
-            ViewHolderType.BODY.ordinal -> {
-                val binding = DataBindingUtil.inflate<BindingT>(
-                    LayoutInflater.from(parent.context),
-                    itemLayoutId,
-                    parent,
-                    false
-                ).also {
-                    it.lifecycleOwner = lifecycleOwner
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): RecyclerView.ViewHolder = when (viewType) {
+        ViewHolderType.BODY.ordinal -> {
+            val binding = DataBindingUtil.inflate<BindingT>(
+                LayoutInflater.from(parent.context),
+                itemLayoutId,
+                parent,
+                false
+            ).also {
+                it.lifecycleOwner = lifecycleOwner
+            }
+
+            ViewHolder(binding).also {
+                it.itemView.setOnClickListener {
+                    onClickItem?.invoke(binding)
                 }
 
-                ViewHolder(binding).also {
-                    it.itemView.setOnClickListener {
-                        onClickItem?.invoke(binding)
-                    }
+                it.itemView.setOnLongClickListener {
+                    onLongClickItem?.invoke(binding)
+                    onLongClickItem != null
+                }
 
-                    it.itemView.setOnLongClickListener {
-                        onLongClickItem?.invoke(binding)
-                        onLongClickItem != null
-                    }
-
-                    it.itemView.setOnTouchListener { view, motionEvent ->
-                        onTouchItem?.invoke(binding, motionEvent) ?: false
-                    }
+                it.itemView.setOnTouchListener { view, motionEvent ->
+                    onTouchItem?.invoke(binding, motionEvent) ?: false
                 }
             }
-
-            ViewHolderType.HEADER.ordinal -> {
-                object : RecyclerView.ViewHolder(headerGenerator!!.invoke(parent)) {}
-            }
-
-            ViewHolderType.FOOTER.ordinal -> {
-                object : RecyclerView.ViewHolder(footerGenerator!!.invoke(parent)) {}
-            }
-
-            else -> throw NotImplementedError()
         }
+
+        ViewHolderType.HEADER.ordinal -> {
+            object : RecyclerView.ViewHolder(headerGenerator!!.invoke(parent)) {}
+        }
+
+        ViewHolderType.FOOTER.ordinal -> {
+            object : RecyclerView.ViewHolder(footerGenerator!!.invoke(parent)) {}
+        }
+
+        else -> throw NotImplementedError()
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
