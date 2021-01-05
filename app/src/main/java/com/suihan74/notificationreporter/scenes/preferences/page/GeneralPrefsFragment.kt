@@ -10,12 +10,9 @@ import androidx.fragment.app.Fragment
 import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.R
 import com.suihan74.notificationreporter.databinding.FragmentGeneralPrefsBinding
-import com.suihan74.notificationreporter.models.NotchType
 import com.suihan74.notificationreporter.scenes.lockScreen.LockScreenActivity
 import com.suihan74.notificationreporter.scenes.preferences.PreferencesActivity
 import com.suihan74.notificationreporter.scenes.preferences.dataBinding.SliderBindingAdapters
-import com.suihan74.notificationreporter.scenes.preferences.notch.RectangleNotchSettingFragment
-import com.suihan74.notificationreporter.scenes.preferences.notch.WaterDropNotchSettingFragment
 import com.suihan74.utilities.extensions.hideSoftInputMethod
 import kotlin.math.absoluteValue
 import kotlin.random.Random
@@ -81,11 +78,11 @@ class GeneralPrefsFragment : Fragment() {
         }
 
         binding.silentTimezoneStartButton.setOnClickListener {
-            viewModel.openSilentTimezonePickerDialog(viewModel.silentTimezoneStart, childFragmentManager)
+            viewModel.openSilentTimezoneStartPickerDialog(childFragmentManager)
         }
 
         binding.silentTimezoneEndButton.setOnClickListener {
-            viewModel.openSilentTimezonePickerDialog(viewModel.silentTimezoneEnd, childFragmentManager)
+            viewModel.openSilentTimezoneEndPickerDialog(childFragmentManager)
         }
 
         binding.multiNoticesSolutionSelectionButton.setOnClickListener {
@@ -96,25 +93,25 @@ class GeneralPrefsFragment : Fragment() {
             viewModel.openOutlinesColorPickerDialog(childFragmentManager)
         }
 
-        binding.notchTypeSelectionButton.setOnClickListener {
-            viewModel.openNotchTypeSelectionDialog(viewModel.topNotchType, childFragmentManager)
+        binding.topNotchTypeSelectionButton.setOnClickListener {
+            viewModel.openTopNotchTypeSelectionDialog(childFragmentManager)
         }
 
-        viewModel.topNotchType.observe(viewLifecycleOwner, {
-            val fragment = when (it) {
-                NotchType.RECTANGLE ->
-                    RectangleNotchSettingFragment.createInstance()
+        binding.bottomNotchTypeSelectionButton.setOnClickListener {
+            viewModel.openBottomNotchTypeSelectionDialog(childFragmentManager)
+        }
 
-                NotchType.WATER_DROP ->
-                    WaterDropNotchSettingFragment.createInstance()
+        viewModel.observeTopNotchType(
+            R.id.topNotchSettingFragmentArea,
+            viewLifecycleOwner,
+            childFragmentManager
+        )
 
-                else -> Fragment()
-            }
-
-            childFragmentManager.beginTransaction()
-                .replace(R.id.notchSettingFragmentArea, fragment)
-                .commit()
-        })
+        viewModel.observeBottomNotchType(
+            R.id.bottomNotchSettingFragmentArea,
+            viewLifecycleOwner,
+            childFragmentManager
+        )
 
         return binding.root
     }

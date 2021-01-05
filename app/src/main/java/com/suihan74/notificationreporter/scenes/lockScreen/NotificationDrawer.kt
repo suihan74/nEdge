@@ -224,10 +224,15 @@ class NotificationDrawer(
     private fun drawNotches(path: Path, thickness: Float, notificationSetting: NotificationSetting) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) return
 
+        val verticalCenter = Point().let {
+            window.windowManager.defaultDisplay.getSize(it)
+            it.y * .5f
+        }
+
         // スクリーン輪郭線とノッチの縁を描画する
         notificationSetting.topNotchSetting.let { notchSetting ->
             val rect = window.decorView.rootWindowInsets.displayCutout?.boundingRects?.firstOrNull {
-                it.top < window.decorView.height * .5f
+                it.top < verticalCenter
             } ?: return@let
 
             when (notchSetting.type) {
@@ -246,7 +251,7 @@ class NotificationDrawer(
 
         notificationSetting.bottomNotchSetting.let { notchSetting ->
             val rect = window.decorView.rootWindowInsets.displayCutout?.boundingRects?.firstOrNull {
-                it.top > window.decorView.height * .5f
+                it.top > verticalCenter
             } ?: return@let
 
             when (notchSetting.type) {

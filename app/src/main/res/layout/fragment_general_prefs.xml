@@ -245,18 +245,43 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="@string/prefs_notch_type_selection_desc" />
+                android:visibility="@{vm.topNotchEnabled}"
+                android:text="@string/prefs_top_notch_type_selection_desc" />
 
             <Button
-                android:id="@+id/notchTypeSelectionButton"
+                android:id="@+id/topNotchTypeSelectionButton"
                 android:contentDescription="@null"
                 src="@{vm.topNotchType.iconId}"
                 android:foregroundGravity="center"
+                android:visibility="@{vm.topNotchEnabled}"
                 android:layout_width="128dp"
                 android:layout_height="wrap_content" />
 
             <FrameLayout
-                android:id="@+id/notchSettingFragmentArea"
+                android:id="@+id/topNotchSettingFragmentArea"
+                android:visibility="@{vm.topNotchEnabled}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:visibility="@{vm.bottomNotchEnabled}"
+                android:text="@string/prefs_bottom_notch_type_selection_desc" />
+
+            <Button
+                android:id="@+id/bottomNotchTypeSelectionButton"
+                android:contentDescription="@null"
+                src="@{vm.bottomNotchType.iconId}"
+                android:foregroundGravity="center"
+                android:visibility="@{vm.bottomNotchEnabled}"
+                android:layout_width="128dp"
+                android:layout_height="wrap_content" />
+
+            <FrameLayout
+                android:id="@+id/bottomNotchSettingFragmentArea"
+                android:visibility="@{vm.bottomNotchEnabled}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 

@@ -6,6 +6,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.R
@@ -14,6 +15,7 @@ import com.suihan74.notificationreporter.databinding.ListHeaderPreferencesMenuBi
 import com.suihan74.notificationreporter.databinding.ListItemPreferencesMenuBinding
 import com.suihan74.utilities.BindingListAdapter
 import com.suihan74.utilities.lazyProvideViewModel
+import kotlinx.coroutines.launch
 
 /**
  * 設定画面
@@ -54,6 +56,10 @@ class PreferencesActivity : AppCompatActivity() {
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         binding.vm = viewModel
+
+        lifecycleScope.launch {
+            viewModel.getNotchRect(window)
+        }
 
         // 画面明度のプレビュー
         viewModel.previewLightLevel.observe(this, {

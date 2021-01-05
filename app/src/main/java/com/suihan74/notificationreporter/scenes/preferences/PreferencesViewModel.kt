@@ -1,12 +1,14 @@
 package com.suihan74.notificationreporter.scenes.preferences
 
 import android.graphics.Color
+import android.graphics.Point
+import android.os.Build
 import android.util.Log
+import android.view.Window
+import androidx.annotation.IdRes
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.suihan74.notificationreporter.R
 import com.suihan74.notificationreporter.dataStore.Preferences
 import com.suihan74.notificationreporter.database.notification.NotificationDao
@@ -14,6 +16,8 @@ import com.suihan74.notificationreporter.models.*
 import com.suihan74.notificationreporter.repositories.PreferencesRepository
 import com.suihan74.notificationreporter.scenes.preferences.dialog.ColorPickerDialogFragment
 import com.suihan74.notificationreporter.scenes.preferences.dialog.TimePickerDialogFragment
+import com.suihan74.notificationreporter.scenes.preferences.notch.RectangleNotchSettingFragment
+import com.suihan74.notificationreporter.scenes.preferences.notch.WaterDropNotchSettingFragment
 import com.suihan74.utilities.fragment.AlertDialogFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOn
@@ -22,6 +26,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
 import org.threeten.bp.LocalTime
 
 class PreferencesViewModel(
@@ -90,11 +95,23 @@ class PreferencesViewModel(
     /** 輪郭線の角丸半径(画面下部) */
     val bottomCornerRadius = mutableLiveData<Float>()
 
-    /** ノッチ設定 */
+    /** 画面上部ノッチが設定可能 */
+    val topNotchEnabled = MutableLiveData(false)
+
+    /** 画面上部ノッチ設定 */
     val topNotchSetting = mutableLiveData<NotchSetting>()
 
-    /** ノッチ種類 */
+    /** 画面上部ノッチ種類 */
     val topNotchType = mutableLiveData<NotchType>()
+
+    /** 画面下部ノッチが設定可能 */
+    val bottomNotchEnabled = MutableLiveData(false)
+
+    /** 画面下部ノッチ設定 */
+    val bottomNotchSetting = mutableLiveData<NotchSetting>()
+
+    /** 画面下部ノッチ種類 */
+    val bottomNotchType = mutableLiveData<NotchType>()
 
     /** 輪郭線の上部角丸を編集中 */
     val editingTopCornerRadius = MutableLiveData(false)
@@ -104,6 +121,9 @@ class PreferencesViewModel(
 
     /** 上部ノッチを編集中 */
     val editingTopNotch = MutableLiveData(false)
+
+    /** 下部ノッチを編集中 */
+    val editingBottomNotch = MutableLiveData(false)
 
     // ------ //
 
@@ -179,7 +199,7 @@ class PreferencesViewModel(
     private val currentTargetMutex = Mutex()
 
     /** 編集中の対象アプリ名 */
-    private var targetAppName : String = NotificationDao.DEFAULT_SETTING_NAME
+    private var targetAppName: String = NotificationDao.DEFAULT_SETTING_NAME
 
     /** 現在の画面で編集中のアプリ設定をセットする */
     private fun setCurrentTarget(appName: String) = viewModelScope.launch(Dispatchers.Main) {
@@ -209,7 +229,7 @@ class PreferencesViewModel(
      *
      * プレビューの表示、データ保存に使用
      */
-    val notificationSetting : LiveData<NotificationSetting> by lazy { _notificationSetting }
+    val notificationSetting: LiveData<NotificationSetting> by lazy { _notificationSetting }
     private val _notificationSetting = MutableLiveData<NotificationSetting>()
 
     /** 編集中の設定を表示用のサンプルデータに反映する */
@@ -238,10 +258,87 @@ class PreferencesViewModel(
 
     // ------ //
 
+    suspend fun getNotchRect(window: Window) = withContext(Dispatchers.Main) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            val verticalCenter = Point().let {
+                window.windowManager.defaultDisplay.getSize(it)
+                it.y * .5f
+            }
+            val topRect = window.decorView.rootWindowInsets.displayCutout?.boundingRects?.firstOrNull {
+                it.top < verticalCenter
+            }
+            val bottomRect = window.decorView.rootWindowInsets.displayCutout?.boundingRects?.firstOrNull {
+                it.top > verticalCenter
+            }
+
+            topNotchEnabled.value = topRect != null
+            bottomNotchEnabled.value = bottomRect != null
+        }
+        else {
+            topNotchEnabled.value = false
+            bottomNotchEnabled.value = false
+        }
+    }
+
+    // ------ //
+
+    /**
+     * ノッチタイプ変更に伴いノッチ設定項目を切り替える
+     */
+    private fun observeNotchType(
+        notchType: MutableLiveData<NotchType>,
+        @IdRes targetViewId: Int,
+        lifecycleOwner: LifecycleOwner,
+        fragmentManager: FragmentManager
+    ) {
+        notchType.observe(lifecycleOwner, {
+            val fragment = when (it) {
+                NotchType.RECTANGLE ->
+                    RectangleNotchSettingFragment.createInstance()
+
+                NotchType.WATER_DROP ->
+                    WaterDropNotchSettingFragment.createInstance()
+
+                else -> Fragment()
+            }
+
+            fragmentManager.beginTransaction()
+                .replace(targetViewId, fragment)
+                .commit()
+        })
+    }
+
+    /**
+     * ノッチタイプ変更に伴いノッチ設定項目を切り替える
+     */
+    fun observeTopNotchType(
+        @IdRes targetViewId: Int,
+        lifecycleOwner: LifecycleOwner,
+        fragmentManager: FragmentManager
+    ) {
+        observeNotchType(topNotchType, targetViewId, lifecycleOwner, fragmentManager)
+    }
+
+    /**
+     * ノッチタイプ変更に伴いノッチ設定項目を切り替える
+     */
+    fun observeBottomNotchType(
+        @IdRes targetViewId: Int,
+        lifecycleOwner: LifecycleOwner,
+        fragmentManager: FragmentManager
+    ) {
+        observeNotchType(bottomNotchType, targetViewId, lifecycleOwner, fragmentManager)
+    }
+
+    // ------ //
+
     /**
      * 通知を行わない時間帯を設定するダイアログを開く
      */
-    fun openSilentTimezonePickerDialog(liveData: MutableLiveData<LocalTime>, fragmentManager: FragmentManager) {
+    private fun openSilentTimezonePickerDialog(
+        liveData: MutableLiveData<LocalTime>,
+        fragmentManager: FragmentManager
+    ) {
         val localTime = liveData.value!!
         val dialog = TimePickerDialogFragment.createInstance(localTime.hour, localTime.minute, true)
 
@@ -250,6 +347,20 @@ class PreferencesViewModel(
         }
 
         dialog.show(fragmentManager, null)
+    }
+
+    /**
+     * 通知を行わない時間帯を設定するダイアログを開く
+     */
+    fun openSilentTimezoneStartPickerDialog(fragmentManager: FragmentManager) {
+        openSilentTimezonePickerDialog(silentTimezoneStart, fragmentManager)
+    }
+
+    /**
+     * 通知を行わない時間帯を設定するダイアログを開く
+     */
+    fun openSilentTimezoneEndPickerDialog(fragmentManager: FragmentManager) {
+        openSilentTimezonePickerDialog(silentTimezoneEnd, fragmentManager)
     }
 
     /**
@@ -276,13 +387,22 @@ class PreferencesViewModel(
     /**
      * ノッチタイプを選択するダイアログを開く
      */
-    fun openNotchTypeSelectionDialog(notchType: MutableLiveData<NotchType>, fragmentManager: FragmentManager) {
+    private fun openNotchTypeSelectionDialog(
+        notchType: MutableLiveData<NotchType>,
+        fragmentManager: FragmentManager
+    ) {
         val notchTypes = NotchType.values()
         val labels = notchTypes.map { it.textId }
         val initialSelected = notchTypes.indexOf(notchType.value)
 
+        val titleId = when (notchType) {
+            topNotchType -> R.string.prefs_top_notch_type_selection_desc
+            bottomNotchType -> R.string.prefs_bottom_notch_type_selection_desc
+            else -> throw IllegalArgumentException()
+        }
+
         val dialog = AlertDialogFragment.Builder()
-            .setTitle(R.string.prefs_notch_type_selection_desc)
+            .setTitle(titleId)
             .setSingleChoiceItems(labels, initialSelected) { _, which ->
                 val type = notchTypes[which]
                 if (notchType.value == type) return@setSingleChoiceItems
@@ -290,12 +410,29 @@ class PreferencesViewModel(
                 when (notchType) {
                     topNotchType ->
                         topNotchSetting.value = NotchSetting.createInstance(type)
+
+                    bottomNotchType ->
+                        bottomNotchSetting.value = NotchSetting.createInstance(type)
                 }
                 notchType.value = type
             }
             .setNegativeButton(R.string.dialog_cancel)
             .create()
         dialog.show(fragmentManager, null)
+    }
+
+    /**
+     * ノッチタイプを選択するダイアログを開く
+     */
+    fun openTopNotchTypeSelectionDialog(fragmentManager: FragmentManager) {
+        openNotchTypeSelectionDialog(topNotchType, fragmentManager)
+    }
+
+    /**
+     * ノッチタイプを選択するダイアログを開く
+     */
+    fun openBottomNotchTypeSelectionDialog(fragmentManager: FragmentManager) {
+        openNotchTypeSelectionDialog(bottomNotchType, fragmentManager)
     }
 
     /**
