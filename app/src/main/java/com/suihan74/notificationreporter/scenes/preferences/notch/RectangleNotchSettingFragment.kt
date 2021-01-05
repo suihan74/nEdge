@@ -8,11 +8,20 @@ import androidx.fragment.app.Fragment
 import com.suihan74.notificationreporter.databinding.FragmentRectangleNotchSettingBinding
 import com.suihan74.notificationreporter.scenes.preferences.PreferencesActivity
 import com.suihan74.notificationreporter.scenes.preferences.PreferencesViewModel
+import com.suihan74.utilities.extensions.getEnum
+import com.suihan74.utilities.extensions.putEnum
+import com.suihan74.utilities.fragment.withArguments
 import com.suihan74.utilities.lazyProvideViewModel
 
 class RectangleNotchSettingFragment : Fragment() {
     companion object {
-        fun createInstance() = RectangleNotchSettingFragment()
+        fun createInstance(notchPosition: NotchPosition) = RectangleNotchSettingFragment().withArguments {
+            putEnum(Arg.NOTCH_POSITION.name, notchPosition)
+        }
+
+        enum class Arg {
+            NOTCH_POSITION
+        }
     }
 
     // ------ //
@@ -26,7 +35,10 @@ class RectangleNotchSettingFragment : Fragment() {
     // ------ //
 
     private val viewModel by lazyProvideViewModel {
-        RectangleNotchSettingViewModel(preferencesViewModel)
+        val notchPosition = requireArguments().let {
+            it.getEnum<NotchPosition>(Arg.NOTCH_POSITION.name)!!
+        }
+        RectangleNotchSettingViewModel(notchPosition, preferencesViewModel)
     }
 
     // ------ //
@@ -38,7 +50,6 @@ class RectangleNotchSettingFragment : Fragment() {
     ): View {
         val binding = FragmentRectangleNotchSettingBinding.inflate(inflater, container, false).also {
             it.vm = viewModel
-            it.prefVm = preferencesViewModel
             it.lifecycleOwner = viewLifecycleOwner
         }
 

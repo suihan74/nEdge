@@ -8,9 +8,20 @@ import com.suihan74.notificationreporter.scenes.preferences.PreferencesViewModel
 import com.suihan74.utilities.extensions.alsoAs
 
 class WaterDropNotchSettingViewModel(
+    notchPosition: NotchPosition,
     preferencesViewModel: PreferencesViewModel,
 ) : ViewModel() {
-    val setting = preferencesViewModel.topNotchSetting
+    val setting =
+        when (notchPosition) {
+            NotchPosition.TOP -> preferencesViewModel.topNotchSetting
+            NotchPosition.BOTTOM -> preferencesViewModel.bottomNotchSetting
+        }
+
+    val editing =
+        when (notchPosition) {
+            NotchPosition.TOP -> preferencesViewModel.editingTopNotch
+            NotchPosition.BOTTOM -> preferencesViewModel.editingBottomNotch
+        }
 
     val widthAdjustment = mutableLiveData<Float>()
 

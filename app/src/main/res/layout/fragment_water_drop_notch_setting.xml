@@ -4,10 +4,6 @@
         <variable
             name="vm"
             type="com.suihan74.notificationreporter.scenes.preferences.notch.WaterDropNotchSettingViewModel"/>
-
-        <variable
-            name="prefVm"
-            type="com.suihan74.notificationreporter.scenes.preferences.PreferencesViewModel"/>
     </data>
 
     <LinearLayout
@@ -27,7 +23,7 @@
             android:valueTo="1.0"
             android:stepSize="0.01"
             android:value="@={vm.widthAdjustment}"
-            editing="@={prefVm.editingTopNotch}"
+            editing="@={vm.editing}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
@@ -42,7 +38,7 @@
             android:valueTo="90.0"
             android:stepSize="1.0"
             android:value="@={vm.heightAdjustment}"
-            editing="@={prefVm.editingTopNotch}"
+            editing="@={vm.editing}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
@@ -57,7 +53,7 @@
             android:valueTo="200.0"
             android:stepSize="1.0"
             android:value="@={vm.topRadius}"
-            editing="@={prefVm.editingTopNotch}"
+            editing="@={vm.editing}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 

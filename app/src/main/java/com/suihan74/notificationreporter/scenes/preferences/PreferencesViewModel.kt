@@ -16,6 +16,7 @@ import com.suihan74.notificationreporter.models.*
 import com.suihan74.notificationreporter.repositories.PreferencesRepository
 import com.suihan74.notificationreporter.scenes.preferences.dialog.ColorPickerDialogFragment
 import com.suihan74.notificationreporter.scenes.preferences.dialog.TimePickerDialogFragment
+import com.suihan74.notificationreporter.scenes.preferences.notch.NotchPosition
 import com.suihan74.notificationreporter.scenes.preferences.notch.RectangleNotchSettingFragment
 import com.suihan74.notificationreporter.scenes.preferences.notch.WaterDropNotchSettingFragment
 import com.suihan74.utilities.fragment.AlertDialogFragment
@@ -94,6 +95,8 @@ class PreferencesViewModel(
 
     /** 輪郭線の角丸半径(画面下部) */
     val bottomCornerRadius = mutableLiveData<Float>()
+
+    // --- //
 
     /** 画面上部ノッチが設定可能 */
     val topNotchEnabled = MutableLiveData(false)
@@ -216,6 +219,10 @@ class PreferencesViewModel(
                     topNotchSetting.value = notch
                     topNotchType.value = notch.type
                 }
+                setting.bottomNotchSetting.let { notch ->
+                    bottomNotchSetting.value = notch
+                    bottomNotchType.value = notch.type
+                }
             }
         }
 
@@ -245,7 +252,8 @@ class PreferencesViewModel(
                     topCornerRadius = topCornerRadius.value!!,
                     bottomCornerRadius = bottomCornerRadius.value!!,
                 ),
-                topNotchSetting = topNotchSetting.value!!
+                topNotchSetting = topNotchSetting.value!!,
+                bottomNotchSetting = bottomNotchSetting.value!!,
             )
         }
 
@@ -291,13 +299,20 @@ class PreferencesViewModel(
         lifecycleOwner: LifecycleOwner,
         fragmentManager: FragmentManager
     ) {
+        val notchPosition =
+            when (notchType) {
+                topNotchType -> NotchPosition.TOP
+                bottomNotchType -> NotchPosition.BOTTOM
+                else -> throw IllegalArgumentException()
+            }
+
         notchType.observe(lifecycleOwner, {
             val fragment = when (it) {
                 NotchType.RECTANGLE ->
-                    RectangleNotchSettingFragment.createInstance()
+                    RectangleNotchSettingFragment.createInstance(notchPosition)
 
                 NotchType.WATER_DROP ->
-                    WaterDropNotchSettingFragment.createInstance()
+                    WaterDropNotchSettingFragment.createInstance(notchPosition)
 
                 else -> Fragment()
             }
