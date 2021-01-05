@@ -1,27 +1,12 @@
 package com.suihan74.notificationreporter.scenes.preferences.notch
 
-import androidx.annotation.MainThread
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.suihan74.notificationreporter.models.RectangleNotchSetting
 import com.suihan74.notificationreporter.scenes.preferences.PreferencesViewModel
-import com.suihan74.utilities.extensions.alsoAs
 
 class RectangleNotchSettingViewModel(
     notchPosition: NotchPosition,
     preferencesViewModel: PreferencesViewModel,
-) : ViewModel() {
-    val setting =
-        when (notchPosition) {
-            NotchPosition.TOP -> preferencesViewModel.topNotchSetting
-            NotchPosition.BOTTOM -> preferencesViewModel.bottomNotchSetting
-        }
-
-    val editing =
-        when (notchPosition) {
-            NotchPosition.TOP -> preferencesViewModel.editingTopNotch
-            NotchPosition.BOTTOM -> preferencesViewModel.editingBottomNotch
-        }
+) : NotchSettingViewModel<RectangleNotchSetting>(notchPosition, preferencesViewModel) {
 
     val widthAdjustment = mutableLiveData<Float>()
 
@@ -37,10 +22,8 @@ class RectangleNotchSettingViewModel(
 
     // ------ //
 
-    private var initialized = false
-
-    init {
-        setting.value!!.alsoAs<RectangleNotchSetting> {
+    override suspend fun initialize() {
+        setting.value!!.let {
             widthAdjustment.value = it.widthAdjustment
             heightAdjustment.value = it.heightAdjustment
             leftTopRadius.value = it.leftTopRadius
@@ -48,22 +31,9 @@ class RectangleNotchSettingViewModel(
             leftBottomRadius.value = it.leftBottomRadius
             rightBottomRadius.value = it.rightBottomRadius
         }
-        initialized = true
     }
 
-    private fun <T> mutableLiveData() =
-        MutableLiveData<T>().apply {
-            observeForever {
-                if (initialized) {
-                    updateNotchSetting()
-                }
-            }
-        }
-
-    @MainThread
-    private fun updateNotchSetting() {
-        if (!initialized) return
-
+    override suspend fun updateNotchSetting() {
         setting.value = RectangleNotchSetting(
             widthAdjustment = widthAdjustment.value!!,
             heightAdjustment = heightAdjustment.value!!,
