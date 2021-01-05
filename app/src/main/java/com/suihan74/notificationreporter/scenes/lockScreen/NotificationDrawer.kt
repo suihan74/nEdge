@@ -62,49 +62,11 @@ class NotificationDrawer(
 
         val path = Path()
 
-        // スクリーンの輪郭線
+        // スクリーン輪郭線
         drawOutLines(path, thickness, notificationSetting)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            // スクリーン輪郭線とノッチの縁を描画する
-            notificationSetting.topNotchSetting.let { notchSetting ->
-                val rect = window.decorView.rootWindowInsets.displayCutout?.boundingRects?.firstOrNull {
-                    it.top < window.decorView.height * .5f
-                } ?: return@let
-
-                when (notchSetting.type) {
-                    NotchType.NONE -> {}
-
-                    NotchType.RECTANGLE ->
-                        drawTopRectangleNotch(path, rect, thickness, notchSetting as RectangleNotchSetting)
-
-                    NotchType.WATER_DROP ->
-                        drawTopWaterDropNotch(path, rect, thickness, notchSetting as WaterDropNotchSetting)
-
-                    NotchType.PUNCH_HOLE ->
-                        drawPunchHoleNotch(path, notchSetting as PunchHoleNotchSetting)
-                }
-            }
-
-            notificationSetting.bottomNotchSetting.let { notchSetting ->
-                val rect = window.decorView.rootWindowInsets.displayCutout?.boundingRects?.firstOrNull {
-                    it.top > window.decorView.height * .5f
-                } ?: return@let
-
-                when (notchSetting.type) {
-                    NotchType.NONE -> {}
-
-                    NotchType.RECTANGLE ->
-                        drawBottomRectangleNotch(path, rect, thickness, notchSetting as RectangleNotchSetting)
-
-                    NotchType.WATER_DROP ->
-                        drawBottomWaterDropNotch(path, rect, thickness, notchSetting as WaterDropNotchSetting)
-
-                    NotchType.PUNCH_HOLE ->
-                        drawPunchHoleNotch(path, notchSetting as PunchHoleNotchSetting)
-                }
-            }
-        }
+        // ノッチ輪郭線
+        drawNotches(path, thickness, notificationSetting)
 
         canvas.drawPath(path, paint)
         imageView.setImageBitmap(bitmap)
@@ -113,7 +75,7 @@ class NotificationDrawer(
     // ------ //
 
     /**
-     * 通知バーの外周のラインを描画する
+     * パスにスクリーン輪郭線を反映
      */
     private fun drawOutLines(
         path: Path,
@@ -242,40 +204,64 @@ class NotificationDrawer(
 
     // ------ //
 
-    /**
-     * 既に描画した内容を消去する
-     *
-     * ノッチ部分の輪郭線削除を行う用途
-     */
-    private fun Canvas.eraseRect(rect: Rect) {
-        val unPaint = Paint().apply {
-            xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
-        }
-        this.drawRect(rect, unPaint)
-    }
-
-    /**
-     * 既に描画した内容を消去する
-     *
-     * ノッチ部分の輪郭線削除を行う用途
-     */
-    private fun Path.eraseRect(rect: RectF) {
-        eraseRect(rect.left, rect.top, rect.right, rect.bottom)
-    }
-
     private fun Path.eraseRect(left: Float, top: Float, right: Float, bottom: Float) {
         val p = Path().apply {
-            val surplus = 50f
-            val scLeft = -surplus
-            val scRight = screenWidth + surplus
-            val scTop = -surplus
-            val scBottom = screenHeight + surplus
+            val scLeft = 0f
+            val scRight = screenWidth.toFloat()
+            val scTop = 0f
+            val scBottom = screenHeight.toFloat()
             addRect(RectF(scLeft, scTop, left, scBottom), Path.Direction.CW)
             addRect(RectF(left, scTop, right, top), Path.Direction.CW)
             addRect(RectF(right, scTop, scRight, scBottom), Path.Direction.CW)
             addRect(RectF(left, bottom, right, scBottom), Path.Direction.CW)
         }
         this.op(p, Path.Op.REVERSE_DIFFERENCE)
+    }
+
+    /**
+     * パスにノッチ輪郭線を反映
+     */
+    private fun drawNotches(path: Path, thickness: Float, notificationSetting: NotificationSetting) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) return
+
+        // スクリーン輪郭線とノッチの縁を描画する
+        notificationSetting.topNotchSetting.let { notchSetting ->
+            val rect = window.decorView.rootWindowInsets.displayCutout?.boundingRects?.firstOrNull {
+                it.top < window.decorView.height * .5f
+            } ?: return@let
+
+            when (notchSetting.type) {
+                NotchType.NONE -> {}
+
+                NotchType.RECTANGLE ->
+                    drawTopRectangleNotch(path, rect, thickness, notchSetting as RectangleNotchSetting)
+
+                NotchType.WATER_DROP ->
+                    drawTopWaterDropNotch(path, rect, thickness, notchSetting as WaterDropNotchSetting)
+
+                NotchType.PUNCH_HOLE ->
+                    drawPunchHoleNotch(path, notchSetting as PunchHoleNotchSetting)
+            }
+        }
+
+        notificationSetting.bottomNotchSetting.let { notchSetting ->
+            val rect = window.decorView.rootWindowInsets.displayCutout?.boundingRects?.firstOrNull {
+                it.top > window.decorView.height * .5f
+            } ?: return@let
+
+            when (notchSetting.type) {
+                NotchType.NONE -> {}
+
+                NotchType.RECTANGLE ->
+                    drawBottomRectangleNotch(path, rect, thickness, notchSetting as RectangleNotchSetting)
+
+                NotchType.WATER_DROP ->
+                    drawBottomWaterDropNotch(path, rect, thickness, notchSetting as WaterDropNotchSetting)
+
+                NotchType.PUNCH_HOLE ->
+                    drawPunchHoleNotch(path, notchSetting as PunchHoleNotchSetting)
+            }
+        }
     }
 
     /**
@@ -405,18 +391,13 @@ class NotificationDrawer(
         val top = rect.top + offset
         val bottom = rect.bottom + offset
 
-        // ノッチ部分に被るスクリーン輪郭線を消す
-        path.eraseRect(
-            left - topRadius,
-            top - offset,
-            right + topRadius,
-            bottom
-        )
-
         path.apply {
             val lx = left - topRadius
             val rx = right + topRadius
             val ly = top + topRadius
+
+            // ノッチ部分に被るスクリーン輪郭線を消す
+            path.eraseRect(lx, top - offset, rx, bottom)
 
             // top left
             moveTo(lx - NOTCH_SURPLUS, top)
