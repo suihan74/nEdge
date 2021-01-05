@@ -362,7 +362,7 @@ class NotificationDrawer(
                 // top edge
                 lineTo(right - r, top)
 
-                // bottom right
+                // top right
                 arcTo(right - r * 2, top, right, top + r * 2, 270f, 90f, true)
             }
 
@@ -388,8 +388,8 @@ class NotificationDrawer(
         val offset = thickness / 2
         val widthAdjustmentPx = rect.width() * .5f * notchSetting.widthAdjustment
 
-        val topRadius = notchSetting.topRadius
-        val topDegree = notchSetting.heightAdjustment
+        val rootRadius = notchSetting.topRadius
+        val rootDegree = notchSetting.heightAdjustment
 
         val left = rect.left - offset - widthAdjustmentPx
         val right = rect.right + offset + widthAdjustmentPx
@@ -397,9 +397,9 @@ class NotificationDrawer(
         val bottom = rect.bottom + offset
 
         path.apply {
-            val lx = left - topRadius
-            val rx = right + topRadius
-            val ly = top + topRadius
+            val lx = left - rootRadius
+            val rx = right + rootRadius
+            val ly = top + rootRadius
 
             // ノッチ部分に被るスクリーン輪郭線を消す
             path.eraseRect(lx, top - offset, rx, bottom)
@@ -407,19 +407,19 @@ class NotificationDrawer(
             // top left
             moveTo(lx - NOTCH_SURPLUS, top)
             lineTo(lx, top)
-            arcTo(lx - topRadius, top, lx + topRadius, ly + topRadius, 270f, topDegree, false)
+            arcTo(lx - rootRadius, top, lx + rootRadius, ly + rootRadius, 270f, rootDegree, false)
 
             // water drop
-            val (sin, cos) = (PI * topDegree / 180f).let {
+            val (sin, cos) = (PI * rootDegree / 180f).let {
                 sin(it) to cos(it)
             }
-            val r = ((rx - lx - 2 * topRadius * sin) / (2 * sin)).toFloat()
-            val cx = (lx + (topRadius + r) * sin).toFloat()
-            val cy = (ly - (topRadius + r) * cos).toFloat()
-            arcTo(cx - r, cy - r, cx + r, cy + r, 90f + topDegree, -topDegree * 2, false)
+            val r = ((rx - lx - 2 * rootRadius * sin) / (2 * sin)).toFloat()
+            val cx = (lx + (rootRadius + r) * sin).toFloat()
+            val cy = (ly - (rootRadius + r) * cos).toFloat()
+            arcTo(cx - r, cy - r, cx + r, cy + r, 90f + rootDegree, -rootDegree * 2, false)
 
             // top right
-            arcTo(right, top, rx + topRadius, ly + topRadius, 270f - topDegree, topDegree, false)
+            arcTo(right, top, rx + rootRadius, ly + rootRadius, 270f - rootDegree, rootDegree, false)
             lineTo(rx + NOTCH_SURPLUS, top)
         }
     }
