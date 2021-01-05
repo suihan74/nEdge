@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
@@ -36,12 +35,10 @@ class PreferencesActivity : AppCompatActivity() {
 
         hideSystemUI()
 
-        binding = DataBindingUtil.setContentView<ActivityPreferencesBinding>(
-            this,
-            R.layout.activity_preferences
-        ).also {
+        binding = ActivityPreferencesBinding.inflate(layoutInflater).also {
             it.lifecycleOwner = this
         }
+        setContentView(binding.root)
 
         // ページ選択メニュー
         initializeMenu(binding)
