@@ -16,7 +16,7 @@ import kotlin.random.Random
 
 class LockScreenViewModel(
     batteryRepo : BatteryRepository,
-    notificationRepo : NotificationRepository,
+    private val notificationRepo : NotificationRepository,
     private val prefRepo : PreferencesRepository
 ) : ViewModel() {
 
@@ -109,6 +109,11 @@ class LockScreenViewModel(
             // 時刻更新開始
             launchClockUpdating()
         }
+    }
+
+    /** アクティビティから抜ける際に通知スタックをクリア */
+    fun onFinishActivity() = GlobalScope.launch {
+        notificationRepo.clearNotifications()
     }
 
     // ------ //
