@@ -18,6 +18,7 @@ import com.suihan74.utilities.lazyProvideViewModel
 /**
  * インストールされているアプリ一覧を表示するフラグメント
  */
+@Deprecated("アプリ一覧は設定編集画面から呼び出すようにする")
 class InstalledApplicationsFragment : Fragment() {
     companion object {
         fun createInstance() = InstalledApplicationsFragment()

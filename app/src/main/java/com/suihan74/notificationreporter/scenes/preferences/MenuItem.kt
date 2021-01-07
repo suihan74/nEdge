@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.DiffUtil
 import com.suihan74.notificationreporter.R
 import com.suihan74.notificationreporter.scenes.preferences.page.GeneralPrefsFragment
 import com.suihan74.notificationreporter.scenes.preferences.page.InformationFragment
-import com.suihan74.notificationreporter.scenes.preferences.page.InstalledApplicationsFragment
 import com.suihan74.notificationreporter.scenes.preferences.page.SettingsListFragment
 
 /**
@@ -24,15 +23,9 @@ enum class MenuItem(
         { GeneralPrefsFragment.createInstance() }
     ),
 
-    APPLICATIONS(
-        R.string.prefs_menu_label_applications,
+    NOTIFICATION_SETTINGS(
+        R.string.prefs_menu_label_notification_settings,
         R.drawable.ic_apps,
-        { InstalledApplicationsFragment.createInstance() }
-    ),
-
-    WHITE_LIST(
-        R.string.prefs_menu_label_while_list,
-        R.drawable.ic_notifications_active,
         { SettingsListFragment.createInstance() }
     ),
 

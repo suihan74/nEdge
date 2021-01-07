@@ -11,6 +11,7 @@ import com.suihan74.notificationreporter.repositories.PreferencesRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+@Deprecated("アプリ一覧は設定編集画面から呼び出すようにする")
 class InstalledApplicationsViewModel(
     private val prefsRepo : PreferencesRepository
 ) : ViewModel() {

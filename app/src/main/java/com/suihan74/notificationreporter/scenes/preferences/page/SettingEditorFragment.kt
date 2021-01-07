@@ -18,6 +18,9 @@ import com.suihan74.notificationreporter.scenes.preferences.dataBinding.SliderBi
 import com.suihan74.utilities.lazyProvideViewModel
 import kotlinx.coroutines.launch
 
+/**
+ * 通知表示編集画面
+ */
 class SettingEditorFragment : Fragment() {
 
     companion object {
