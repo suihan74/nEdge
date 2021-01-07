@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.suihan74.notificationreporter.R
 import com.suihan74.notificationreporter.dataStore.Preferences
 import com.suihan74.notificationreporter.models.MultipleNotificationsSolution
-import com.suihan74.notificationreporter.models.NotificationSetting
 import com.suihan74.notificationreporter.repositories.PreferencesRepository
 import com.suihan74.notificationreporter.scenes.preferences.dialog.TimePickerDialogFragment
 import com.suihan74.utilities.fragment.AlertDialogFragment
@@ -65,11 +64,6 @@ class PreferencesViewModel(
 
     /** 複数通知の表示方法 */
     val multipleNotificationsSolution = MutableLiveData<MultipleNotificationsSolution>()
-
-    /**
-     * プレビュー表示用の`NotificationSetting`
-     */
-    val notificationSetting = MutableLiveData<NotificationSetting>()
 
     // ------ //
 

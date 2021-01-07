@@ -33,11 +33,8 @@ class SettingEditorFragment : Fragment() {
     private val preferencesActivity
         get() = requireActivity() as PreferencesActivity
 
-    private val preferencesViewModel
-        get() = preferencesActivity.viewModel
-
     val viewModel by lazyProvideViewModel {
-        SettingEditorViewModel(Application.instance, preferencesViewModel)
+        SettingEditorViewModel(Application.instance)
     }
 
     private var onBackPressedCallback : OnBackPressedCallback? = null

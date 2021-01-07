@@ -16,7 +16,6 @@ import com.suihan74.notificationreporter.models.NotchSetting
 import com.suihan74.notificationreporter.models.NotchType
 import com.suihan74.notificationreporter.models.NotificationSetting
 import com.suihan74.notificationreporter.models.OutlinesSetting
-import com.suihan74.notificationreporter.scenes.preferences.PreferencesViewModel
 import com.suihan74.notificationreporter.scenes.preferences.dialog.ColorPickerDialogFragment
 import com.suihan74.notificationreporter.scenes.preferences.notch.NotchPosition
 import com.suihan74.notificationreporter.scenes.preferences.notch.RectangleNotchSettingFragment
@@ -28,10 +27,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 
-class SettingEditorViewModel(
-    private val application: Application,
-    preferencesViewModel: PreferencesViewModel
-) : ViewModel() {
+class SettingEditorViewModel(private val application: Application) : ViewModel() {
 
     /** 通知表示の輪郭線の色 */
     val notificationColor = mutableLiveData<Int>()
@@ -152,7 +148,7 @@ class SettingEditorViewModel(
      * プレビューの表示、データ保存に使用
      */
     val notificationSetting: LiveData<NotificationSetting> by lazy { _notificationSetting }
-    private val _notificationSetting = preferencesViewModel.notificationSetting
+    private val _notificationSetting = MutableLiveData<NotificationSetting>()
 
     /** 編集中の設定を表示用のサンプルデータに反映する */
     private fun updateNotificationSetting() {
