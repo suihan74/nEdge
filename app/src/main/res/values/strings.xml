@@ -47,9 +47,16 @@
     <string name="prefs_water_drop_notch_radius_desc">%sの角丸半径</string>
     <string name="prefs_water_drop_notch_degree_desc">%sの角度</string>
 
+    <!-- SettingsListFragment -->
+    <string name="prefs_settings_list_default_setting_text">デフォルト設定</string>
+    <string name="prefs_settings_list_search_hint">項目を検索</string>
+    <string name="prefs_settings_list_keyword_text">キーワード: %s</string>
+
     <!-- InformationFragment -->
     <string name="pref_information_release_notes_desc">更新履歴</string>
     <string name="pref_information_licenses_desc">ライセンス</string>
+
+    <!-- ====== -->
 
     <!-- NotchType -->
     <string name="notch_type_none">なし</string>

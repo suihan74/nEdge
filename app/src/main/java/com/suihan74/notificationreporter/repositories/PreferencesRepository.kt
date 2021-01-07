@@ -25,6 +25,12 @@ class PreferencesRepository(
     // ------ //
 
     /**
+     * すべての通知表示設定を取得する
+     */
+    val allNotificationSettingsFlow : Flow<List<NotificationEntity>>
+        get() = notificationDao.getAllSettingsFlow()
+
+    /**
      * 設定をDBに保存する
      */
     suspend fun updateNotificationSetting(
@@ -41,6 +47,13 @@ class PreferencesRepository(
         ).let {
             notificationDao.insert(it)
         }
+    }
+
+    /**
+     * 設定をDBに保存する
+     */
+    suspend fun updateNotificationSetting(entity: NotificationEntity) {
+        notificationDao.insert(entity)
     }
 
     suspend fun getNotificationSettingOrNull(sbn: StatusBarNotification) : NotificationSetting? {
@@ -82,6 +95,14 @@ class PreferencesRepository(
             .firstOrNull { it.keyword == keyword && it.keywordMatchingType == keywordMatchingType }
             ?.setting
             ?: notificationDao.getDefaultSetting()
+    }
+
+    suspend fun getNotificationSettingOrDefault(entity: NotificationEntity) : NotificationSetting {
+        return getNotificationSettingOrDefault(
+            entity.appName,
+            entity.keyword,
+            entity.keywordMatchingType
+        )
     }
 
     /**

@@ -6,8 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.suihan74.notificationreporter.databinding.FragmentRectangleNotchSettingBinding
-import com.suihan74.notificationreporter.scenes.preferences.PreferencesActivity
-import com.suihan74.notificationreporter.scenes.preferences.PreferencesViewModel
+import com.suihan74.notificationreporter.scenes.preferences.page.SettingEditorFragment
 import com.suihan74.utilities.extensions.getEnum
 import com.suihan74.utilities.extensions.putEnum
 import com.suihan74.utilities.fragment.withArguments
@@ -26,11 +25,11 @@ class RectangleNotchSettingFragment : Fragment() {
 
     // ------ //
 
-    private val preferencesActivity : PreferencesActivity
-        get() = requireActivity() as PreferencesActivity
+    private val settingEditorFragment
+        get() = requireParentFragment() as SettingEditorFragment
 
-    private val preferencesViewModel : PreferencesViewModel
-        get() = preferencesActivity.viewModel
+    private val settingEditorViewModel
+        get() = settingEditorFragment.viewModel
 
     // ------ //
 
@@ -38,7 +37,7 @@ class RectangleNotchSettingFragment : Fragment() {
         val notchPosition = requireArguments().let {
             it.getEnum<NotchPosition>(Arg.NOTCH_POSITION.name)!!
         }
-        RectangleNotchSettingViewModel(notchPosition, preferencesViewModel)
+        RectangleNotchSettingViewModel(notchPosition, settingEditorViewModel)
     }
 
     // ------ //

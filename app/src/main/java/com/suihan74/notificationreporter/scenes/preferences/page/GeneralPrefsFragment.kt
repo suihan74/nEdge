@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
 import com.suihan74.notificationreporter.Application
-import com.suihan74.notificationreporter.R
 import com.suihan74.notificationreporter.databinding.FragmentGeneralPrefsBinding
 import com.suihan74.notificationreporter.scenes.lockScreen.LockScreenActivity
 import com.suihan74.notificationreporter.scenes.preferences.PreferencesActivity
@@ -33,9 +32,6 @@ class GeneralPrefsFragment : Fragment() {
     private val viewModel
         get() = preferencesActivity.viewModel
 
-    private var _binding : FragmentGeneralPrefsBinding? = null
-    private val binding get() = _binding!!
-
     // ------ //
 
     override fun onCreateView(
@@ -43,7 +39,7 @@ class GeneralPrefsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentGeneralPrefsBinding.inflate(inflater, container, false).also {
+        val binding = FragmentGeneralPrefsBinding.inflate(inflater, container, false).also {
             it.vm = viewModel
             it.lifecycleOwner = viewLifecycleOwner
             it.lifecycle = viewLifecycleOwner.lifecycle
@@ -89,41 +85,12 @@ class GeneralPrefsFragment : Fragment() {
             viewModel.openMultipleNotificationsSolutionSelectionDialog(childFragmentManager)
         }
 
-        binding.pickOutlinesColorButton.setOnClickListener {
-            viewModel.openOutlinesColorPickerDialog(childFragmentManager)
-        }
-
-        binding.topNotchTypeSelectionButton.setOnClickListener {
-            viewModel.openTopNotchTypeSelectionDialog(childFragmentManager)
-        }
-
-        binding.bottomNotchTypeSelectionButton.setOnClickListener {
-            viewModel.openBottomNotchTypeSelectionDialog(childFragmentManager)
-        }
-
-        viewModel.observeTopNotchType(
-            R.id.topNotchSettingFragmentArea,
-            viewLifecycleOwner,
-            childFragmentManager
-        )
-
-        viewModel.observeBottomNotchType(
-            R.id.bottomNotchSettingFragmentArea,
-            viewLifecycleOwner,
-            childFragmentManager
-        )
-
         return binding.root
     }
 
     override fun onPause() {
         super.onPause()
         viewModel.saveSettings()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     override fun onDestroy() {

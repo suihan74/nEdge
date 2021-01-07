@@ -64,49 +64,11 @@
 
         </androidx.constraintlayout.motion.widget.MotionLayout>
 
-        <!-- はみ出し確認用の背景 -->
-        <View
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:visibility="@{vm.editingTopCornerRadius}"
-            android:background="#ff00ff"
-            android:layout_width="48dp"
-            android:layout_height="48dp"/>
-
-        <View
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:visibility="@{vm.editingTopCornerRadius}"
-            android:background="#ff00ff"
-            android:layout_width="48dp"
-            android:layout_height="48dp"/>
-
-        <View
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:visibility="@{vm.editingBottomCornerRadius}"
-            android:background="#ff00ff"
-            android:layout_width="48dp"
-            android:layout_height="48dp"/>
-
-        <View
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:visibility="@{vm.editingBottomCornerRadius}"
-            android:background="#ff00ff"
-            android:layout_width="48dp"
-            android:layout_height="48dp"/>
-
-        <View
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintWidth_percent="0.5"
-            android:visibility="@{vm.editingTopNotch}"
-            android:background="#ff00ff"
-            android:layout_width="0dp"
-            android:layout_height="64dp"/>
-        <!-- はみ出し確認用の背景ここまで -->
+        <FrameLayout
+            android:id="@+id/settingEditorFrame"
+            android:background="@null"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
         <ImageView
             android:id="@+id/notificationBar"

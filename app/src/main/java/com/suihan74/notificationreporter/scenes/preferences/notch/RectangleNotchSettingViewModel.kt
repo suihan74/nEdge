@@ -1,12 +1,12 @@
 package com.suihan74.notificationreporter.scenes.preferences.notch
 
 import com.suihan74.notificationreporter.models.RectangleNotchSetting
-import com.suihan74.notificationreporter.scenes.preferences.PreferencesViewModel
+import com.suihan74.notificationreporter.scenes.preferences.page.SettingEditorViewModel
 
 class RectangleNotchSettingViewModel(
     notchPosition: NotchPosition,
-    preferencesViewModel: PreferencesViewModel,
-) : NotchSettingViewModel<RectangleNotchSetting>(notchPosition, preferencesViewModel) {
+    editorViewModel: SettingEditorViewModel,
+) : NotchSettingViewModel<RectangleNotchSetting>(notchPosition, editorViewModel) {
 
     val widthAdjustment = mutableLiveData<Float>()
 
