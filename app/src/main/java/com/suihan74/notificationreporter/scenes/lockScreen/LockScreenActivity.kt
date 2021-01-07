@@ -3,9 +3,11 @@ package com.suihan74.notificationreporter.scenes.lockScreen
 import android.annotation.SuppressLint
 import android.app.KeyguardManager
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.service.notification.StatusBarNotification
+import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.WindowManager
@@ -16,12 +18,25 @@ import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.R
 import com.suihan74.notificationreporter.databinding.ActivityLockScreenBinding
 import com.suihan74.utilities.lazyProvideViewModel
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.threeten.bp.LocalTime
 
 class LockScreenActivity : AppCompatActivity() {
     companion object {
+        /**
+         * 可能なら`LockScreenActivity`に遷移する
+         *
+         * @see checkNotifiable
+         */
+        suspend fun startWhenAvailable(context: Context, sbn: StatusBarNotification?) {
+            if (checkNotifiable(sbn)) {
+                val intent = Intent(context, LockScreenActivity::class.java).also {
+                    it.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                }
+                context.startActivity(intent)
+                Log.i("Notification", sbn!!.packageName)
+            }
+        }
+
         /**
          * `LockScreenActivity`に遷移するべきかをチェックする
          *
@@ -186,8 +201,6 @@ class LockScreenActivity : AppCompatActivity() {
 
     override fun finish() {
         super.finish()
-        GlobalScope.launch {
-            Application.instance.notificationRepository.clearNotifications()
-        }
+        viewModel.onFinishActivity()
     }
 }
