@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -39,6 +40,8 @@ class SettingEditorFragment : Fragment() {
         SettingEditorViewModel(Application.instance, preferencesViewModel)
     }
 
+    private var onBackPressedCallback : OnBackPressedCallback? = null
+
     // ------ //
 
     override fun onCreateView(
@@ -49,6 +52,18 @@ class SettingEditorFragment : Fragment() {
         val binding = FragmentSettingEditorBinding.inflate(inflater, container, false).also {
             it.vm = viewModel
             it.lifecycleOwner = viewLifecycleOwner
+        }
+
+        binding.saveButton.setOnClickListener {
+            onBackPressedCallback = null
+            lifecycleScope.launch {
+                viewModel.saveSettings()
+                preferencesActivity.closeSettingEditor(this@SettingEditorFragment)
+            }
+        }
+
+        binding.cancelButton.setOnClickListener {
+            onBackPressedCallback?.handleOnBackPressed()
         }
 
         binding.pickOutlinesColorButton.setOnClickListener {
@@ -76,9 +91,10 @@ class SettingEditorFragment : Fragment() {
         )
 
         // 戻るボタンの割り込み
-        preferencesActivity.onBackPressedDispatcher.addCallback(viewLifecycleOwner, true) {
-            preferencesActivity.closeSettingEditor(this@SettingEditorFragment)
+        onBackPressedCallback = preferencesActivity.onBackPressedDispatcher.addCallback(viewLifecycleOwner, true) {
+            onBackPressedCallback = null
             remove()
+            preferencesActivity.closeSettingEditor(this@SettingEditorFragment)
         }
 
         return binding.root
@@ -93,7 +109,6 @@ class SettingEditorFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        viewModel.saveSettings(Application.instance.coroutineScope)
         SliderBindingAdapters.onTerminateLifecycle(this)
     }
 }

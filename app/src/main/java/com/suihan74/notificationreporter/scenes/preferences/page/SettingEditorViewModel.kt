@@ -22,7 +22,6 @@ import com.suihan74.notificationreporter.scenes.preferences.notch.NotchPosition
 import com.suihan74.notificationreporter.scenes.preferences.notch.RectangleNotchSettingFragment
 import com.suihan74.notificationreporter.scenes.preferences.notch.WaterDropNotchSettingFragment
 import com.suihan74.utilities.fragment.AlertDialogFragment
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
@@ -92,7 +91,7 @@ class SettingEditorViewModel(
     /**
      * 編集したデータを保存する
      */
-    fun saveSettings(coroutineScope: CoroutineScope = viewModelScope) = coroutineScope.launch {
+    suspend fun saveSettings() {
         targetEntity?.let {
             application.preferencesRepository.updateNotificationSetting(
                 it.copy(setting = notificationSetting.value!!)
