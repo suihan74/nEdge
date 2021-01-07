@@ -2,13 +2,15 @@ package com.suihan74.notificationreporter.scenes.preferences.page
 
 import android.content.Context
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
-import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.transition.Fade
+import androidx.transition.Slide
+import androidx.transition.TransitionSet
 import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.R
 import com.suihan74.notificationreporter.database.notification.NotificationEntity
@@ -40,9 +42,20 @@ class SettingEditorFragment : Fragment() {
         SettingEditorViewModel(Application.instance)
     }
 
-    private var onBackPressedCallback : OnBackPressedCallback? = null
-
     // ------ //
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        // 遷移アニメーション
+        enterTransition = TransitionSet().apply {
+            addTransition(Fade())
+            addTransition(Slide().also {
+                it.slideEdge = Gravity.END
+            })
+            this.ordering = TransitionSet.ORDERING_TOGETHER
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,15 +68,14 @@ class SettingEditorFragment : Fragment() {
         }
 
         binding.saveButton.setOnClickListener {
-            onBackPressedCallback = null
             lifecycleScope.launch {
                 viewModel.saveSettings()
-                preferencesActivity.closeSettingEditor(this@SettingEditorFragment)
+                preferencesActivity.closeSettingEditor()
             }
         }
 
         binding.cancelButton.setOnClickListener {
-            onBackPressedCallback?.handleOnBackPressed()
+            preferencesActivity.closeSettingEditor()
         }
 
         binding.pickOutlinesColorButton.setOnClickListener {
@@ -89,13 +101,6 @@ class SettingEditorFragment : Fragment() {
             viewLifecycleOwner,
             childFragmentManager
         )
-
-        // 戻るボタンの割り込み
-        onBackPressedCallback = preferencesActivity.onBackPressedDispatcher.addCallback(viewLifecycleOwner, true) {
-            onBackPressedCallback = null
-            remove()
-            preferencesActivity.closeSettingEditor(this@SettingEditorFragment)
-        }
 
         return binding.root
     }

@@ -175,14 +175,13 @@ class PreferencesActivity : AppCompatActivity() {
         val fragment = SettingEditorFragment.createInstance(entity)
         supportFragmentManager.beginTransaction()
             .replace(R.id.settingEditorFrame, fragment)
+            .addToBackStack("settingEditorFrame")
             .commit()
     }
 
     /** 通知設定編集画面を閉じる */
-    fun closeSettingEditor(fragment: SettingEditorFragment) {
-        supportFragmentManager.beginTransaction()
-            .remove(fragment)
-            .commit()
+    fun closeSettingEditor() {
+        supportFragmentManager.popBackStackImmediate()
     }
 
     // ------ //
