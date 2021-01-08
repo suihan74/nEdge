@@ -34,6 +34,9 @@
     <string name="prefs_cancel">Cancel</string>
     <string name="prefs_line_width_desc">線の太さ</string>
     <string name="prefs_blur_size_desc">ブラー効果の強さ (0で無効化)</string>
+    <string name="prefs_enabled_outlines_desc">輪郭線を表示する辺・角</string>
+    <string name="prefs_enabled_edge">%s辺</string>
+    <string name="prefs_enabled_corner">%s角</string>
     <string name="prefs_corner_radius_desc">%sの角丸半径</string>
     <string name="prefs_default_notification_color_desc">線の色</string>
     <string name="prefs_top_notch_type_selection_desc">画面上部ノッチタイプ</string>

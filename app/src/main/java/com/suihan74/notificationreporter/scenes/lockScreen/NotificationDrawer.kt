@@ -74,33 +74,6 @@ class NotificationDrawer(
         thickness: Float,
         notificationSetting: NotificationSetting
     ) {
-        when (notificationSetting.outlinesSetting.type) {
-            OutlinesType.NONE -> {}
-
-            OutlinesType.FULL -> drawFullOutLines(path, thickness, notificationSetting)
-
-            OutlinesType.TOP -> drawTopOutLine(path, thickness, notificationSetting)
-
-            OutlinesType.BOTTOM -> drawBottomOutLine(path, thickness, notificationSetting)
-
-            OutlinesType.LEFT -> drawOutLineOnlyLeft(path, thickness)
-
-            OutlinesType.RIGHT -> drawOutLineOnlyRight(path, thickness)
-
-            OutlinesType.HORIZONTAL -> {}//drawOutLinesHorizontal(path, thickness)
-
-            OutlinesType.VERTICAL -> {}//drawOutLinesVertical(path, thickness)
-        }
-    }
-
-    /**
-     * 外周を描画
-     */
-    private fun drawFullOutLines(
-        path: Path,
-        thickness: Float,
-        notificationSetting: NotificationSetting
-    ) {
         notificationSetting.outlinesSetting.run {
             val offset = thickness / 2
             val left = offset
@@ -109,28 +82,68 @@ class NotificationDrawer(
             val bottom = screenHeight - offset
 
             // top left corner
-            path.arcTo(left, top, left + topCornerRadius * 2f, top + topCornerRadius * 2, 180f, 90f, true)
+            if (topLeftCornerEnabled) {
+                path.arcTo(left, top, left + topCornerRadius * 2f, top + topCornerRadius * 2, 180f, 90f, true)
+            }
+            else {
+                path.moveTo(left + topCornerRadius, top)
+            }
 
             // top edge
-            drawTopOutLine(path, thickness, notificationSetting)
+            if (topEdgeEnabled) {
+                drawTopOutLine(path, thickness, notificationSetting)
+            }
+            else {
+                path.moveTo(right - topCornerRadius, top)
+            }
 
             // top right corner
-            path.arcTo(right - topCornerRadius * 2, top, right, top + topCornerRadius * 2 + offset, 270f, 90f, true)
+            if (topRightCornerEdgeEnabled) {
+                path.arcTo(right - topCornerRadius * 2, top, right, top + topCornerRadius * 2 + offset, 270f, 90f, true)
+            }
+            else {
+                path.moveTo(right, top + topCornerRadius)
+            }
 
             // right edge
-            path.lineTo(right, bottom - bottomCornerRadius)
+            if (rightEdgeEnabled) {
+                path.lineTo(right, bottom - bottomCornerRadius)
+            }
+            else {
+                path.moveTo(right, bottom - bottomCornerRadius)
+            }
 
             // bottom right corner
-            path.arcTo(right - bottomCornerRadius * 2, bottom - bottomCornerRadius * 2, right, bottom, 0f, 90f, true)
+            if (bottomRightCornerEnabled) {
+                path.arcTo(right - bottomCornerRadius * 2, bottom - bottomCornerRadius * 2, right, bottom, 0f, 90f, true)
+            }
+            else {
+                path.moveTo(right - bottomCornerRadius, bottom)
+            }
 
             // bottom edge
-            drawBottomOutLine(path, thickness, notificationSetting)
+            if (bottomEdgeEnabled) {
+                drawBottomOutLine(path, thickness, notificationSetting)
+            }
+            else {
+                path.moveTo(left + bottomCornerRadius, bottom)
+            }
 
             // bottom left corner
-            path.arcTo(left, bottom - bottomCornerRadius * 2, left + bottomCornerRadius * 2, bottom, 90f, 90f, true)
+            if (bottomLeftCornerEnabled) {
+                path.arcTo(left, bottom - bottomCornerRadius * 2, left + bottomCornerRadius * 2, bottom, 90f, 90f, true)
+            }
+            else {
+                path.moveTo(left, bottom - bottomCornerRadius)
+            }
 
             // left edge
-            path.lineTo(left, top + topCornerRadius)
+            if (leftEdgeEnabled) {
+                path.lineTo(left, top + topCornerRadius)
+            }
+            else {
+                path.moveTo(left, top + topCornerRadius)
+            }
         }
     }
 

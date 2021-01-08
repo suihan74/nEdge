@@ -76,6 +76,67 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
+                    android:text="@string/prefs_enabled_outlines_desc" />
+
+                <GridLayout
+                    android:columnCount="4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <CheckBox
+                        android:text="@{@string/prefs_enabled_edge(`上`)}"
+                        android:checked="@={vm.topEdgeEnabled}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <CheckBox
+                        android:text="@{@string/prefs_enabled_edge(`下`)}"
+                        android:checked="@={vm.bottomEdgeEnabled}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <CheckBox
+                        android:text="@{@string/prefs_enabled_edge(`左`)}"
+                        android:checked="@={vm.leftEdgeEnabled}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <CheckBox
+                        android:text="@{@string/prefs_enabled_edge(`右`)}"
+                        android:checked="@={vm.rightEdgeEnabled}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <CheckBox
+                        android:text="@{@string/prefs_enabled_corner(`左上`)}"
+                        android:checked="@={vm.topLeftCornerEnabled}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <CheckBox
+                        android:text="@{@string/prefs_enabled_corner(`右上`)}"
+                        android:checked="@={vm.topRightCornerEnabled}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <CheckBox
+                        android:text="@{@string/prefs_enabled_corner(`左下`)}"
+                        android:checked="@={vm.bottomLeftCornerEnabled}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <CheckBox
+                        android:text="@{@string/prefs_enabled_corner(`右下`)}"
+                        android:checked="@={vm.bottomRightCornerEnabled}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </GridLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:text="@{@string/prefs_corner_radius_desc(`上部`)}" />
 
                 <com.google.android.material.slider.Slider

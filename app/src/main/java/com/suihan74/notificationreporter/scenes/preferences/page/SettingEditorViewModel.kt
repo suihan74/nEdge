@@ -46,6 +46,32 @@ class SettingEditorViewModel(private val application: Application) : ViewModel()
 
     // --- //
 
+    /** 上辺を描画する */
+    val topEdgeEnabled = mutableLiveData<Boolean>()
+
+    /** 下辺を描画する */
+    val bottomEdgeEnabled = mutableLiveData<Boolean>()
+
+    /** 左辺を描画する */
+    val leftEdgeEnabled = mutableLiveData<Boolean>()
+
+    /** 右辺を描画する */
+    val rightEdgeEnabled = mutableLiveData<Boolean>()
+
+    /** 左上角を描画する */
+    val topLeftCornerEnabled = mutableLiveData<Boolean>()
+
+    /** 右上角を描画する */
+    val topRightCornerEnabled = mutableLiveData<Boolean>()
+
+    /** 左下角を描画する */
+    val bottomLeftCornerEnabled = mutableLiveData<Boolean>()
+
+    /** 右下角を描画する */
+    val bottomRightCornerEnabled = mutableLiveData<Boolean>()
+
+    // --- //
+
     /** 画面上部ノッチが設定可能 */
     val topNotchEnabled = MutableLiveData(false)
 
@@ -122,14 +148,26 @@ class SettingEditorViewModel(private val application: Application) : ViewModel()
                 notificationColor.value = setting.color
                 lineThickness.value = setting.thickness
                 blurSize.value = setting.blurSize
+
                 setting.outlinesSetting.let { outlines ->
                     topCornerRadius.value = outlines.topCornerRadius
                     bottomCornerRadius.value = outlines.bottomCornerRadius
+
+                    topEdgeEnabled.value = outlines.topEdgeEnabled
+                    bottomEdgeEnabled.value = outlines.bottomEdgeEnabled
+                    leftEdgeEnabled.value = outlines.leftEdgeEnabled
+                    rightEdgeEnabled.value = outlines.rightEdgeEnabled
+                    topLeftCornerEnabled.value = outlines.topLeftCornerEnabled
+                    topRightCornerEnabled.value = outlines.topRightCornerEdgeEnabled
+                    bottomLeftCornerEnabled.value = outlines.bottomLeftCornerEnabled
+                    bottomRightCornerEnabled.value = outlines.bottomRightCornerEnabled
                 }
+
                 setting.topNotchSetting.let { notch ->
                     topNotchSetting.value = notch
                     topNotchType.value = notch.type
                 }
+
                 setting.bottomNotchSetting.let { notch ->
                     bottomNotchSetting.value = notch
                     bottomNotchType.value = notch.type
@@ -162,6 +200,14 @@ class SettingEditorViewModel(private val application: Application) : ViewModel()
                 outlinesSetting = OutlinesSetting(
                     topCornerRadius = topCornerRadius.value!!,
                     bottomCornerRadius = bottomCornerRadius.value!!,
+                    topEdgeEnabled = topEdgeEnabled.value!!,
+                    bottomEdgeEnabled = bottomEdgeEnabled.value!!,
+                    leftEdgeEnabled = leftEdgeEnabled.value!!,
+                    rightEdgeEnabled = rightEdgeEnabled.value!!,
+                    topLeftCornerEnabled = topLeftCornerEnabled.value!!,
+                    topRightCornerEdgeEnabled = topRightCornerEnabled.value!!,
+                    bottomLeftCornerEnabled = bottomLeftCornerEnabled.value!!,
+                    bottomRightCornerEnabled = bottomRightCornerEnabled.value!!
                 ),
                 topNotchSetting = topNotchSetting.value!!,
                 bottomNotchSetting = bottomNotchSetting.value!!,

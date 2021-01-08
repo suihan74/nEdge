@@ -1,6 +1,5 @@
 package com.suihan74.notificationreporter.models
 
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 /**
@@ -8,9 +7,29 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class OutlinesSetting (
-    /** 描画タイプ */
-    @SerialName("outlines_type")
-    val type: OutlinesType = OutlinesType.FULL,
+    /** 上辺を描画する */
+    val topEdgeEnabled : Boolean = true,
+
+    /** 下辺を描画する */
+    val bottomEdgeEnabled : Boolean = true,
+
+    /** 左辺を描画する */
+    val leftEdgeEnabled : Boolean = true,
+
+    /** 右辺を描画する */
+    val rightEdgeEnabled : Boolean = true,
+
+    /** 左上角を描画する */
+    val topLeftCornerEnabled : Boolean = true,
+
+    /** 右上角を描画する */
+    val topRightCornerEdgeEnabled : Boolean = true,
+
+    /** 左下角を描画する */
+    val bottomLeftCornerEnabled : Boolean = true,
+
+    /** 右下角を描画する */
+    val bottomRightCornerEnabled : Boolean = true,
 
     /** 画面上部角の角丸半径 */
     val topCornerRadius: Float = 0f,
