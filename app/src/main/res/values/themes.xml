@@ -46,6 +46,7 @@
 
         <item name="alertDialogTheme">@style/AlertDialog</item>
         <item name="switchTextAppearance">@style/SwitchTextAppearance</item>
+        <item name="android:checkboxStyle">@style/CheckBoxStyle</item>
     </style>
 
     <style name="SearchAppsTextInputLayout" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
@@ -58,6 +59,10 @@
     </style>
 
     <style name="SwitchTextAppearance">
+        <item name="android:textColor">@color/preferencesTextColor</item>
+    </style>
+
+    <style name="CheckBoxStyle" parent="Widget.MaterialComponents.CompoundButton.CheckBox">
         <item name="android:textColor">@color/preferencesTextColor</item>
     </style>
 

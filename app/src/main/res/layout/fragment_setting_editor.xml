@@ -15,8 +15,6 @@
 
         <ScrollView
             android:id="@+id/mainLayout"
-            android:layout_marginTop="64dp"
-            android:paddingHorizontal="24dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -27,7 +25,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="72dp"
+                android:paddingVertical="72dp"
+                android:paddingHorizontal="24dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -86,6 +85,8 @@
                     <CheckBox
                         android:text="@{@string/prefs_enabled_edge(`上`)}"
                         android:checked="@={vm.topEdgeEnabled}"
+                        tools:checked="true"
+                        tools:text="@string/prefs_enabled_edge"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
 
@@ -205,6 +206,11 @@
                     android:visibility="@{vm.bottomNotchEnabled}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
+
+                <!-- 下端の余白(CANCEL/SAVEボタンと被るのを防ぐ) -->
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="64dp"/>
 
             </LinearLayout>
         </ScrollView>
