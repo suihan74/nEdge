@@ -1,5 +1,6 @@
 package com.suihan74.notificationreporter.scenes.preferences
 
+import android.content.Context
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,6 +9,7 @@ import com.suihan74.notificationreporter.R
 import com.suihan74.notificationreporter.dataStore.Preferences
 import com.suihan74.notificationreporter.models.MultipleNotificationsSolution
 import com.suihan74.notificationreporter.repositories.PreferencesRepository
+import com.suihan74.notificationreporter.scenes.lockScreen.LockScreenActivity
 import com.suihan74.notificationreporter.scenes.preferences.dialog.TimePickerDialogFragment
 import com.suihan74.utilities.fragment.AlertDialogFragment
 import kotlinx.coroutines.Dispatchers
@@ -114,6 +116,14 @@ class PreferencesViewModel(
     }
 
     // ------ //
+
+    /**
+     * デフォルト通知表示設定でプレビューを表示する
+     */
+    fun startPreview(context: Context) = viewModelScope.launch {
+        val entity = prefRepo.getDefaultNotificationEntity()
+        LockScreenActivity.startPreview(context, entity)
+    }
 
     /**
      * 通知を行わない時間帯を設定するダイアログを開く

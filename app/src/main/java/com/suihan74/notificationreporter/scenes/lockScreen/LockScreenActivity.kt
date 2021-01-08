@@ -16,6 +16,7 @@ import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.databinding.DataBindingUtil
 import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.R
+import com.suihan74.notificationreporter.database.notification.NotificationEntity
 import com.suihan74.notificationreporter.databinding.ActivityLockScreenBinding
 import com.suihan74.utilities.lazyProvideViewModel
 import org.threeten.bp.LocalTime
@@ -59,7 +60,7 @@ class LockScreenActivity : AppCompatActivity() {
                 return false
             }
 
-            val prefs = prefRepo.getPreferences()
+            val prefs = prefRepo.preferences()
 
             // バッテリレベルが指定値未満
             val batteryLevel = batteryRepo.batteryLevel.value ?: 0
@@ -86,17 +87,21 @@ class LockScreenActivity : AppCompatActivity() {
 
             return true
         }
+
+        /** プレビュー用に`LockScreenActivity`を開く */
+        fun startPreview(context: Context, entity: NotificationEntity) {
+            val intent = Intent(context, LockScreenActivity::class.java).also {
+                it.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                it.putExtra(LockScreenViewModel.Extra.PREVIEW_ENTITY_ID.name, entity.id)
+            }
+            context.startActivity(intent)
+        }
     }
 
     // ------ //
 
     private val viewModel by lazyProvideViewModel {
-        val app = Application.instance
-        LockScreenViewModel(
-            batteryRepo = app.batteryRepository,
-            notificationRepo = app.notificationRepository,
-            prefRepo = app.preferencesRepository
-        )
+        LockScreenViewModel(Application.instance)
     }
 
     private lateinit var binding : ActivityLockScreenBinding
@@ -109,7 +114,7 @@ class LockScreenActivity : AppCompatActivity() {
         setTheme(R.style.LockScreenActivity)
         overlapLockScreenAndKeepScreenOn()
 
-        viewModel.init(this)
+        viewModel.init(this, intent)
 
         binding = DataBindingUtil.setContentView<ActivityLockScreenBinding>(
                 this,

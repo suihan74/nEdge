@@ -1,6 +1,5 @@
 package com.suihan74.notificationreporter.scenes.preferences.page
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +8,6 @@ import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
 import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.databinding.FragmentGeneralPrefsBinding
-import com.suihan74.notificationreporter.scenes.lockScreen.LockScreenActivity
 import com.suihan74.notificationreporter.scenes.preferences.PreferencesActivity
 import com.suihan74.notificationreporter.scenes.preferences.dataBinding.SliderBindingAdapters
 import com.suihan74.utilities.extensions.hideSoftInputMethod
@@ -46,8 +44,7 @@ class GeneralPrefsFragment : Fragment() {
         }
 
         binding.previewButton.setOnClickListener {
-            val intent = Intent(requireContext(), LockScreenActivity::class.java)
-            startActivity(intent)
+            viewModel.startPreview(requireContext())
         }
 
         binding.notifyButton.setOnClickListener {

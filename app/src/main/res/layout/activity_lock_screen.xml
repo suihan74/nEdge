@@ -121,7 +121,7 @@
         <ImageView
             android:id="@+id/notificationBar"
             android:background="@android:color/transparent"
-            android:visibility="@{vm.currentNotice}"
+            android:visibility="@{vm.notificationSetting}"
             android:contentDescription="@null"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"

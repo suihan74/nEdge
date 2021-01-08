@@ -4,6 +4,7 @@ import android.service.notification.StatusBarNotification
 import android.view.View
 import androidx.annotation.FloatRange
 import androidx.databinding.BindingAdapter
+import com.suihan74.notificationreporter.models.NotificationSetting
 import kotlin.math.absoluteValue
 
 object ViewBindingAdapters {
@@ -25,14 +26,21 @@ object ViewBindingAdapters {
     /** 通知バー表示状態切り替え */
     @JvmStatic
     @BindingAdapter("android:visibility")
+    fun setNotificationVisibility(view: View, setting: NotificationSetting?) {
+        setNotificationVisibility(view, setting, null)
+    }
+
+    /** 通知バー表示状態切り替え */
+    @JvmStatic
+    @BindingAdapter("android:visibility")
     fun setNotificationVisibility(view: View, notification: StatusBarNotification?) {
         setNotificationVisibility(view, notification, null)
     }
 
     /** 通知バー表示状態切り替え */
     @JvmStatic
-    fun setNotificationVisibility(view: View, notification: StatusBarNotification?, endAction: (()->Unit)?) {
-        if (notification == null) {
+    fun setNotificationVisibility(view: View, setting: Any?, endAction: (()->Unit)?) {
+        if (setting == null) {
             if (view.visibility == View.VISIBLE) {
                 view.animate()
                     .alphaBy(1f)

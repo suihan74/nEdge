@@ -1,24 +1,27 @@
 package com.suihan74.notificationreporter.scenes.lockScreen
 
+import android.content.Intent
 import android.service.notification.StatusBarNotification
 import android.view.MotionEvent
 import android.view.View
 import android.view.Window
 import androidx.lifecycle.*
+import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.models.MultipleNotificationsSolution
 import com.suihan74.notificationreporter.models.NotificationSetting
-import com.suihan74.notificationreporter.repositories.BatteryRepository
-import com.suihan74.notificationreporter.repositories.NotificationRepository
-import com.suihan74.notificationreporter.repositories.PreferencesRepository
 import kotlinx.coroutines.*
 import org.threeten.bp.LocalDateTime
 import kotlin.random.Random
 
-class LockScreenViewModel(
-    batteryRepo : BatteryRepository,
-    private val notificationRepo : NotificationRepository,
-    private val prefRepo : PreferencesRepository
-) : ViewModel() {
+class LockScreenViewModel(application: Application) : ViewModel() {
+
+    private val batteryRepo = application.batteryRepository
+
+    private val notificationRepo = application.notificationRepository
+
+    private val prefRepo = application.preferencesRepository
+
+    // ------ //
 
     /** 現在時刻 */
     val currentTime : LiveData<LocalDateTime> by lazy { _currentTime }
@@ -78,17 +81,17 @@ class LockScreenViewModel(
 
     // ------ //
 
-    fun init(lifecycleOwner: LifecycleOwner) {
+    fun init(lifecycleOwner: LifecycleOwner, intent: Intent) {
         var switchNoticeJob : Job? = null
 
-        currentNotice.observe(lifecycleOwner, {
-            if (it == null) return@observe
+        currentNotice.observe(lifecycleOwner, Observer {
+            if (it == null) return@Observer
             viewModelScope.launch(Dispatchers.Main.immediate) {
                 _notificationSetting.value = prefRepo.getNotificationSettingOrDefault(it)
             }
         })
 
-        statusBarNotifications.observe(lifecycleOwner, {
+        statusBarNotifications.observe(lifecycleOwner, Observer {
             viewModelScope.launch {
                 switchNoticeJob?.cancelAndJoin()
                 switchNoticeJob = launchNotificationsSwitching()
@@ -96,7 +99,7 @@ class LockScreenViewModel(
         })
 
         viewModelScope.launch(Dispatchers.Main.immediate) {
-            prefRepo.getPreferences().let { prefs ->
+            prefRepo.preferences().let { prefs ->
                 _lightLevelOn.value = prefs.lightLevelOn
                 _lightLevelOff.value = prefs.lightLevelOff
                 lightOffInterval = prefs.lightOffInterval
@@ -108,6 +111,16 @@ class LockScreenViewModel(
 
             // 時刻更新開始
             launchClockUpdating()
+        }
+
+        // プレビューとして開始
+        val previewEntityId = intent.getLongExtra(Extra.PREVIEW_ENTITY_ID.name, -1L)
+        if (previewEntityId != -1L) {
+            viewModelScope.launch(Dispatchers.Main.immediate) {
+                prefRepo.getNotificationEntityOrNull(previewEntityId)?.let {
+                    notificationSetting.value = it.setting
+                }
+            }
         }
     }
 
@@ -247,5 +260,12 @@ class LockScreenViewModel(
             // バックライト使用
             else -> 0.01f + (1.0f - 0.01f) * value
         }
+    }
+
+    // ------ //
+
+    enum class Extra {
+        /** プレビューする設定ID */
+        PREVIEW_ENTITY_ID
     }
 }

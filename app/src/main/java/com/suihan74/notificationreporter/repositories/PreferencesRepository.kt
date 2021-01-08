@@ -18,12 +18,6 @@ class PreferencesRepository(
     private val dataStore: DataStore<Preferences>,
     private val notificationDao: NotificationDao
 ) {
-    companion object {
-        private const val DEFAULT_SETTING_NAME = NotificationDao.DEFAULT_SETTING_NAME
-    }
-
-    // ------ //
-
     /**
      * すべての通知表示設定を取得する
      */
@@ -32,6 +26,10 @@ class PreferencesRepository(
 
     suspend fun getDefaultNotificationEntity() : NotificationEntity {
         return notificationDao.getDefaultEntity()
+    }
+
+    suspend fun getNotificationEntityOrNull(id: Long) : NotificationEntity? {
+        return notificationDao.findById(id)
     }
 
     /**
@@ -109,10 +107,16 @@ class PreferencesRepository(
         )
     }
 
+    suspend fun deleteNotificationEntity(entity: NotificationEntity) {
+        notificationDao.delete(entity)
+    }
+
+    // ------ //
+
     /**
      * アプリ設定値を取得する
      */
-    suspend fun getPreferences() : Preferences {
+    suspend fun preferences() : Preferences {
         return dataStore.data.firstOrNull() ?: Preferences()
     }
 
