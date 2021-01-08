@@ -5,4 +5,8 @@
     <dimen name="prefMenuWidthCompact">48dp</dimen>
     <!-- メニュー部分を開いているときの横幅 -->
     <dimen name="prefMenuWidthFull">256dp</dimen>
+    <!-- メニューアイコンサイズ -->
+    <dimen name="prefMenuIconSize">24dp</dimen>
+    <!-- メニューアイコン余白(prefMenuIconSize + prefMenuIconPadding * 2 == prefMenuWidthCompact) -->
+    <dimen name="prefMenuIconPadding">12dp</dimen>
 </resources>

@@ -24,7 +24,6 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:background="?selectableItemBackground"
-            android:paddingHorizontal="12dp"
             android:paddingVertical="12dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -37,10 +36,12 @@
                 android:contentDescription="@null"
                 tools:src="@drawable/ic_info"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/label"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_width="24dp"
-                android:layout_height="24dp"/>
+                android:layout_marginHorizontal="@dimen/prefMenuIconPadding"
+                android:layout_width="@dimen/prefMenuIconSize"
+                android:layout_height="@dimen/prefMenuIconSize"/>
 
             <TextView
                 android:id="@+id/label"
@@ -49,12 +50,12 @@
                 android:textSize="18sp"
                 android:singleLine="true"
                 android:ellipsize="none"
-                tools:text="@string/prefs_menu_label_applications"
+                tools:text="@string/prefs_menu_label_information"
                 app:layout_constraintStart_toEndOf="@id/icon"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginStart="12dp"
+                android:layout_marginEnd="@dimen/prefMenuIconPadding"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"/>
 
