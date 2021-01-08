@@ -7,8 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.DiffUtil
 import com.suihan74.notificationreporter.Application
-import com.suihan74.notificationreporter.database.notification.NotificationDao
 import com.suihan74.notificationreporter.database.notification.NotificationEntity
+import com.suihan74.notificationreporter.database.notification.isDefault
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
@@ -33,7 +33,7 @@ class SettingsListViewModel(
         application.preferencesRepository.allNotificationSettingsFlow
             .onEach {
                 defaultSettingEntity =
-                    it.firstOrNull { entity -> entity.appName == NotificationDao.DEFAULT_SETTING_NAME }
+                    it.firstOrNull { entity -> entity.isDefault }
                         ?: application.preferencesRepository.getDefaultNotificationEntity()
 
                 settings.postValue(

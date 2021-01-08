@@ -1,5 +1,6 @@
 package com.suihan74.notificationreporter.scenes.preferences.dataBinding
 
+import android.content.pm.ApplicationInfo
 import android.graphics.Color
 import android.util.Log
 import android.widget.TextView
@@ -65,5 +66,13 @@ object TextViewBindingAdapters {
         else if (textColorLight != null) {
             textView.setTextColor(textColorLight)
         }
+    }
+
+    @JvmStatic
+    @BindingAdapter(value = ["applicationName", "defaultName"], requireAll = false)
+    fun setApplicationName(textView: TextView, appInfo: ApplicationInfo?, defaultName: String?) {
+        textView.text =
+            if (appInfo == null) defaultName.orEmpty()
+            else textView.context.packageManager.getApplicationLabel(appInfo)
     }
 }

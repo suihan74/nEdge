@@ -1,5 +1,6 @@
 package com.suihan74.notificationreporter.scenes.preferences.page
 
+import android.content.pm.ApplicationInfo
 import android.graphics.Color
 import android.graphics.Point
 import android.os.Build
@@ -12,10 +13,8 @@ import androidx.lifecycle.*
 import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.R
 import com.suihan74.notificationreporter.database.notification.NotificationEntity
-import com.suihan74.notificationreporter.models.NotchSetting
-import com.suihan74.notificationreporter.models.NotchType
-import com.suihan74.notificationreporter.models.NotificationSetting
-import com.suihan74.notificationreporter.models.OutlinesSetting
+import com.suihan74.notificationreporter.database.notification.isDefault
+import com.suihan74.notificationreporter.models.*
 import com.suihan74.notificationreporter.scenes.preferences.dialog.ColorPickerDialogFragment
 import com.suihan74.notificationreporter.scenes.preferences.notch.NotchPosition
 import com.suihan74.notificationreporter.scenes.preferences.notch.RectangleNotchSettingFragment
@@ -28,6 +27,22 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 
 class SettingEditorViewModel(private val application: Application) : ViewModel() {
+
+    /** 編集対象のエンティティ */
+    val targetEntity : LiveData<NotificationEntity> by lazy { _targetEntity }
+    private val _targetEntity = MutableLiveData<NotificationEntity>()
+
+    /** アプリ情報(デフォルト設定のときはnull) */
+    val applicationInfo : LiveData<ApplicationInfo?> by lazy { _applicationInfo }
+    private val _applicationInfo = MutableLiveData<ApplicationInfo?>()
+
+    /** キーワード */
+    val keyword = MutableLiveData<String>()
+
+    /** キーワードのマッチ方法 */
+    val keywordMatchingType = MutableLiveData<KeywordMatchingType>()
+
+    // --- //
 
     /** 通知表示の輪郭線の色 */
     val notificationColor = mutableLiveData<Int>()
@@ -104,8 +119,6 @@ class SettingEditorViewModel(private val application: Application) : ViewModel()
 
     // ------ //
 
-    private var targetEntity: NotificationEntity? = null
-
     fun initialize(entity: NotificationEntity) {
         setCurrentTarget(entity)
     }
@@ -114,10 +127,16 @@ class SettingEditorViewModel(private val application: Application) : ViewModel()
      * 編集したデータを保存する
      */
     suspend fun saveSettings() {
-        targetEntity?.let {
-            application.preferencesRepository.updateNotificationSetting(
-                it.copy(setting = notificationSetting.value!!)
-            )
+        targetEntity.value?.let {
+            currentTargetMutex.withLock {
+                application.preferencesRepository.updateNotificationSetting(
+                    it.copy(
+                        keyword = keyword.value.orEmpty(),
+                        keywordMatchingType = keywordMatchingType.value ?: KeywordMatchingType.NONE,
+                        setting = notificationSetting.value!!
+                    )
+                )
+            }
         }
     }
 
@@ -143,7 +162,13 @@ class SettingEditorViewModel(private val application: Application) : ViewModel()
     /** 現在の画面で編集中のアプリ設定をセットする */
     private fun setCurrentTarget(entity: NotificationEntity) = viewModelScope.launch(Dispatchers.Main) {
         currentTargetMutex.withLock {
-            targetEntity = entity
+            _targetEntity.value = entity
+            _applicationInfo.value =
+                if (entity.isDefault) null
+                else application.packageManager.getApplicationInfo(entity.appName, 0)
+            keyword.value = entity.keyword
+            keywordMatchingType.value = entity.keywordMatchingType
+
             application.preferencesRepository.getNotificationSettingOrDefault(entity).let { setting ->
                 notificationColor.value = setting.color
                 lineThickness.value = setting.thickness

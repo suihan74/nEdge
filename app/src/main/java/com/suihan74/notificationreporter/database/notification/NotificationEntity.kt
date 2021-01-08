@@ -21,5 +21,8 @@ data class NotificationEntity(
 
     @PrimaryKey
     val key : String = "$appName!$keyword!$keywordMatchingType"
-) {
-}
+)
+
+/** デフォルト設定である */
+val NotificationEntity.isDefault : Boolean
+    get() = appName == NotificationDao.DEFAULT_SETTING_NAME
