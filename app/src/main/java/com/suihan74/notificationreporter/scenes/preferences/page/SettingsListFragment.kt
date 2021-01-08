@@ -8,10 +8,13 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.R
+import com.suihan74.notificationreporter.database.notification.NotificationEntity
 import com.suihan74.notificationreporter.databinding.FragmentSettingsListBinding
 import com.suihan74.notificationreporter.databinding.ListHeaderNotificationSettingItemsBinding
 import com.suihan74.notificationreporter.databinding.ListItemNotificationSettingItemsBinding
+import com.suihan74.notificationreporter.models.NotificationSetting
 import com.suihan74.notificationreporter.scenes.preferences.PreferencesActivity
+import com.suihan74.notificationreporter.scenes.preferences.dialog.ApplicationSelectionDialogFragment
 import com.suihan74.utilities.BindingListAdapter
 import com.suihan74.utilities.lazyProvideViewModel
 
@@ -51,7 +54,14 @@ class SettingsListFragment : Fragment() {
 
         // 設定追加ボタン
         binding.addSettingButton.setOnClickListener {
-            // TODO
+            val dialog = ApplicationSelectionDialogFragment.createInstance { _, appInfo ->
+                val entity = NotificationEntity(
+                    appName = appInfo.packageName,
+                    setting = viewModel.defaultSettingEntity?.setting ?: NotificationSetting()
+                )
+                preferencesActivity.openSettingEditor(entity)
+            }
+            dialog.show(childFragmentManager, null)
         }
 
         return binding.root
@@ -72,6 +82,11 @@ class SettingsListFragment : Fragment() {
         recyclerView.adapter = adapter
         recyclerView.setHasFixedSize(true)
 
+        adapter.setOnClickItemListener {
+            val entity = it.item!!.entity
+            preferencesActivity.openSettingEditor(entity)
+        }
+
         viewModel.settings.observe(viewLifecycleOwner, {
             adapter.submit(
                 items = it,
@@ -82,8 +97,8 @@ class SettingsListFragment : Fragment() {
                         false
                     )
                     binding.mainLayout.setOnClickListener {
-                        viewModel.defaultSettingEntity?.let { defaultSetting ->
-                            preferencesActivity.openSettingEditor(defaultSetting)
+                        viewModel.defaultSettingEntity?.let { entity ->
+                            preferencesActivity.openSettingEditor(entity)
                         }
                     }
                     binding.root
