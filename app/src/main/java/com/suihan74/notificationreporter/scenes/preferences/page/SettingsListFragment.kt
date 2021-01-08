@@ -8,13 +8,10 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.R
-import com.suihan74.notificationreporter.database.notification.NotificationEntity
 import com.suihan74.notificationreporter.databinding.FragmentSettingsListBinding
 import com.suihan74.notificationreporter.databinding.ListHeaderNotificationSettingItemsBinding
 import com.suihan74.notificationreporter.databinding.ListItemNotificationSettingItemsBinding
-import com.suihan74.notificationreporter.models.NotificationSetting
 import com.suihan74.notificationreporter.scenes.preferences.PreferencesActivity
-import com.suihan74.notificationreporter.scenes.preferences.dialog.ApplicationSelectionDialogFragment
 import com.suihan74.utilities.BindingListAdapter
 import com.suihan74.utilities.lazyProvideViewModel
 
@@ -54,14 +51,7 @@ class SettingsListFragment : Fragment() {
 
         // 設定追加ボタン
         binding.addSettingButton.setOnClickListener {
-            val dialog = ApplicationSelectionDialogFragment.createInstance { _, appInfo ->
-                val entity = NotificationEntity(
-                    appName = appInfo.packageName,
-                    setting = viewModel.defaultSettingEntity?.setting ?: NotificationSetting()
-                )
-                preferencesActivity.openSettingEditor(entity)
-            }
-            dialog.show(childFragmentManager, null)
+            viewModel.createNewNotificationSetting(childFragmentManager)
         }
 
         return binding.root
@@ -85,6 +75,10 @@ class SettingsListFragment : Fragment() {
         adapter.setOnClickItemListener {
             val entity = it.item!!.entity
             preferencesActivity.openSettingEditor(entity)
+        }
+
+        adapter.setOnLongClickItemListener {
+            viewModel.openSettingItemMenuDialog(it.item!!, childFragmentManager)
         }
 
         viewModel.settings.observe(viewLifecycleOwner, {

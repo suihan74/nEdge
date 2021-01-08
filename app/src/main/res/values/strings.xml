@@ -58,6 +58,11 @@
     <string name="prefs_settings_list_search_hint">項目を検索</string>
     <string name="prefs_settings_list_keyword_text">キーワード: %s</string>
 
+    <string name="prefs_settings_list_item_menu_edit">編集</string>
+    <string name="prefs_settings_list_item_menu_preview">プレビュー</string>
+    <string name="prefs_settings_list_item_menu_copy">これを基にして新規作成</string>
+    <string name="prefs_settings_list_item_menu_delete">削除</string>
+
     <!-- InformationFragment -->
     <string name="pref_information_release_notes_desc">更新履歴</string>
     <string name="pref_information_licenses_desc">ライセンス</string>

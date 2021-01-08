@@ -288,7 +288,7 @@ class SettingEditorViewModel(private val application: Application) : ViewModel()
                 else -> throw IllegalArgumentException()
             }
 
-        notchType.observe(lifecycleOwner, {
+        notchType.observe(lifecycleOwner, Observer {
             val fragment = when (it) {
                 NotchType.RECTANGLE ->
                     RectangleNotchSettingFragment.createInstance(notchPosition)
