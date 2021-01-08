@@ -214,7 +214,7 @@ class LockScreenViewModel(
     // ------ //
 
     fun observeScreenBrightness(owner: LifecycleOwner, window: Window) {
-        lightOff.observe(owner, { lightOff ->
+        lightOff.observe(owner, Observer { lightOff ->
             window.attributes = window.attributes.also { lp ->
                 lp.screenBrightness =
                     when {
@@ -228,6 +228,11 @@ class LockScreenViewModel(
                         else -> calcBrightness(lightLevelOn.value)
                     }
             }
+        })
+
+        // 新たな通知を受け取ったら画面を点灯する
+        statusBarNotifications.observe(owner, Observer {
+            _lightOff.value = false
         })
     }
 
