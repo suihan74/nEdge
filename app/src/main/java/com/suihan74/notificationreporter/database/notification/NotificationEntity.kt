@@ -19,8 +19,8 @@ data class NotificationEntity(
     /** 通知表示設定 */
     val setting : NotificationSetting = NotificationSetting(),
 
-    @PrimaryKey
-    val key : String = "$appName!$keyword!$keywordMatchingType"
+    @PrimaryKey(autoGenerate = true)
+    val id : Long = 0
 )
 
 /** デフォルト設定である */

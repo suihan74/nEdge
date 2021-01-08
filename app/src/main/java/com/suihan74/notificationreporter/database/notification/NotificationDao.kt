@@ -16,11 +16,22 @@ interface NotificationDao {
     @Query("SELECT * FROM NotificationEntity")
     fun getAllSettingsFlow() : Flow<List<NotificationEntity>>
 
+    // ------ //
+
     @Query("""
         SELECT * FROM NotificationEntity
         WHERE appName = :appName
     """)
     suspend fun findByAppName(appName: String) : List<NotificationEntity>
+
+    @Query("""
+        SELECT * FROM NotificationEntity
+        WHERE id = :id
+        LIMIT 1
+    """)
+    suspend fun findById(id: Long) : NotificationEntity?
+
+    // ------ //
 
     @Transaction
     suspend fun getDefaultEntity() : NotificationEntity {
@@ -32,6 +43,8 @@ interface NotificationDao {
     suspend fun getDefaultSetting() : NotificationSetting {
         return findByAppName(DEFAULT_SETTING_NAME).firstOrNull()?.setting ?: NotificationSetting()
     }
+
+    // ------ //
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(entity: NotificationEntity)
@@ -45,4 +58,9 @@ interface NotificationDao {
             )
         )
     }
+
+    // ------ //
+
+    @Delete
+    suspend fun delete(entity: NotificationEntity)
 }
