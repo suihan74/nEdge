@@ -29,19 +29,21 @@ class AlertDialogFragment : DialogFragment() {
     companion object {
         private fun createInstance() = AlertDialogFragment().withArguments()
 
-        private const val ARG_THEME_ID = "ARG_THEME_ID"
-        private const val ARG_TITLE_ID = "ARG_TITLE_ID"
-        private const val ARG_TITLE = "ARG_TITLE"
-        private const val ARG_MESSAGE_ID = "ARG_MESSAGE_ID"
-        private const val ARG_MESSAGE = "ARG_MESSAGE"
-        private const val ARG_POSITIVE_BUTTON_TEXT_ID = "ARG_POSITIVE_BUTTON_TEXT_ID"
-        private const val ARG_NEGATIVE_BUTTON_TEXT_ID = "ARG_NEGATIVE_BUTTON_TEXT_ID"
-        private const val ARG_NEUTRAL_BUTTON_TEXT_ID = "ARG_NEUTRAL_BUTTON_TEXT_ID"
-        private const val ARG_ITEM_LABEL_IDS = "ARG_ITEM_LABEL_IDS"
-        private const val ARG_ITEM_LABELS = "ARG_ITEM_LABELS"
-        private const val ARG_ITEMS_MODE = "ARG_ITEMS_MODE"
-        private const val ARG_SINGLE_CHECKED_ITEM = "ARG_SINGLE_CHECKED_ITEM"
-        private const val ARG_MULTI_CHECKED_ITEMS = "ARG_MULTI_CHECKED_ITEMS"
+        private enum class Arg {
+            THEME_ID,
+            TITLE_ID,
+            TITLE,
+            MESSAGE_ID,
+            MESSAGE,
+            POSITIVE_BUTTON_TEXT_ID,
+            NEGATIVE_BUTTON_TEXT_ID,
+            NEUTRAL_BUTTON_TEXT_ID,
+            ITEM_LABEL_IDS,
+            ITEM_LABELS,
+            ITEMS_MODE,
+            SINGLE_CHECKED_ITEM,
+            MULTI_CHECKED_ITEMS
+        }
     }
 
     private val viewModel: DialogViewModel by lazyProvideViewModel {
@@ -92,49 +94,49 @@ class AlertDialogFragment : DialogFragment() {
 
     class DialogViewModel(args: Bundle) : ViewModel() {
         @StyleRes
-        val themeId: Int? = args.getIntOrNull(ARG_THEME_ID)
+        val themeId: Int? = args.getIntOrNull(Arg.THEME_ID.name)
 
         @StringRes
-        val titleId : Int = args.getInt(ARG_TITLE_ID, 0)
+        val titleId : Int = args.getInt(Arg.TITLE_ID.name, 0)
 
-        val title : CharSequence? = args.getCharSequence(ARG_TITLE)
-
-        @StringRes
-        val messageId : Int = args.getInt(ARG_MESSAGE_ID, 0)
-
-        val message : CharSequence? = args.getCharSequence(ARG_MESSAGE)
+        val title : CharSequence? = args.getCharSequence(Arg.TITLE.name)
 
         @StringRes
-        val positiveTextId : Int = args.getInt(ARG_POSITIVE_BUTTON_TEXT_ID, 0)
+        val messageId : Int = args.getInt(Arg.MESSAGE_ID.name, 0)
+
+        val message : CharSequence? = args.getCharSequence(Arg.MESSAGE.name)
 
         @StringRes
-        val negativeTextId : Int = args.getInt(ARG_NEGATIVE_BUTTON_TEXT_ID, 0)
+        val positiveTextId : Int = args.getInt(Arg.POSITIVE_BUTTON_TEXT_ID.name, 0)
 
         @StringRes
-        val neutralTextId : Int = args.getInt(ARG_NEUTRAL_BUTTON_TEXT_ID, 0)
+        val negativeTextId : Int = args.getInt(Arg.NEGATIVE_BUTTON_TEXT_ID.name, 0)
+
+        @StringRes
+        val neutralTextId : Int = args.getInt(Arg.NEUTRAL_BUTTON_TEXT_ID.name, 0)
 
         /**
          *  各項目ラベル文字列リソースID
          *
          * itemLabelsより優先される
          */
-        val itemLabelIds : IntArray? = args.getIntArray(ARG_ITEM_LABEL_IDS)
+        val itemLabelIds : IntArray? = args.getIntArray(Arg.ITEM_LABEL_IDS.name)
 
         /** 各項目ラベル文字列 */
-        val itemLabels : Array<out CharSequence>? = args.getCharSequenceArray(ARG_ITEM_LABELS)
+        val itemLabels : Array<out CharSequence>? = args.getCharSequenceArray(Arg.ITEM_LABELS.name)
 
         /**
          * 項目の表示モード
          */
-        val itemsMode : ItemsMode = args.getEnum(ARG_ITEMS_MODE, ItemsMode.SINGLE_CLICK)
+        val itemsMode : ItemsMode = args.getEnum(Arg.ITEMS_MODE.name, ItemsMode.SINGLE_CLICK)
 
         /** singleChoiceItemsの選択項目位置 */
-        var checkedItem : Int = args.getInt(ARG_SINGLE_CHECKED_ITEM, 0)
+        var checkedItem : Int = args.getInt(Arg.SINGLE_CHECKED_ITEM.name, 0)
             private set
 
         /** multiChoiceItemsの選択項目位置 */
         val checkedItems : BooleanArray by lazy {
-            args.getBooleanArray(ARG_MULTI_CHECKED_ITEMS) ?: BooleanArray(0)
+            args.getBooleanArray(Arg.MULTI_CHECKED_ITEMS.name) ?: BooleanArray(0)
         }
 
         /** ボタンクリック処理後に自動でダイアログを閉じる */
@@ -296,46 +298,46 @@ class AlertDialogFragment : DialogFragment() {
         private val dialog = AlertDialogFragment.createInstance()
         private val args = dialog.requireArguments().also {
             if (styleId != null) {
-                it.putInt(ARG_THEME_ID, styleId)
+                it.putInt(Arg.THEME_ID.name, styleId)
             }
         }
 
         fun create() = dialog
 
         fun setTitle(@StringRes titleId: Int) : Builder {
-            args.putInt(ARG_TITLE_ID, titleId)
+            args.putInt(Arg.TITLE_ID.name, titleId)
             return this
         }
 
         fun setMessage(@StringRes messageId: Int) : Builder {
-            args.putInt(ARG_MESSAGE_ID, messageId)
+            args.putInt(Arg.MESSAGE_ID.name, messageId)
             return this
         }
 
         fun setTitle(title: CharSequence) : Builder {
-            args.putCharSequence(ARG_TITLE, title)
+            args.putCharSequence(Arg.TITLE.name, title)
             return this
         }
 
         fun setMessage(message: CharSequence) : Builder {
-            args.putCharSequence(ARG_MESSAGE, message)
+            args.putCharSequence(Arg.MESSAGE.name, message)
             return this
         }
 
         fun setPositiveButton(@StringRes textId: Int, listener: Listener<AlertDialogFragment>? = null) : Builder {
-            args.putInt(ARG_POSITIVE_BUTTON_TEXT_ID, textId)
+            args.putInt(Arg.POSITIVE_BUTTON_TEXT_ID.name, textId)
             dialog.setOnClickPositiveButton(listener)
             return this
         }
 
         fun setNegativeButton(@StringRes textId: Int, listener: Listener<AlertDialogFragment>? = null) : Builder {
-            args.putInt(ARG_NEGATIVE_BUTTON_TEXT_ID, textId)
+            args.putInt(Arg.NEGATIVE_BUTTON_TEXT_ID.name, textId)
             dialog.setOnClickNegativeButton(listener)
             return this
         }
 
         fun setNeutralButton(@StringRes textId: Int, listener: Listener<AlertDialogFragment>? = null) : Builder {
-            args.putInt(ARG_NEUTRAL_BUTTON_TEXT_ID, textId)
+            args.putInt(Arg.NEUTRAL_BUTTON_TEXT_ID.name, textId)
             dialog.setOnClickNeutralButton(listener)
             return this
         }
@@ -373,8 +375,8 @@ class AlertDialogFragment : DialogFragment() {
             labelIds: List<Int>,
             listener: ((dialog: AlertDialogFragment, which: Int)->Unit)? = null
         ) : Builder {
-            args.putEnum(ARG_ITEMS_MODE, ItemsMode.SINGLE_CLICK)
-            args.putIntArray(ARG_ITEM_LABEL_IDS, labelIds.toIntArray())
+            args.putEnum(Arg.ITEMS_MODE.name, ItemsMode.SINGLE_CLICK)
+            args.putIntArray(Arg.ITEM_LABEL_IDS.name, labelIds.toIntArray())
             dialog.setOnClickItem(listener)
             return this
         }
@@ -383,8 +385,8 @@ class AlertDialogFragment : DialogFragment() {
             labels: List<CharSequence>,
             listener: ((dialog: AlertDialogFragment, which: Int)->Unit)? = null
         ) : Builder {
-            args.putEnum(ARG_ITEMS_MODE, ItemsMode.SINGLE_CLICK)
-            args.putCharSequenceArray(ARG_ITEM_LABELS, labels.toTypedArray())
+            args.putEnum(Arg.ITEMS_MODE.name, ItemsMode.SINGLE_CLICK)
+            args.putCharSequenceArray(Arg.ITEM_LABELS.name, labels.toTypedArray())
             dialog.setOnClickItem(listener)
             return this
         }
@@ -414,9 +416,9 @@ class AlertDialogFragment : DialogFragment() {
             checkedItem: Int,
             listener: ((dialog: AlertDialogFragment, which: Int)->Unit)? = null
         ) : Builder {
-            args.putEnum(ARG_ITEMS_MODE, ItemsMode.SINGLE_CHOICE)
-            args.putIntArray(ARG_ITEM_LABEL_IDS, labelIds.toIntArray())
-            args.putInt(ARG_SINGLE_CHECKED_ITEM, checkedItem)
+            args.putEnum(Arg.ITEMS_MODE.name, ItemsMode.SINGLE_CHOICE)
+            args.putIntArray(Arg.ITEM_LABEL_IDS.name, labelIds.toIntArray())
+            args.putInt(Arg.SINGLE_CHECKED_ITEM.name, checkedItem)
             dialog.setOnClickItem(listener)
             return this
         }
@@ -426,9 +428,9 @@ class AlertDialogFragment : DialogFragment() {
             checkedItem: Int,
             listener: ((dialog: AlertDialogFragment, which: Int)->Unit)? = null
         ) : Builder {
-            args.putEnum(ARG_ITEMS_MODE, ItemsMode.SINGLE_CHOICE)
-            args.putCharSequenceArray(ARG_ITEM_LABELS, labels.toTypedArray())
-            args.putInt(ARG_SINGLE_CHECKED_ITEM, checkedItem)
+            args.putEnum(Arg.ITEMS_MODE.name, ItemsMode.SINGLE_CHOICE)
+            args.putCharSequenceArray(Arg.ITEM_LABELS.name, labels.toTypedArray())
+            args.putInt(Arg.SINGLE_CHECKED_ITEM.name, checkedItem)
             dialog.setOnClickItem(listener)
             return this
         }
