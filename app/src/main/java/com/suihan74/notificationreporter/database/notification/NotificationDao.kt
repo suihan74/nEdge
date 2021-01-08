@@ -23,6 +23,12 @@ interface NotificationDao {
     suspend fun findByAppName(appName: String) : List<NotificationEntity>
 
     @Transaction
+    suspend fun getDefaultEntity() : NotificationEntity {
+        return findByAppName(DEFAULT_SETTING_NAME).firstOrNull()
+            ?: NotificationEntity(appName = DEFAULT_SETTING_NAME, setting = NotificationSetting())
+    }
+
+    @Transaction
     suspend fun getDefaultSetting() : NotificationSetting {
         return findByAppName(DEFAULT_SETTING_NAME).firstOrNull()?.setting ?: NotificationSetting()
     }

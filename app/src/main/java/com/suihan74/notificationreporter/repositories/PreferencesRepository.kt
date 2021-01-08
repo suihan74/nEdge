@@ -30,6 +30,10 @@ class PreferencesRepository(
     val allNotificationSettingsFlow : Flow<List<NotificationEntity>>
         get() = notificationDao.getAllSettingsFlow()
 
+    suspend fun getDefaultNotificationEntity() : NotificationEntity {
+        return notificationDao.getDefaultEntity()
+    }
+
     /**
      * 設定をDBに保存する
      */

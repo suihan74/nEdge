@@ -32,7 +32,10 @@ class SettingsListViewModel(
     init {
         application.preferencesRepository.allNotificationSettingsFlow
             .onEach {
-                defaultSettingEntity = it.firstOrNull { entity -> entity.appName == NotificationDao.DEFAULT_SETTING_NAME }
+                defaultSettingEntity =
+                    it.firstOrNull { entity -> entity.appName == NotificationDao.DEFAULT_SETTING_NAME }
+                        ?: application.preferencesRepository.getDefaultNotificationEntity()
+
                 settings.postValue(
                     it.filterNot { entity -> entity == defaultSettingEntity }
                         .map { entity -> settingItem(entity) }
