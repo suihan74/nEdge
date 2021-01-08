@@ -148,6 +148,32 @@
             </LinearLayout>
         </ScrollView>
 
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/cancelButton"
+            style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
+            android:text="@string/prefs_cancel"
+            android:textColor="@color/white"
+            android:textAlignment="center"
+            app:backgroundTint="@color/gray_800"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/saveButton"
+            android:layout_marginBottom="48dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/saveButton"
+            style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
+            android:text="@string/prefs_save"
+            android:textColor="@color/white"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toBottomOf="@id/cancelButton"
+            app:layout_constraintStart_toEndOf="@id/cancelButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
         <!-- はみ出し確認用の背景 -->
         <View
             app:layout_constraintTop_toTopOf="parent"
@@ -190,33 +216,17 @@
             android:background="#ff00ff"
             android:layout_width="0dp"
             android:layout_height="64dp"/>
-        <!-- はみ出し確認用の背景ここまで -->
 
-        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-            android:id="@+id/cancelButton"
-            style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
-            android:text="@string/prefs_cancel"
-            android:textColor="@color/white"
-            android:textAlignment="center"
-            app:backgroundTint="@color/gray_800"
+        <View
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/saveButton"
-            android:layout_marginBottom="18dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-            android:id="@+id/saveButton"
-            style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
-            android:text="@string/prefs_save"
-            android:textColor="@color/white"
-            android:textAlignment="center"
-            app:layout_constraintBottom_toBottomOf="@id/cancelButton"
-            app:layout_constraintStart_toEndOf="@id/cancelButton"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            app:layout_constraintWidth_percent="0.5"
+            android:visibility="@{vm.editingBottomNotch}"
+            android:background="#ff00ff"
+            android:layout_width="0dp"
+            android:layout_height="64dp"/>
+        <!-- はみ出し確認用の背景ここまで -->
 
         <ImageView
             android:id="@+id/notificationBar"
