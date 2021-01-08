@@ -182,31 +182,6 @@ class NotificationDrawer(
         path.lineTo(offset + bottomCornerRadius, bottom)
     }
 
-    /**
-     * 左辺のみ描画
-     */
-    private fun drawOutLineOnlyLeft(
-        path: Path,
-        thickness: Float
-    ) {
-        val offset = thickness / 2
-        path.moveTo(offset, offset)
-        path.lineTo(offset, screenHeight.toFloat() - offset)
-    }
-
-    /**
-     * 右辺のみ描画
-     */
-    private fun drawOutLineOnlyRight(
-        path: Path,
-        thickness: Float
-    ) {
-        val offset = thickness / 2
-        val x = screenWidth - offset
-        path.moveTo(x, offset)
-        path.lineTo(x, screenHeight - offset)
-    }
-
     // ------ //
 
     private fun drawTopNotch(
@@ -214,7 +189,7 @@ class NotificationDrawer(
         thickness: Float,
         notchSetting: NotchSetting
     ) {
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) return
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) return
 
         val verticalCenter = screenHeight / 2
         val rect =
@@ -241,7 +216,7 @@ class NotificationDrawer(
         thickness: Float,
         notchSetting: NotchSetting
     ) {
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) return
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) return
 
         val verticalCenter = screenHeight / 2
         val rect =
