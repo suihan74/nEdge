@@ -18,6 +18,7 @@ import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.R
 import com.suihan74.notificationreporter.database.notification.NotificationEntity
 import com.suihan74.notificationreporter.databinding.ActivityLockScreenBinding
+import com.suihan74.notificationreporter.models.UnknownNotificationSolution
 import com.suihan74.utilities.lazyProvideViewModel
 import org.threeten.bp.LocalTime
 
@@ -81,6 +82,13 @@ class LockScreenActivity : AppCompatActivity() {
             }
             else {
                 if (now in silentTimeZoneStart..silentTimeZoneEnd) {
+                    return false
+                }
+            }
+
+            // 無視する通知
+            if (prefs.unknownNotificationSolution == UnknownNotificationSolution.IGNORE) {
+                if (null == prefRepo.getNotificationSettingOrNull(sbn)) {
                     return false
                 }
             }
