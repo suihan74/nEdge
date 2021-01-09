@@ -19,6 +19,7 @@ import com.suihan74.notificationreporter.R
 import com.suihan74.notificationreporter.database.notification.NotificationEntity
 import com.suihan74.notificationreporter.databinding.ActivityLockScreenBinding
 import com.suihan74.notificationreporter.models.UnknownNotificationSolution
+import com.suihan74.utilities.extensions.between
 import com.suihan74.utilities.lazyProvideViewModel
 import org.threeten.bp.LocalTime
 
@@ -71,19 +72,8 @@ class LockScreenActivity : AppCompatActivity() {
             }
 
             // 通知を行わない時間帯
-            val silentTimeZoneStart = prefs.silentTimezoneStart
-            val silentTimeZoneEnd = prefs.silentTimezoneEnd
-            val now = LocalTime.now()
-            val considerDateChange = silentTimeZoneStart > silentTimeZoneEnd
-            if (considerDateChange) {
-                if (now >= silentTimeZoneStart || now <= silentTimeZoneEnd) {
-                    return false
-                }
-            }
-            else {
-                if (now in silentTimeZoneStart..silentTimeZoneEnd) {
-                    return false
-                }
+            if (LocalTime.now().between(prefs.silentTimezoneStart, prefs.silentTimezoneEnd)) {
+                return false
             }
 
             // 無視する通知
