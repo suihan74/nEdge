@@ -49,16 +49,16 @@ class LockScreenViewModel(application: Application) : ViewModel() {
     private var lightOffInterval : Long = 5_000L
 
     /** 画面起動直後の画面の明るさ */
-    private val _lightLevelOn = MutableLiveData<Float>()
     private val lightLevelOn : LiveData<Float> by lazy { _lightLevelOn }
+    private val _lightLevelOn = MutableLiveData<Float>()
 
     /** バックライト消灯後の画面の明るさ */
-    private val _lightLevelOff = MutableLiveData<Float>()
     val lightLevelOff : LiveData<Float> by lazy { _lightLevelOff }
+    private val _lightLevelOff = MutableLiveData<Float>()
 
     /** 画面起動直後の画面の明るさをシステム設定値にする */
-    private val _useSystemLightLevelOn = MutableLiveData<Boolean>()
     private val useSystemLightLevelOn : LiveData<Boolean> by lazy { _useSystemLightLevelOn }
+    private val _useSystemLightLevelOn = MutableLiveData<Boolean>()
 
     /** バッテリーレベル */
     val batteryLevel : LiveData<Int> = batteryRepo.batteryLevel
