@@ -25,6 +25,7 @@
     <string name="prefs_light_off_interval_hint">秒数</string>
     <string name="prefs_required_battery_level_desc">バッテリ充電量が指定値未満のとき通知を行わない(0で常に通知)</string>
     <string name="prefs_multi_notices_solution_selection_desc">複数通知の表示方法</string>
+    <string name="prefs_unknown_notice_solution_selection_desc">設定登録されていない通知の処理方法</string>
     <string name="prefs_light_level_off_desc">消灯後の画面の明るさ(マイナス値でさらに暗くする)</string>
     <string name="prefs_light_level_on_desc">ロック画面起動直後の画面の明るさ</string>
     <string name="prefs_use_system_light_level_on_desc">システムの値を使用</string>

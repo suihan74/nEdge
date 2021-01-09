@@ -10,6 +10,10 @@
         <variable
             name="lifecycle"
             type="androidx.lifecycle.Lifecycle" />
+
+        <variable
+            name="fragmentManager"
+            type="androidx.fragment.app.FragmentManager" />
     </data>
 
     <ScrollView
@@ -28,6 +32,7 @@
 
             <Button
                 android:id="@+id/previewButton"
+                android:onClick="@{() -> vm.startPreview()}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -35,6 +40,7 @@
 
             <Button
                 android:id="@+id/notifyButton"
+                android:onClick="@{() -> vm.notifyDummy()}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -55,6 +61,7 @@
                 <Button
                     android:id="@+id/silentTimezoneStartButton"
                     localTime="@{vm.silentTimezoneStart}"
+                    android:onClick="@{() -> vm.openSilentTimezoneStartPickerDialog(fragmentManager)}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -75,6 +82,7 @@
                 <Button
                     android:id="@+id/silentTimezoneEndButton"
                     localTime="@{vm.silentTimezoneEnd}"
+                    android:onClick="@{() -> vm.openSilentTimezoneEndPickerDialog(fragmentManager)}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -167,6 +175,20 @@
             <Button
                 android:id="@+id/multiNoticesSolutionSelectionButton"
                 textId="@{vm.multipleNotificationsSolution.textId}"
+                android:onClick="@{() -> vm.openMultipleNotificationsSolutionSelectionDialog(fragmentManager)}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/prefs_unknown_notice_solution_selection_desc" />
+
+            <Button
+                android:id="@+id/unknownNotificationSolutionSelectionButton"
+                textId="@{vm.unknownNotificationSolution.textId}"
+                android:onClick="@{() -> vm.openUnknownNotificationSolutionSelectionDialog(fragmentManager)}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 

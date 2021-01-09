@@ -23,8 +23,7 @@ import com.suihan74.utilities.lazyProvideViewModel
 class PreferencesActivity : AppCompatActivity() {
 
     val viewModel by lazyProvideViewModel {
-        val app = Application.instance
-        PreferencesViewModel(app.preferencesRepository)
+        PreferencesViewModel(Application.instance)
     }
 
     private lateinit var binding: ActivityPreferencesBinding

@@ -4,6 +4,10 @@
         <variable
             name="vm"
             type="com.suihan74.notificationreporter.scenes.preferences.page.SettingEditorViewModel" />
+
+        <variable
+            name="fragmentManager"
+            type="androidx.fragment.app.FragmentManager" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -121,6 +125,7 @@
                     textColorLight="@{@color/white}"
                     textColorDark="@{@color/black}"
                     android:backgroundTint="@{vm.notificationColor}"
+                    android:onClick="@{() -> vm.openOutlinesColorPickerDialog(fragmentManager)}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
@@ -227,6 +232,7 @@
                     android:id="@+id/topNotchTypeSelectionButton"
                     android:contentDescription="@null"
                     src="@{vm.topNotchType.iconId}"
+                    android:onClick="@{() -> vm.openTopNotchTypeSelectionDialog(fragmentManager)}"
                     android:foregroundGravity="center"
                     android:visibility="@{vm.topNotchEnabled}"
                     android:layout_width="128dp"
@@ -249,6 +255,7 @@
                     android:id="@+id/bottomNotchTypeSelectionButton"
                     android:contentDescription="@null"
                     src="@{vm.bottomNotchType.iconId}"
+                    android:onClick="@{() -> vm.openBottomNotchTypeSelectionDialog(fragmentManager)}"
                     android:foregroundGravity="center"
                     android:visibility="@{vm.bottomNotchEnabled}"
                     android:layout_width="128dp"

@@ -6,13 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
-import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.databinding.FragmentGeneralPrefsBinding
 import com.suihan74.notificationreporter.scenes.preferences.PreferencesActivity
 import com.suihan74.notificationreporter.scenes.preferences.dataBinding.SliderBindingAdapters
 import com.suihan74.utilities.extensions.hideSoftInputMethod
-import kotlin.math.absoluteValue
-import kotlin.random.Random
 
 /**
  * 全般設定画面
@@ -39,17 +36,9 @@ class GeneralPrefsFragment : Fragment() {
     ): View {
         val binding = FragmentGeneralPrefsBinding.inflate(inflater, container, false).also {
             it.vm = viewModel
+            it.fragmentManager = childFragmentManager
             it.lifecycleOwner = viewLifecycleOwner
             it.lifecycle = viewLifecycleOwner.lifecycle
-        }
-
-        binding.previewButton.setOnClickListener {
-            viewModel.startPreview(requireContext())
-        }
-
-        binding.notifyButton.setOnClickListener {
-            val id = Random.nextInt().absoluteValue
-            Application.instance.notifyDummy(5, id, "dummy-$id")
         }
 
         binding.lightOffIntervalEditText.also { editText ->
@@ -68,18 +57,6 @@ class GeneralPrefsFragment : Fragment() {
                     preferencesActivity.hideSystemUI()
                 }
             }
-        }
-
-        binding.silentTimezoneStartButton.setOnClickListener {
-            viewModel.openSilentTimezoneStartPickerDialog(childFragmentManager)
-        }
-
-        binding.silentTimezoneEndButton.setOnClickListener {
-            viewModel.openSilentTimezoneEndPickerDialog(childFragmentManager)
-        }
-
-        binding.multiNoticesSolutionSelectionButton.setOnClickListener {
-            viewModel.openMultipleNotificationsSolutionSelectionDialog(childFragmentManager)
         }
 
         return binding.root

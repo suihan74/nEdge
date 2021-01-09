@@ -1,14 +1,14 @@
 package com.suihan74.notificationreporter.scenes.preferences
 
-import android.content.Context
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.R
 import com.suihan74.notificationreporter.dataStore.Preferences
 import com.suihan74.notificationreporter.models.MultipleNotificationsSolution
-import com.suihan74.notificationreporter.repositories.PreferencesRepository
+import com.suihan74.notificationreporter.models.UnknownNotificationSolution
 import com.suihan74.notificationreporter.scenes.lockScreen.LockScreenActivity
 import com.suihan74.notificationreporter.scenes.preferences.dialog.TimePickerDialogFragment
 import com.suihan74.utilities.fragment.AlertDialogFragment
@@ -20,10 +20,14 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import org.threeten.bp.LocalTime
+import kotlin.math.absoluteValue
+import kotlin.random.Random
 
 class PreferencesViewModel(
-    private val prefRepo: PreferencesRepository
+    private val application: Application
 ) : ViewModel() {
+
+    private val prefRepo = application.preferencesRepository
 
     /** 選択中のメニュー項目 */
     val selectedMenuItem = MutableLiveData(MenuItem.GENERAL)
@@ -67,6 +71,9 @@ class PreferencesViewModel(
     /** 複数通知の表示方法 */
     val multipleNotificationsSolution = MutableLiveData<MultipleNotificationsSolution>()
 
+    /** 設定登録されていない通知の処理方法 */
+    val unknownNotificationSolution = MutableLiveData<UnknownNotificationSolution>()
+
     // ------ //
 
     /**
@@ -89,6 +96,7 @@ class PreferencesViewModel(
                     silentTimezoneEnd.value = it.silentTimezoneEnd
                     requiredBatteryLevel.value = it.requiredBatteryLevel
                     multipleNotificationsSolution.value = it.multipleNotificationsSolution
+                    unknownNotificationSolution.value = it.unknownNotificationSolution
                 }
             }
             .flowOn(Dispatchers.Main)
@@ -109,7 +117,8 @@ class PreferencesViewModel(
                     silentTimezoneStart = silentTimezoneStart.value!!,
                     silentTimezoneEnd = silentTimezoneEnd.value!!,
                     requiredBatteryLevel = requiredBatteryLevel.value!!,
-                    multipleNotificationsSolution = multipleNotificationsSolution.value!!
+                    multipleNotificationsSolution = multipleNotificationsSolution.value!!,
+                    unknownNotificationSolution = unknownNotificationSolution.value!!,
                 )
             }
         }
@@ -120,9 +129,17 @@ class PreferencesViewModel(
     /**
      * デフォルト通知表示設定でプレビューを表示する
      */
-    fun startPreview(context: Context) = viewModelScope.launch {
+    fun startPreview() = viewModelScope.launch {
         val entity = prefRepo.getDefaultNotificationEntity()
-        LockScreenActivity.startPreview(context, entity)
+        LockScreenActivity.startPreview(application, entity)
+    }
+
+    /**
+     * テスト用のダミー通知を発生させる
+     */
+    fun notifyDummy() {
+        val id = Random.nextInt().absoluteValue
+        application.notifyDummy(5, id, "dummy-$id")
     }
 
     /**
@@ -170,6 +187,27 @@ class PreferencesViewModel(
                 val solution = solutions[which]
                 if (multipleNotificationsSolution.value != solution) {
                     multipleNotificationsSolution.value = solution
+                }
+            }
+            .setNegativeButton(R.string.dialog_cancel)
+            .create()
+        dialog.show(fragmentManager, null)
+    }
+
+    /**
+     * 設定登録されていない通知の処理方法を選択するダイアログを開く
+     */
+    fun openUnknownNotificationSolutionSelectionDialog(fragmentManager: FragmentManager) {
+        val solutions = UnknownNotificationSolution.values()
+        val labels = solutions.map { it.textId }
+        val initialSelected = solutions.indexOf(unknownNotificationSolution.value)
+
+        val dialog = AlertDialogFragment.Builder()
+            .setTitle(R.string.prefs_unknown_notice_solution_selection_desc)
+            .setSingleChoiceItems(labels, initialSelected) { _, which ->
+                val solution = solutions[which]
+                if (unknownNotificationSolution.value != solution) {
+                    unknownNotificationSolution.value = solution
                 }
             }
             .setNegativeButton(R.string.dialog_cancel)

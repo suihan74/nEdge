@@ -64,6 +64,7 @@ class SettingEditorFragment : Fragment() {
     ): View {
         val binding = FragmentSettingEditorBinding.inflate(inflater, container, false).also {
             it.vm = viewModel
+            it.fragmentManager = childFragmentManager
             it.lifecycleOwner = viewLifecycleOwner
         }
 
@@ -76,18 +77,6 @@ class SettingEditorFragment : Fragment() {
 
         binding.cancelButton.setOnClickListener {
             preferencesActivity.closeSettingEditor()
-        }
-
-        binding.pickOutlinesColorButton.setOnClickListener {
-            viewModel.openOutlinesColorPickerDialog(childFragmentManager)
-        }
-
-        binding.topNotchTypeSelectionButton.setOnClickListener {
-            viewModel.openTopNotchTypeSelectionDialog(childFragmentManager)
-        }
-
-        binding.bottomNotchTypeSelectionButton.setOnClickListener {
-            viewModel.openBottomNotchTypeSelectionDialog(childFragmentManager)
         }
 
         viewModel.observeTopNotchType(
