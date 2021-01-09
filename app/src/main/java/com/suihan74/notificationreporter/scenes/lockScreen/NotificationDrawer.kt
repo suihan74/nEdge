@@ -356,14 +356,14 @@ class NotificationDrawer(
         val right = rect.right + offset + widthAdjustmentPx
         val top = rect.top + offset
 
-        path.apply {
-            val lx = left - rootRadius
-            val rx = right + rootRadius
-            val ly = top + rootRadius
+        val lx = left - rootRadius
+        val rx = right + rootRadius
+        val wy = top + rootRadius
 
+        path.apply {
             // top left
             lineTo(lx, top)
-            arcTo(lx - rootRadius, top, lx + rootRadius, ly + rootRadius, 270f, rootDegree, false)
+            arcTo(lx - rootRadius, top, lx + rootRadius, wy + rootRadius, 270f, rootDegree, false)
 
             // water drop
             val (sin, cos) = (PI * rootDegree / 180f).let {
@@ -371,11 +371,11 @@ class NotificationDrawer(
             }
             val r = ((rx - lx - 2 * rootRadius * sin) / (2 * sin)).toFloat()
             val cx = (lx + (rootRadius + r) * sin).toFloat()
-            val cy = (ly - (rootRadius + r) * cos).toFloat()
+            val cy = (wy - (rootRadius + r) * cos).toFloat()
             arcTo(cx - r, cy - r, cx + r, cy + r, 90f + rootDegree, -rootDegree * 2, false)
 
             // top right
-            arcTo(right, top, rx + rootRadius, ly + rootRadius, 270f - rootDegree, rootDegree, false)
+            arcTo(right, top, rx + rootRadius, wy + rootRadius, 270f - rootDegree, rootDegree, false)
         }
     }
 
@@ -389,7 +389,37 @@ class NotificationDrawer(
         thickness: Float,
         notchSetting: WaterDropNotchSetting
     ) {
-        // TODO
+        val offset = thickness / 2
+        val widthAdjustmentPx = rect.width() * .5f * notchSetting.widthAdjustment
+
+        val rootRadius = notchSetting.topRadius
+        val rootDegree = notchSetting.heightAdjustment
+
+        val left = rect.left - offset - widthAdjustmentPx
+        val right = rect.right + offset + widthAdjustmentPx
+        val bottom = rect.bottom - offset
+
+        val lx = left - rootRadius
+        val rx = right + rootRadius
+        val wy = bottom - rootRadius
+
+        path.apply {
+            // bottom right
+            lineTo(rx, bottom)
+            arcTo(right, wy - rootRadius, rx + rootRadius, bottom, 90f, rootDegree, false)
+
+            // water drop
+            val (sin, cos) = (PI * rootDegree / 180f).let {
+                sin(it) to -cos(it)
+            }
+            val r = ((rx - lx - 2 * rootRadius * sin) / (2 * sin)).toFloat()
+            val cx = (lx + (rootRadius + r) * sin).toFloat()
+            val cy = (wy - (rootRadius + r) * cos).toFloat()
+            arcTo(cx - r, cy - r, cx + r, cy + r, 270f + rootDegree, -rootDegree * 2, false)
+
+            // bottom left
+            arcTo(lx - rootRadius, wy - rootRadius, lx + rootRadius, bottom, 90f - rootDegree , rootDegree, false)
+        }
     }
 
     /**
