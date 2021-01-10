@@ -7,9 +7,7 @@ import android.widget.ImageView
 import androidx.annotation.RequiresApi
 import com.suihan74.notificationreporter.models.*
 import com.suihan74.utilities.extensions.onNot
-import kotlin.math.PI
-import kotlin.math.cos
-import kotlin.math.sin
+import kotlin.math.*
 
 /**
  * 通知表示を生成する
@@ -251,39 +249,60 @@ class NotificationDrawer(
         notchSetting: RectangleNotchSetting
     ) {
         val offset = thickness / 2
-        val widthAdjustmentPx = rect.width() * .5f * notchSetting.widthAdjustment
-        val heightAdjustmentPx = rect.height() * notchSetting.heightAdjustment
+        val majorWidth = rect.width() * notchSetting.majorWidthAdjustment
+        val minorWidth = rect.width() * min(notchSetting.minorWidthAdjustment, notchSetting.majorWidthAdjustment)
+        val height = rect.height() * notchSetting.heightAdjustment
 
-        val left = rect.left - offset - widthAdjustmentPx
-        val right = rect.right + offset + widthAdjustmentPx
         val top = rect.top + offset
-        val bottom = rect.bottom + offset + heightAdjustmentPx
+        val bottom = rect.bottom + offset + height
+
+        val rad =
+            if (majorWidth == minorWidth) (PI * .5)
+            else atan((bottom - top) / (majorWidth - minorWidth) / .5)
+        val deg = (180 * rad / PI).toFloat()
 
         path.run {
-            notchSetting.leftTopRadius.let { r ->
-                // top left
-                lineTo(left - r, top)
-                arcTo(left - r * 2, top, left, top + r * 2, 270f, 90f, false)
+            notchSetting.majorRadius.let { r ->
+                val left = rect.left - offset - majorWidth * .5f
+                val cx = (left - r * tan(rad / 2)).toFloat()
+                val cy = top + r
+
+                // top edge (left of the notch)
+                lineTo(cx, top)
+                // top left corner
+                arcTo(cx - r, cy - r, cx + r, cy + r, 270f, deg, false)
             }
 
-            notchSetting.leftBottomRadius.let { r ->
-                // bottom left
-                lineTo(left, bottom - r)
-                arcTo(left, bottom - r * 2, left + r * 2, bottom, 180f, -90f, false)
-            }
+            notchSetting.minorRadius.let { r ->
+                val left = rect.left - offset - minorWidth * .5f
+                val right = rect.right + offset + minorWidth * .5f
+                val cy = bottom - r
+                val lcx = left + r * tan(rad / 2)
+                val rcx = (right - r * tan(rad / 2)).toFloat()
+                val lex = (lcx - r * sin(rad)).toFloat()
+                val ley = (cy + r * cos(rad)).toFloat()
 
-            notchSetting.rightBottomRadius.let { r ->
+                // left edge
+                lineTo(lex, ley)
+                // bottom left corner
+                arcTo(lcx.toFloat() - r, cy - r, lcx.toFloat() + r, cy + r, 90f + deg, -deg, false)
                 // bottom edge
-                lineTo(right - r, bottom)
-
-                // bottom right
-                arcTo(right - r * 2, bottom - r * 2, right, bottom, 90f, -90f, false)
+                lineTo(rcx, bottom)
+                // bottom right corner
+                arcTo(rcx - r, cy - r, rcx + r, cy + r, 90f, -deg, false)
             }
 
-            notchSetting.rightTopRadius.let { r ->
-                // top right
-                lineTo(right, top + r)
-                arcTo(right, top, right + r * 2, top + r * 2, 180f, 90f, false)
+            notchSetting.majorRadius.let { r ->
+                val right = rect.right + offset + majorWidth * .5f
+                val cx = right + r * tan(rad / 2)
+                val cy = top + r
+                val rex = (cx - r * sin(rad)).toFloat()
+                val rey = (cy - r * cos(rad)).toFloat()
+
+                // right edge
+                lineTo(rex, rey)
+                // top right corner
+                arcTo(cx.toFloat() - r, cy - r, cx.toFloat() + r, cy + r, 270f - deg, deg, false)
             }
         }
     }
@@ -299,39 +318,60 @@ class NotificationDrawer(
         notchSetting: RectangleNotchSetting
     ) {
         val offset = thickness / 2
-        val widthAdjustmentPx = rect.width() * .5f * notchSetting.widthAdjustment
-        val heightAdjustmentPx = rect.height() * notchSetting.heightAdjustment
+        val majorWidth = rect.width() * notchSetting.majorWidthAdjustment
+        val minorWidth = rect.width() * min(notchSetting.minorWidthAdjustment, notchSetting.majorWidthAdjustment)
+        val height = rect.height() * notchSetting.heightAdjustment
 
-        val left = rect.left - offset - widthAdjustmentPx
-        val right = rect.right + offset + widthAdjustmentPx
-        val top = rect.top - offset - heightAdjustmentPx
+        val top = rect.top - offset - height
         val bottom = rect.bottom - offset
 
+        val rad =
+            if (minorWidth == majorWidth) (PI * .5)
+            else atan((bottom - top) / (majorWidth - minorWidth) / .5)
+        val deg = (180 * rad / PI).toFloat()
+
         path.apply {
-            notchSetting.rightTopRadius.let { r ->
-                // bottom right
-                lineTo(right + r, bottom)
-                arcTo(right, bottom - r * 2, right + r * 2, bottom, 90f, 90f, true)
+            notchSetting.majorRadius.let { r ->
+                val right = rect.right + offset + majorWidth * .5f
+                val cx = (right + r * tan(rad / 2)).toFloat()
+                val cy = bottom - r
+
+                // bottom edge (right of the notch)
+                lineTo(cx, bottom)
+                // bottom right corner
+                arcTo(cx - r, cy - r, cx + r, cy + r, 90f, deg, false)
             }
 
-            notchSetting.rightBottomRadius.let { r ->
-                // top right
-                lineTo(right, top + r)
-                arcTo(right - r * 2, top, right, top + r * 2, 0f, -90f, true)
-            }
+            notchSetting.minorRadius.let { r ->
+                val left = rect.left - offset - minorWidth * .5f
+                val right = rect.right + offset + minorWidth * .5f
+                val cy = top + r
+                val rcx = right - r * tan(rad / 2)
+                val lcx = (left + r * tan(rad / 2)).toFloat()
+                val rex = (rcx + r * sin(rad)).toFloat()
+                val rey = (cy - r * cos(rad)).toFloat()
 
-            notchSetting.leftBottomRadius.let { r ->
+                // right edge
+                lineTo(rex, rey)
+                // top right corner
+                arcTo(rcx.toFloat() - r, cy - r, rcx.toFloat() + r, cy + r, 270f + deg, -deg, false)
                 // top edge
-                lineTo(left + r, top)
-
-                // top left
-                arcTo(left, top, left + r * 2, top + r * 2, 270f, -90f, true)
+                lineTo(lcx, top)
+                // top left corner
+                arcTo(lcx - r, cy - r, lcx + r, cy + r, 270f, -deg, false)
             }
 
-            notchSetting.leftTopRadius.let { r ->
-                // bottom left
-                lineTo(left, bottom - r)
-                arcTo(left - r * 2, bottom - r * 2, left, bottom, 0f, 90f, true)
+            notchSetting.majorRadius.let { r ->
+                val left = rect.left - offset - majorWidth * .5f
+                val cx = left - r * tan(rad / 2)
+                val cy = bottom - r
+                val lex = (cx + r * sin(rad)).toFloat()
+                val ley = (cy + r * cos(rad)).toFloat()
+
+                // left edge
+                lineTo(lex, ley)
+                // bottom left corner
+                arcTo(cx.toFloat() - r, cy - r, cx.toFloat() + r, cy + r, 90f - deg, deg, false)
             }
         }
     }
@@ -349,7 +389,7 @@ class NotificationDrawer(
         val offset = thickness / 2
         val widthAdjustmentPx = rect.width() * .5f * notchSetting.widthAdjustment
 
-        val rootRadius = notchSetting.topRadius
+        val rootRadius = notchSetting.majorRadius
         val rootDegree = notchSetting.heightAdjustment
 
         val left = rect.left - offset - widthAdjustmentPx
@@ -392,7 +432,7 @@ class NotificationDrawer(
         val offset = thickness / 2
         val widthAdjustmentPx = rect.width() * .5f * notchSetting.widthAdjustment
 
-        val rootRadius = notchSetting.topRadius
+        val rootRadius = notchSetting.majorRadius
         val rootDegree = notchSetting.heightAdjustment
 
         val left = rect.left - offset - widthAdjustmentPx

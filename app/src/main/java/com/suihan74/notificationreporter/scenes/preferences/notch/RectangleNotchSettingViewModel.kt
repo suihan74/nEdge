@@ -8,39 +8,35 @@ class RectangleNotchSettingViewModel(
     editorViewModel: SettingEditorViewModel,
 ) : NotchSettingViewModel<RectangleNotchSetting>(notchPosition, editorViewModel) {
 
-    val widthAdjustment = mutableLiveData<Float>()
+    val majorWidthAdjustment = mutableLiveData<Float>()
+
+    val minorWidthAdjustment = mutableLiveData<Float>()
 
     val heightAdjustment = mutableLiveData<Float>()
 
-    val leftTopRadius = mutableLiveData<Float>()
+    val majorRadius = mutableLiveData<Float>()
 
-    val rightTopRadius = mutableLiveData<Float>()
-
-    val leftBottomRadius = mutableLiveData<Float>()
-
-    val rightBottomRadius = mutableLiveData<Float>()
+    val minorRadius = mutableLiveData<Float>()
 
     // ------ //
 
     override suspend fun initialize() {
         setting.value!!.let {
-            widthAdjustment.value = it.widthAdjustment
+            majorWidthAdjustment.value = it.majorWidthAdjustment
+            minorWidthAdjustment.value = it.minorWidthAdjustment
             heightAdjustment.value = it.heightAdjustment
-            leftTopRadius.value = it.leftTopRadius
-            rightTopRadius.value = it.rightTopRadius
-            leftBottomRadius.value = it.leftBottomRadius
-            rightBottomRadius.value = it.rightBottomRadius
+            majorRadius.value = it.majorRadius
+            minorRadius.value = it.minorRadius
         }
     }
 
     override suspend fun updateNotchSetting() {
         setting.value = RectangleNotchSetting(
-            widthAdjustment = widthAdjustment.value!!,
+            majorWidthAdjustment = majorWidthAdjustment.value!!,
+            minorWidthAdjustment = minorWidthAdjustment.value!!,
             heightAdjustment = heightAdjustment.value!!,
-            leftTopRadius = leftTopRadius.value!!,
-            rightTopRadius = rightTopRadius.value!!,
-            leftBottomRadius = leftBottomRadius.value!!,
-            rightBottomRadius = rightBottomRadius.value!!,
+            majorRadius = majorRadius.value!!,
+            minorRadius = minorRadius.value!!,
         )
     }
 }

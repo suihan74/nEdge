@@ -40,25 +40,22 @@ class EmptyNotchSetting : NotchSetting(type = NotchType.NONE)
  */
 @Serializable
 data class RectangleNotchSetting(
-    /** 左上の角丸半径 */
-    val leftTopRadius: Float = 0f,
+    /** 上部の角丸半径 */
+    val majorRadius: Float = 0f,
 
-    /** 右上の角丸半径 */
-    val rightTopRadius: Float = 0f,
+    /** 下部の角丸半径 */
+    val minorRadius: Float = 0f,
 
-    /** 左下の角丸半径 */
-    val leftBottomRadius: Float = 0f,
+    /** 上部幅の伸縮調整 */
+    val majorWidthAdjustment: Float = 0f,
 
-    /** 右下の角丸半径 */
-    val rightBottomRadius: Float = 0f,
-
-    /** 幅の伸縮調整 */
-    val widthAdjustment: Float = 0f,
+    /** 下部幅の伸縮調整 */
+    val minorWidthAdjustment: Float = 0f,
 
     /** 高さの伸縮調整 */
     val heightAdjustment: Float = 0f,
 
-) : NotchSetting(NotchType.RECTANGLE)
+    ) : NotchSetting(NotchType.RECTANGLE)
 
 // ------ //
 
@@ -68,7 +65,7 @@ data class RectangleNotchSetting(
 @Serializable
 data class WaterDropNotchSetting(
     /** 上部の角丸半径 */
-    val topRadius: Float = 0f,
+    val majorRadius: Float = 0f,
 
     /** 幅の伸縮調整 */
     val widthAdjustment: Float = 0f,

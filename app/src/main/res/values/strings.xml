@@ -44,15 +44,16 @@
     <string name="prefs_bottom_notch_type_selection_desc">画面下部ノッチタイプ</string>
 
     <!-- RectangleNotchSettingFragment -->
-    <string name="prefs_rectangle_notch_width_adjustment_desc">幅の調整</string>
-    <string name="prefs_rectangle_notch_height_adjustment_desc">高さの調整</string>
-    <string name="prefs_rectangle_notch_left_top_radius_desc">%sの角丸半径</string>
+    <string name="prefs_rectangle_notch_major_width_adjustment_desc">外側の幅調整</string>
+    <string name="prefs_rectangle_notch_minor_width_adjustment_desc">内側の幅調整</string>
+    <string name="prefs_rectangle_notch_height_adjustment_desc">高さ調整</string>
+    <string name="prefs_rectangle_notch_major_radius_desc">外側の角の丸み</string>
+    <string name="prefs_rectangle_notch_minor_radius_desc">内側の角の丸み</string>
 
     <!-- WaterDropNotchSettingFragment -->
-    <string name="prefs_water_drop_notch_width_adjustment_desc">幅の調整</string>
-    <string name="prefs_water_drop_notch_height_adjustment_desc">高さの調整</string>
-    <string name="prefs_water_drop_notch_radius_desc">%sの角丸半径</string>
-    <string name="prefs_water_drop_notch_degree_desc">%sの角度</string>
+    <string name="prefs_water_drop_notch_width_adjustment_desc">幅調整</string>
+    <string name="prefs_water_drop_notch_height_adjustment_desc">高さ調整</string>
+    <string name="prefs_water_drop_notch_radius_desc">水滴の大きさ</string>
 
     <!-- SettingsListFragment -->
     <string name="prefs_settings_list_default_setting_text">デフォルト設定</string>

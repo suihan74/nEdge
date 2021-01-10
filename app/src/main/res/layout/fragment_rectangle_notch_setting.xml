@@ -13,16 +13,29 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:text="@string/prefs_rectangle_notch_width_adjustment_desc"
+            android:text="@string/prefs_rectangle_notch_major_width_adjustment_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
         <com.google.android.material.slider.Slider
-            android:id="@+id/widthAdjustmentSlider"
             android:valueFrom="-0.7"
             android:valueTo="0.7"
             android:stepSize="0.01"
-            android:value="@={vm.widthAdjustment}"
+            android:value="@={vm.majorWidthAdjustment}"
+            editing="@={vm.editing}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:text="@string/prefs_rectangle_notch_minor_width_adjustment_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.google.android.material.slider.Slider
+            android:valueFrom="-0.7"
+            android:valueTo="0.7"
+            android:stepSize="0.01"
+            android:value="@={vm.minorWidthAdjustment}"
             editing="@={vm.editing}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
@@ -43,61 +56,29 @@
             android:layout_height="wrap_content"/>
 
         <TextView
-            android:text="@{@string/prefs_rectangle_notch_left_top_radius_desc(`左上`)}"
+            android:text="@string/prefs_rectangle_notch_major_radius_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
         <com.google.android.material.slider.Slider
-            android:id="@+id/leftTopRadiusSlider"
             android:valueFrom="0.0"
             android:valueTo="200.0"
             android:stepSize="1.0"
-            android:value="@={vm.leftTopRadius}"
+            android:value="@={vm.majorRadius}"
             editing="@={vm.editing}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
         <TextView
-            android:text="@{@string/prefs_rectangle_notch_left_top_radius_desc(`右上`)}"
+            android:text="@string/prefs_rectangle_notch_minor_radius_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
         <com.google.android.material.slider.Slider
-            android:id="@+id/rightTopRadiusSlider"
             android:valueFrom="0.0"
             android:valueTo="200.0"
             android:stepSize="1.0"
-            android:value="@={vm.rightTopRadius}"
-            editing="@={vm.editing}"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-        <TextView
-            android:text="@{@string/prefs_rectangle_notch_left_top_radius_desc(`左下`)}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <com.google.android.material.slider.Slider
-            android:id="@+id/leftBottomRadiusSlider"
-            android:valueFrom="0.0"
-            android:valueTo="200.0"
-            android:stepSize="1.0"
-            android:value="@={vm.leftBottomRadius}"
-            editing="@={vm.editing}"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-        <TextView
-            android:text="@{@string/prefs_rectangle_notch_left_top_radius_desc(`右下`)}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <com.google.android.material.slider.Slider
-            android:id="@+id/rightBottomRadiusSlider"
-            android:valueFrom="0.0"
-            android:valueTo="200.0"
-            android:stepSize="1.0"
-            android:value="@={vm.rightBottomRadius}"
+            android:value="@={vm.minorRadius}"
             editing="@={vm.editing}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>

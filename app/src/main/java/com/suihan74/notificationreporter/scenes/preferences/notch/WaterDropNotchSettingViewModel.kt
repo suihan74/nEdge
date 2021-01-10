@@ -12,7 +12,7 @@ class WaterDropNotchSettingViewModel(
 
     val heightAdjustment = mutableLiveData<Float>()
 
-    val topRadius = mutableLiveData<Float>()
+    val majorRadius = mutableLiveData<Float>()
 
     // ------ //
 
@@ -20,7 +20,7 @@ class WaterDropNotchSettingViewModel(
         setting.value!!.let {
             widthAdjustment.value = it.widthAdjustment
             heightAdjustment.value = it.heightAdjustment
-            topRadius.value = it.topRadius
+            majorRadius.value = it.majorRadius
         }
     }
 
@@ -28,7 +28,7 @@ class WaterDropNotchSettingViewModel(
         setting.value = WaterDropNotchSetting(
             widthAdjustment = widthAdjustment.value!!,
             heightAdjustment = heightAdjustment.value!!,
-            topRadius = topRadius.value!!,
+            majorRadius = majorRadius.value!!,
         )
     }
 }
