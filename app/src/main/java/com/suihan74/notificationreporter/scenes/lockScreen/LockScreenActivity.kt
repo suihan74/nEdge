@@ -78,7 +78,7 @@ class LockScreenActivity : AppCompatActivity() {
 
             // 無視する通知
             if (prefs.unknownNotificationSolution == UnknownNotificationSolution.IGNORE) {
-                if (null == prefRepo.getNotificationSettingOrNull(sbn)) {
+                if (null == prefRepo.getNotificationEntityOrNull(sbn)) {
                     return false
                 }
             }
@@ -156,8 +156,8 @@ class LockScreenActivity : AppCompatActivity() {
         viewModel.observeScreenBrightness(this, window)
 
         val notificationDrawer = NotificationDrawer(window)
-        viewModel.notificationSetting.observe(this, {
-            notificationDrawer.draw(binding.notificationBar, it)
+        viewModel.notificationEntity.observe(this, {
+            notificationDrawer.draw(binding.notificationBar, it.setting)
         })
     }
 

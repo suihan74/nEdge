@@ -3,6 +3,7 @@ package com.suihan74.notificationreporter.scenes.lockScreen.dataBinding
 import android.service.notification.StatusBarNotification
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
+import com.suihan74.notificationreporter.database.notification.NotificationEntity
 import com.suihan74.utilities.extensions.text
 import com.suihan74.utilities.extensions.title
 
@@ -17,19 +18,23 @@ object TextViewBindingAdapters {
     }
 
     /**
-     * 通知発生したアプリ名を表示する
+     * 通知発生した設定の表示名を表示する
      */
     @JvmStatic
-    @BindingAdapter("notificationAppName")
-    fun setNotificationAppName(textView: TextView, sbn: StatusBarNotification?) {
+    @BindingAdapter("notification", "notificationEntity")
+    fun setNotificationAppName(textView: TextView, sbn: StatusBarNotification?, entity: NotificationEntity?) {
         ViewBindingAdapters.setNotificationVisibility(textView, sbn) {
-            textView.text =
-                if (sbn == null) ""
-                else {
+            textView.text = when {
+                sbn?.packageName == null -> ""
+
+                entity?.displayName?.isNotBlank() == true -> entity.displayName
+
+                else -> {
                     val pm = textView.context.packageManager
                     val appInfo = pm.getApplicationInfo(sbn.packageName, 0)
                     pm.getApplicationLabel(appInfo)
                 }
+            }
         }
     }
 

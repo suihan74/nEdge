@@ -88,8 +88,9 @@
         </androidx.constraintlayout.motion.widget.MotionLayout>
 
         <TextView
-            notificationAppName="@{vm.currentNotice}"
-            android:textColor="@{vm.notificationSetting.color}"
+            notification="@{vm.currentNotice}"
+            notificationEntity="@{vm.notificationEntity}"
+            android:textColor="@{vm.notificationEntity.setting.color}"
             android:textAlignment="center"
             android:ellipsize="end"
             android:singleLine="true"
@@ -105,7 +106,7 @@
         <TextView
             android:id="@+id/notificationText"
             notificationText="@{vm.currentNotice}"
-            android:textColor="@{vm.notificationSetting.color}"
+            android:textColor="@{vm.notificationEntity.setting.color}"
             android:textAlignment="center"
             android:ellipsize="end"
             android:singleLine="true"
@@ -121,7 +122,7 @@
         <ImageView
             android:id="@+id/notificationBar"
             android:background="@android:color/transparent"
-            android:visibility="@{vm.notificationSetting}"
+            android:visibility="@{vm.notificationEntity.setting}"
             android:contentDescription="@null"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"

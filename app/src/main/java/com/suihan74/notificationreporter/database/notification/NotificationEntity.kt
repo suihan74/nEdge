@@ -16,6 +16,13 @@ data class NotificationEntity(
     /** キーワードの検索方法 */
     val keywordMatchingType : KeywordMatchingType = KeywordMatchingType.NONE,
 
+    /**
+     * 表示名
+     *
+     * `null`のとき通知を発生させたアプリ名を取得して表示する
+     */
+    val displayName : String? = null,
+
     /** 通知表示設定 */
     val setting : NotificationSetting = NotificationSetting(),
 
