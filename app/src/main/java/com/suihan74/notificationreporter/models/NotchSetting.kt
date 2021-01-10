@@ -65,13 +65,13 @@ data class RectangleNotchSetting(
 @Serializable
 data class WaterDropNotchSetting(
     /** 上部の角丸半径 */
-    val majorRadius: Float = 0f,
+    val majorRadius: Float = 10f,
 
     /** 幅の伸縮調整 */
     val widthAdjustment: Float = 0f,
 
     /** 高さの伸縮調整 */
-    val heightAdjustment: Float = 0f,
+    val heightAdjustment: Float = 10f,
 
 ) : NotchSetting(NotchType.WATER_DROP)
 

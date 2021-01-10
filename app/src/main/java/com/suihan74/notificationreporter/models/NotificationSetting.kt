@@ -12,7 +12,7 @@ data class NotificationSetting (
     val color: Int = Color.WHITE,
 
     /** 線の太さ */
-    val thickness: Float = 10f,
+    val thickness: Float = 5f,
 
     /** ブラー効果の太さ(0で無効化) */
     val blurSize: Float = 0f,
