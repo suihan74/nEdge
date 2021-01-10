@@ -239,7 +239,7 @@ class NotificationDrawer(
     // ------ //
 
     /**
-     * 通知バーの矩形ノッチ縁を描画する(画面上部)
+     * 矩形ノッチ(画面上部)
      */
     @RequiresApi(Build.VERSION_CODES.P)
     private fun drawTopRectangleNotch(
@@ -316,7 +316,7 @@ class NotificationDrawer(
     }
 
     /**
-     * 通知バーの矩形ノッチ縁を描画する(画面下部)
+     * 矩形ノッチ(画面下部)
      */
     @RequiresApi(Build.VERSION_CODES.P)
     private fun drawBottomRectangleNotch(
@@ -393,7 +393,7 @@ class NotificationDrawer(
     }
 
     /**
-     * 通知バーの水滴ノッチ縁を描画する(画面上部)
+     * 水滴ノッチ縁(画面上部)
      */
     @RequiresApi(Build.VERSION_CODES.P)
     private fun drawTopWaterDropNotch(
@@ -436,7 +436,7 @@ class NotificationDrawer(
     }
 
     /**
-     * 通知バーの水滴ノッチ縁を描画する(画面下部)
+     * 水滴ノッチ(画面下部)
      */
     @RequiresApi(Build.VERSION_CODES.P)
     private fun drawBottomWaterDropNotch(
@@ -479,7 +479,7 @@ class NotificationDrawer(
     }
 
     /**
-     * 通知バーのパンチホールノッチ縁を描画する
+     * パンチホールノッチ
      */
     @RequiresApi(Build.VERSION_CODES.P)
     private fun drawPunchHoleNotch(
