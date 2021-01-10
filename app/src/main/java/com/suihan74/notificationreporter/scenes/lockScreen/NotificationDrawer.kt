@@ -261,10 +261,14 @@ class NotificationDrawer(
             else atan((bottom - top) / (majorWidth - minorWidth) / .5)
         val deg = (180 * rad / PI).toFloat()
 
+        val sin = sin(rad)
+        val cos = cos(rad)
+        val tanHalf = tan(rad / 2)
+
         path.run {
             notchSetting.majorRadius.let { r ->
                 val left = rect.left - offset - majorWidth * .5f
-                val cx = (left - r * tan(rad / 2)).toFloat()
+                val cx = (left - r * tanHalf).toFloat()
                 val cy = top + r
 
                 // top edge (left of the notch)
@@ -277,15 +281,17 @@ class NotificationDrawer(
                 val left = rect.left - offset - minorWidth * .5f
                 val right = rect.right + offset + minorWidth * .5f
                 val cy = bottom - r
-                val lcx = left + r * tan(rad / 2)
-                val rcx = (right - r * tan(rad / 2)).toFloat()
-                val lex = (lcx - r * sin(rad)).toFloat()
-                val ley = (cy + r * cos(rad)).toFloat()
+                val lcx = left + r * tanHalf
+                val rcx = (right - r * tanHalf).toFloat()
+                val lex = (lcx - r * sin).toFloat()
+                val ley = (cy + r * cos).toFloat()
 
                 // left edge
                 lineTo(lex, ley)
                 // bottom left corner
-                arcTo(lcx.toFloat() - r, cy - r, lcx.toFloat() + r, cy + r, 90f + deg, -deg, false)
+                lcx.toFloat().let {
+                    arcTo(it - r, cy - r, it + r, cy + r, 90f + deg, -deg, false)
+                }
                 // bottom edge
                 lineTo(rcx, bottom)
                 // bottom right corner
@@ -294,15 +300,17 @@ class NotificationDrawer(
 
             notchSetting.majorRadius.let { r ->
                 val right = rect.right + offset + majorWidth * .5f
-                val cx = right + r * tan(rad / 2)
+                val cx = right + r * tanHalf
                 val cy = top + r
-                val rex = (cx - r * sin(rad)).toFloat()
-                val rey = (cy - r * cos(rad)).toFloat()
+                val rex = (cx - r * sin).toFloat()
+                val rey = (cy - r * cos).toFloat()
 
                 // right edge
                 lineTo(rex, rey)
                 // top right corner
-                arcTo(cx.toFloat() - r, cy - r, cx.toFloat() + r, cy + r, 270f - deg, deg, false)
+                cx.toFloat().let {
+                    arcTo(it - r, cy - r, it + r, cy + r, 270f - deg, deg, false)
+                }
             }
         }
     }
@@ -330,10 +338,14 @@ class NotificationDrawer(
             else atan((bottom - top) / (majorWidth - minorWidth) / .5)
         val deg = (180 * rad / PI).toFloat()
 
+        val sin = sin(rad)
+        val cos = cos(rad)
+        val tanHalf = tan(rad / 2)
+
         path.apply {
             notchSetting.majorRadius.let { r ->
                 val right = rect.right + offset + majorWidth * .5f
-                val cx = (right + r * tan(rad / 2)).toFloat()
+                val cx = (right + r * tanHalf).toFloat()
                 val cy = bottom - r
 
                 // bottom edge (right of the notch)
@@ -346,15 +358,17 @@ class NotificationDrawer(
                 val left = rect.left - offset - minorWidth * .5f
                 val right = rect.right + offset + minorWidth * .5f
                 val cy = top + r
-                val rcx = right - r * tan(rad / 2)
-                val lcx = (left + r * tan(rad / 2)).toFloat()
-                val rex = (rcx + r * sin(rad)).toFloat()
-                val rey = (cy - r * cos(rad)).toFloat()
+                val rcx = right - r * tanHalf
+                val lcx = (left + r * tanHalf).toFloat()
+                val rex = (rcx + r * sin).toFloat()
+                val rey = (cy - r * cos).toFloat()
 
                 // right edge
                 lineTo(rex, rey)
                 // top right corner
-                arcTo(rcx.toFloat() - r, cy - r, rcx.toFloat() + r, cy + r, 270f + deg, -deg, false)
+                rcx.toFloat().let {
+                    arcTo(it - r, cy - r, it + r, cy + r, 270f + deg, -deg, false)
+                }
                 // top edge
                 lineTo(lcx, top)
                 // top left corner
@@ -363,15 +377,17 @@ class NotificationDrawer(
 
             notchSetting.majorRadius.let { r ->
                 val left = rect.left - offset - majorWidth * .5f
-                val cx = left - r * tan(rad / 2)
+                val cx = left - r * tanHalf
                 val cy = bottom - r
-                val lex = (cx + r * sin(rad)).toFloat()
-                val ley = (cy + r * cos(rad)).toFloat()
+                val lex = (cx + r * sin).toFloat()
+                val ley = (cy + r * cos).toFloat()
 
                 // left edge
                 lineTo(lex, ley)
                 // bottom left corner
-                arcTo(cx.toFloat() - r, cy - r, cx.toFloat() + r, cy + r, 90f - deg, deg, false)
+                cx.toFloat().let {
+                    arcTo(it - r, cy - r, it + r, cy + r, 90f - deg, deg, false)
+                }
             }
         }
     }
