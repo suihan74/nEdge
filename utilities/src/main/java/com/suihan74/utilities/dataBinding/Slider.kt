@@ -6,6 +6,8 @@ import androidx.databinding.InverseBindingListener
 import com.google.android.material.slider.Slider
 import java.lang.ref.WeakReference
 import java.util.*
+import kotlin.math.max
+import kotlin.math.min
 
 object SliderBindingAdapters {
     private val editingStates = HashSet<WeakReference<Slider>>()
@@ -53,16 +55,18 @@ object SliderBindingAdapters {
     fun bindFloatValue(
         slider: Slider,
         value: Float?,
-        lowerBound: Float?,
-        upperBound: Float?,
+        valueFrom: Float?,
+        valueTo: Float?,
         stepSize: Float?
     ) {
-        lowerBound?.let { slider.valueFrom = it }
-        upperBound?.let { slider.valueFrom = it }
+        valueFrom?.let { slider.valueFrom = it }
+        valueTo?.let { slider.valueTo = it }
         stepSize?.let { slider.stepSize = it }
 
         if (value != null && slider.value != value) {
-            slider.value = value
+            // スライダーの目盛りが正確に割り振れない値を入れようとするとエラーになるため、補正してから代入する
+            val step = max(0, ((min(value, slider.valueTo) - slider.valueFrom) / slider.stepSize).toInt())
+            slider.value = slider.valueFrom + step * slider.stepSize
         }
     }
 
@@ -83,15 +87,15 @@ object SliderBindingAdapters {
     fun bindIntValue(
         slider: Slider,
         value: Int?,
-        lowerBound: Int?,
-        upperBound: Int?,
+        valueFrom: Int?,
+        valueTo: Int?,
         stepSize: Int?
     ) {
         bindFloatValue(
             slider,
             value?.toFloat(),
-            lowerBound?.toFloat(),
-            upperBound?.toFloat(),
+            valueFrom?.toFloat(),
+            valueTo?.toFloat(),
             stepSize?.toFloat()
         )
     }
