@@ -5,16 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.suihan74.notificationreporter.databinding.FragmentWaterDropNotchSettingBinding
+import com.suihan74.notificationreporter.databinding.FragmentPunchHoleNotchSettingBinding
 import com.suihan74.notificationreporter.scenes.preferences.page.SettingEditorFragment
 import com.suihan74.utilities.extensions.getEnum
 import com.suihan74.utilities.extensions.putEnum
 import com.suihan74.utilities.fragment.withArguments
 import com.suihan74.utilities.lazyProvideViewModel
 
-class WaterDropNotchSettingFragment : Fragment() {
+class PunchHoleNotchSettingFragment : Fragment() {
     companion object {
-        fun createInstance(notchPosition: NotchPosition) = WaterDropNotchSettingFragment().withArguments {
+        fun createInstance(notchPosition: NotchPosition) = PunchHoleNotchSettingFragment().withArguments {
             putEnum(Arg.NOTCH_POSITION.name, notchPosition)
         }
     }
@@ -33,7 +33,7 @@ class WaterDropNotchSettingFragment : Fragment() {
         val notchPosition = requireArguments().let {
             it.getEnum<NotchPosition>(Arg.NOTCH_POSITION.name)!!
         }
-        WaterDropNotchSettingViewModel(notchPosition, settingEditorViewModel)
+        PunchHoleNotchSettingViewModel(notchPosition, settingEditorViewModel)
     }
 
     // ------ //
@@ -43,7 +43,7 @@ class WaterDropNotchSettingFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val binding = FragmentWaterDropNotchSettingBinding.inflate(inflater, container, false).also {
+        val binding = FragmentPunchHoleNotchSettingBinding.inflate(inflater, container, false).also {
             it.vm = viewModel
             it.lifecycleOwner = viewLifecycleOwner
         }

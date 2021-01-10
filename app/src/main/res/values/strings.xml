@@ -55,6 +55,11 @@
     <string name="prefs_water_drop_notch_height_adjustment_desc">高さ調整</string>
     <string name="prefs_water_drop_notch_radius_desc">水滴の大きさ</string>
 
+    <!-- PunchHoleNotchSettingFragment -->
+    <string name="prefs_punch_hole_notch_cx_desc">X座標調整</string>
+    <string name="prefs_punch_hole_notch_cy_desc">Y座標調整</string>
+    <string name="prefs_punch_hole_notch_radius_desc">半径</string>
+
     <!-- SettingsListFragment -->
     <string name="prefs_settings_list_default_setting_text">デフォルト設定</string>
     <string name="prefs_settings_list_search_hint">項目を検索</string>

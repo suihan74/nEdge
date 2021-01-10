@@ -17,6 +17,7 @@ import com.suihan74.notificationreporter.database.notification.isDefault
 import com.suihan74.notificationreporter.models.*
 import com.suihan74.notificationreporter.scenes.preferences.dialog.ColorPickerDialogFragment
 import com.suihan74.notificationreporter.scenes.preferences.notch.NotchPosition
+import com.suihan74.notificationreporter.scenes.preferences.notch.PunchHoleNotchSettingFragment
 import com.suihan74.notificationreporter.scenes.preferences.notch.RectangleNotchSettingFragment
 import com.suihan74.notificationreporter.scenes.preferences.notch.WaterDropNotchSettingFragment
 import com.suihan74.utilities.fragment.AlertDialogFragment
@@ -295,6 +296,9 @@ class SettingEditorViewModel(private val application: Application) : ViewModel()
 
                 NotchType.WATER_DROP ->
                     WaterDropNotchSettingFragment.createInstance(notchPosition)
+
+                NotchType.PUNCH_HOLE ->
+                    PunchHoleNotchSettingFragment.createInstance(notchPosition)
 
                 else -> Fragment()
             }

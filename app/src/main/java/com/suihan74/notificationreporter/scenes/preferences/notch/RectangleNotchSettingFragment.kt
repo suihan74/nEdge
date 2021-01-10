@@ -17,10 +17,6 @@ class RectangleNotchSettingFragment : Fragment() {
         fun createInstance(notchPosition: NotchPosition) = RectangleNotchSettingFragment().withArguments {
             putEnum(Arg.NOTCH_POSITION.name, notchPosition)
         }
-
-        enum class Arg {
-            NOTCH_POSITION
-        }
     }
 
     // ------ //

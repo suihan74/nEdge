@@ -10,6 +10,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
+/**
+ * ノッチ設定画面用ViewModelベースクラス
+ */
 abstract class NotchSettingViewModel<NotchSettingT : NotchSetting>(
     notchPosition: NotchPosition,
     editorViewModel: SettingEditorViewModel,

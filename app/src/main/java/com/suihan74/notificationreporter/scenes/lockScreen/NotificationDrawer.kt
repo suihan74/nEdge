@@ -143,6 +143,20 @@ class NotificationDrawer(
                 path.moveTo(left, top + topCornerRadius)
             }
         }
+
+        when (notificationSetting.topNotchSetting.type) {
+            NotchType.PUNCH_HOLE -> {
+                drawFloatingNotch(path, thickness, notificationSetting.topNotchSetting)
+            }
+            else -> {}
+        }
+
+        when (notificationSetting.bottomNotchSetting.type) {
+            NotchType.PUNCH_HOLE -> {
+                drawFloatingNotch(path, thickness, notificationSetting.bottomNotchSetting)
+            }
+            else -> {}
+        }
     }
 
     /**
@@ -196,16 +210,13 @@ class NotificationDrawer(
             } ?: return
 
         when (notchSetting.type) {
-            NotchType.NONE -> {}
-
             NotchType.RECTANGLE ->
                 drawTopRectangleNotch(path, rect, thickness, notchSetting as RectangleNotchSetting)
 
             NotchType.WATER_DROP ->
                 drawTopWaterDropNotch(path, rect, thickness, notchSetting as WaterDropNotchSetting)
 
-            NotchType.PUNCH_HOLE ->
-                drawPunchHoleNotch(path, notchSetting as PunchHoleNotchSetting)
+            else -> {}
         }
     }
 
@@ -223,16 +234,28 @@ class NotificationDrawer(
             } ?: return
 
         when (notchSetting.type) {
-            NotchType.NONE -> {}
-
             NotchType.RECTANGLE ->
                 drawBottomRectangleNotch(path, rect, thickness, notchSetting as RectangleNotchSetting)
 
             NotchType.WATER_DROP ->
                 drawBottomWaterDropNotch(path, rect, thickness, notchSetting as WaterDropNotchSetting)
 
+            else -> {}
+        }
+    }
+
+    private fun drawFloatingNotch(
+        path: Path,
+        thickness: Float,
+        notchSetting: NotchSetting
+    ) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) return
+
+        when (notchSetting.type) {
             NotchType.PUNCH_HOLE ->
                 drawPunchHoleNotch(path, notchSetting as PunchHoleNotchSetting)
+
+            else -> {}
         }
     }
 
@@ -486,6 +509,8 @@ class NotificationDrawer(
         path: Path,
         notchSetting: PunchHoleNotchSetting
     ) {
-        path.addCircle(notchSetting.cx, notchSetting.cy, notchSetting.radius, Path.Direction.CW)
+        val cx = screenWidth * notchSetting.cx
+        val cy = screenHeight * notchSetting.cy
+        path.addCircle(cx, cy, notchSetting.radius, Path.Direction.CW)
     }
 }
