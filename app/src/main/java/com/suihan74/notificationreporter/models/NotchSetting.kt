@@ -91,4 +91,9 @@ data class PunchHoleNotchSetting(
     /** 半径 */
     val radius: Float = 16f,
 
+    /** 上下辺 */
+    val horizontalEdgeSize: Float = 0f,
+
+    /** 左右辺 */
+    val verticalEdgeSize: Float = 0f,
 ) : NotchSetting(NotchType.PUNCH_HOLE)

@@ -14,6 +14,10 @@ class PunchHoleNotchSettingViewModel(
 
     val radius = mutableLiveData<Float>()
 
+    val horizontalEdgeSize = mutableLiveData<Float>()
+
+    val verticalEdgeSize = mutableLiveData<Float>()
+
     // ------ //
 
     override suspend fun initialize() {
@@ -21,6 +25,8 @@ class PunchHoleNotchSettingViewModel(
             cx.value = it.cx
             cy.value = it.cy
             radius.value = it.radius
+            horizontalEdgeSize.value = it.horizontalEdgeSize
+            verticalEdgeSize.value = it.verticalEdgeSize
         }
     }
 
@@ -28,7 +34,9 @@ class PunchHoleNotchSettingViewModel(
         setting.value = PunchHoleNotchSetting(
             cx = cx.value!!,
             cy = cy.value!!,
-            radius = radius.value!!
+            radius = radius.value!!,
+            horizontalEdgeSize = horizontalEdgeSize.value!!,
+            verticalEdgeSize = verticalEdgeSize.value!!
         )
     }
 }

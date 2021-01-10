@@ -54,5 +54,33 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
+        <TextView
+            android:text="@string/prefs_punch_hole_horizontal_edge_size_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.google.android.material.slider.Slider
+            android:valueFrom="0.0"
+            android:valueTo="200.0"
+            android:stepSize="1.0"
+            android:value="@={vm.horizontalEdgeSize}"
+            editing="@={vm.editing}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:text="@string/prefs_punch_hole_vertical_edge_size_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.google.android.material.slider.Slider
+            android:valueFrom="0.0"
+            android:valueTo="200.0"
+            android:stepSize="1.0"
+            android:value="@={vm.verticalEdgeSize}"
+            editing="@={vm.editing}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
     </LinearLayout>
 </layout>

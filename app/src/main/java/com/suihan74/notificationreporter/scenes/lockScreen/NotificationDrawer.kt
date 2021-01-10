@@ -511,6 +511,25 @@ class NotificationDrawer(
     ) {
         val cx = screenWidth * notchSetting.cx
         val cy = screenHeight * notchSetting.cy
-        path.addCircle(cx, cy, notchSetting.radius, Path.Direction.CW)
+        if (notchSetting.horizontalEdgeSize == 0f && notchSetting.verticalEdgeSize == 0f) {
+            path.addCircle(cx, cy, notchSetting.radius, Path.Direction.CW)
+        }
+        else {
+            val widthHalf = (notchSetting.horizontalEdgeSize + notchSetting.radius * 2) / 2
+            val heightHalf = (notchSetting.verticalEdgeSize + notchSetting.radius * 2) / 2
+            path.addRoundRect(
+                cx - widthHalf,
+                cy - heightHalf,
+                cx + widthHalf,
+                cy + heightHalf,
+                floatArrayOf(
+                    notchSetting.radius, notchSetting.radius,
+                    notchSetting.radius, notchSetting.radius,
+                    notchSetting.radius, notchSetting.radius,
+                    notchSetting.radius, notchSetting.radius
+                ),
+                Path.Direction.CW
+            )
+        }
     }
 }

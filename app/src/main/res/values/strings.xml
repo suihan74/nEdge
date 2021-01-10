@@ -59,6 +59,8 @@
     <string name="prefs_punch_hole_notch_cx_desc">X座標調整</string>
     <string name="prefs_punch_hole_notch_cy_desc">Y座標調整</string>
     <string name="prefs_punch_hole_notch_radius_desc">半径</string>
+    <string name="prefs_punch_hole_horizontal_edge_size_desc">横に伸ばす</string>
+    <string name="prefs_punch_hole_vertical_edge_size_desc">縦に伸ばす</string>
 
     <!-- SettingsListFragment -->
     <string name="prefs_settings_list_default_setting_text">デフォルト設定</string>
