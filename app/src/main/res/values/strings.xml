@@ -53,7 +53,7 @@
     <!-- WaterDropNotchSettingFragment -->
     <string name="prefs_water_drop_notch_width_adjustment_desc">幅調整</string>
     <string name="prefs_water_drop_notch_height_adjustment_desc">高さ調整</string>
-    <string name="prefs_water_drop_notch_radius_desc">水滴の大きさ</string>
+    <string name="prefs_water_drop_notch_radius_desc">外側の角の丸み</string>
 
     <!-- PunchHoleNotchSettingFragment -->
     <string name="prefs_punch_hole_notch_cx_desc">X座標調整</string>

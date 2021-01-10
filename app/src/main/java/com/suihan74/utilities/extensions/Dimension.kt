@@ -20,3 +20,9 @@ private val displayMetrics : DisplayMetrics?
  */
 val Int.dp : Float
     get() = this * (displayMetrics?.density ?: 1.0f)
+
+/**
+ * dpで指定した数値をpxに変換する
+ */
+val Float.dp : Float
+    get() = this * (displayMetrics?.density ?: 1.0f)

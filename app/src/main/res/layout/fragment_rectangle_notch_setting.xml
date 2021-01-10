@@ -62,8 +62,8 @@
 
         <com.google.android.material.slider.Slider
             android:valueFrom="0.0"
-            android:valueTo="200.0"
-            android:stepSize="1.0"
+            android:valueTo="50.0"
+            android:stepSize="0.2"
             android:value="@={vm.majorRadius}"
             editing="@={vm.editing}"
             android:layout_width="match_parent"
@@ -76,8 +76,8 @@
 
         <com.google.android.material.slider.Slider
             android:valueFrom="0.0"
-            android:valueTo="200.0"
-            android:stepSize="1.0"
+            android:valueTo="50.0"
+            android:stepSize="0.2"
             android:value="@={vm.minorRadius}"
             editing="@={vm.editing}"
             android:layout_width="match_parent"

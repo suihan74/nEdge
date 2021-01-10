@@ -98,7 +98,7 @@
                     android:stepSize="0.1"
                     android:value="@={vm.lineThickness}"
                     android:valueFrom="0.0"
-                    android:valueTo="20.0" />
+                    android:valueTo="10.0" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -202,10 +202,10 @@
                     editing="@={vm.editingTopCornerRadius}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:stepSize="1.0"
+                    android:stepSize="0.5"
                     android:value="@={vm.topCornerRadius}"
                     android:valueFrom="0.0"
-                    android:valueTo="200.0" />
+                    android:valueTo="50.0" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -216,10 +216,10 @@
                     editing="@={vm.editingBottomCornerRadius}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:stepSize="1.0"
+                    android:stepSize="0.5"
                     android:value="@={vm.bottomCornerRadius}"
                     android:valueFrom="0.0"
-                    android:valueTo="200.0" />
+                    android:valueTo="50.0" />
 
                 <TextView
                     android:layout_width="wrap_content"

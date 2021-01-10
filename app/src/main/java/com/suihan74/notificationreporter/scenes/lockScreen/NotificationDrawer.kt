@@ -6,6 +6,7 @@ import android.view.Window
 import android.widget.ImageView
 import androidx.annotation.RequiresApi
 import com.suihan74.notificationreporter.models.*
+import com.suihan74.utilities.extensions.dp
 import com.suihan74.utilities.extensions.onNot
 import kotlin.math.*
 
@@ -39,7 +40,7 @@ class NotificationDrawer(
         imageView: ImageView,
         notificationSetting: NotificationSetting
     ) {
-        val thickness = notificationSetting.thickness
+        val thickness = notificationSetting.thickness.dp
 
         val bitmap = Bitmap.createBitmap(screenWidth, screenHeight, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
@@ -73,6 +74,9 @@ class NotificationDrawer(
         notificationSetting: NotificationSetting
     ) {
         notificationSetting.outlinesSetting.run {
+            val topCornerRadius = topCornerRadius.dp
+            val bottomCornerRadius = bottomCornerRadius.dp
+
             val offset = thickness / 2
             val left = offset
             val top = offset
@@ -169,7 +173,7 @@ class NotificationDrawer(
     ) {
         val offset = thickness / 2
         val right = screenWidth - offset
-        val topCornerRadius = notificationSetting.outlinesSetting.topCornerRadius
+        val topCornerRadius = notificationSetting.outlinesSetting.topCornerRadius.dp
 
         path.moveTo(offset + topCornerRadius, offset)
         drawTopNotch(path, thickness, notificationSetting.topNotchSetting)
@@ -187,7 +191,7 @@ class NotificationDrawer(
         val offset = thickness / 2
         val bottom = screenHeight - offset
         val right = screenWidth - offset
-        val bottomCornerRadius = notificationSetting.outlinesSetting.bottomCornerRadius
+        val bottomCornerRadius = notificationSetting.outlinesSetting.bottomCornerRadius.dp
 
         path.moveTo(right - bottomCornerRadius, bottom)
         drawBottomNotch(path, thickness, notificationSetting.bottomNotchSetting)
@@ -289,7 +293,7 @@ class NotificationDrawer(
         val tanHalf = tan(rad / 2)
 
         path.run {
-            notchSetting.majorRadius.let { r ->
+            notchSetting.majorRadius.dp.let { r ->
                 val left = rect.left - offset - majorWidth * .5f
                 val cx = (left - r * tanHalf).toFloat()
                 val cy = top + r
@@ -300,7 +304,7 @@ class NotificationDrawer(
                 arcTo(cx - r, cy - r, cx + r, cy + r, 270f, deg, false)
             }
 
-            notchSetting.minorRadius.let { r ->
+            notchSetting.minorRadius.dp.let { r ->
                 val left = rect.left - offset - minorWidth * .5f
                 val right = rect.right + offset + minorWidth * .5f
                 val cy = bottom - r
@@ -321,7 +325,7 @@ class NotificationDrawer(
                 arcTo(rcx - r, cy - r, rcx + r, cy + r, 90f, -deg, false)
             }
 
-            notchSetting.majorRadius.let { r ->
+            notchSetting.majorRadius.dp.let { r ->
                 val right = rect.right + offset + majorWidth * .5f
                 val cx = right + r * tanHalf
                 val cy = top + r
@@ -366,7 +370,7 @@ class NotificationDrawer(
         val tanHalf = tan(rad / 2)
 
         path.apply {
-            notchSetting.majorRadius.let { r ->
+            notchSetting.majorRadius.dp.let { r ->
                 val right = rect.right + offset + majorWidth * .5f
                 val cx = (right + r * tanHalf).toFloat()
                 val cy = bottom - r
@@ -377,7 +381,7 @@ class NotificationDrawer(
                 arcTo(cx - r, cy - r, cx + r, cy + r, 90f, deg, false)
             }
 
-            notchSetting.minorRadius.let { r ->
+            notchSetting.minorRadius.dp.let { r ->
                 val left = rect.left - offset - minorWidth * .5f
                 val right = rect.right + offset + minorWidth * .5f
                 val cy = top + r
@@ -398,7 +402,7 @@ class NotificationDrawer(
                 arcTo(lcx - r, cy - r, lcx + r, cy + r, 270f, -deg, false)
             }
 
-            notchSetting.majorRadius.let { r ->
+            notchSetting.majorRadius.dp.let { r ->
                 val left = rect.left - offset - majorWidth * .5f
                 val cx = left - r * tanHalf
                 val cy = bottom - r
@@ -428,8 +432,8 @@ class NotificationDrawer(
         val offset = thickness / 2
         val widthAdjustmentPx = rect.width() * .5f * notchSetting.widthAdjustment
 
-        val rootRadius = notchSetting.majorRadius
-        val rootDegree = notchSetting.heightAdjustment
+        val rootRadius = notchSetting.majorRadius.dp
+        val rootDegree = notchSetting.heightAdjustment.dp
 
         val left = rect.left - offset - widthAdjustmentPx
         val right = rect.right + offset + widthAdjustmentPx
@@ -471,8 +475,8 @@ class NotificationDrawer(
         val offset = thickness / 2
         val widthAdjustmentPx = rect.width() * .5f * notchSetting.widthAdjustment
 
-        val rootRadius = notchSetting.majorRadius
-        val rootDegree = notchSetting.heightAdjustment
+        val rootRadius = notchSetting.majorRadius.dp
+        val rootDegree = notchSetting.heightAdjustment.dp
 
         val left = rect.left - offset - widthAdjustmentPx
         val right = rect.right + offset + widthAdjustmentPx
@@ -511,22 +515,23 @@ class NotificationDrawer(
     ) {
         val cx = screenWidth * notchSetting.cx
         val cy = screenHeight * notchSetting.cy
+        val radius = notchSetting.radius.dp
         if (notchSetting.horizontalEdgeSize == 0f && notchSetting.verticalEdgeSize == 0f) {
-            path.addCircle(cx, cy, notchSetting.radius, Path.Direction.CW)
+            path.addCircle(cx, cy, radius, Path.Direction.CW)
         }
         else {
-            val widthHalf = (notchSetting.horizontalEdgeSize + notchSetting.radius * 2) / 2
-            val heightHalf = (notchSetting.verticalEdgeSize + notchSetting.radius * 2) / 2
+            val widthHalf = (notchSetting.horizontalEdgeSize.dp + radius * 2) / 2
+            val heightHalf = (notchSetting.verticalEdgeSize.dp + radius * 2) / 2
             path.addRoundRect(
                 cx - widthHalf,
                 cy - heightHalf,
                 cx + widthHalf,
                 cy + heightHalf,
                 floatArrayOf(
-                    notchSetting.radius, notchSetting.radius,
-                    notchSetting.radius, notchSetting.radius,
-                    notchSetting.radius, notchSetting.radius,
-                    notchSetting.radius, notchSetting.radius
+                    radius, radius,
+                    radius, radius,
+                    radius, radius,
+                    radius, radius
                 ),
                 Path.Direction.CW
             )
