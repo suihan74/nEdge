@@ -18,8 +18,10 @@
         <item name="android:textColor">@color/preferencesTextColor</item>
         <item name="android:textColorPrimary">@color/preferencesTextColor</item>
         <item name="colorOnSurface">@color/preferencesTextColor</item>
+        <item name="colorSurface">@color/preferencesBackgroundColor</item>
 
         <item name="alertDialogTheme">@style/AlertDialog</item>
+        <item name="switchStyle">@style/SwitchStyle</item>
         <item name="switchTextAppearance">@style/SwitchTextAppearance</item>
         <item name="checkboxStyle">@style/CheckBoxStyle</item>
 

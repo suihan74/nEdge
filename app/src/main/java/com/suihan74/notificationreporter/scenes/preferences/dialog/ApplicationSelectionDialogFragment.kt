@@ -23,7 +23,7 @@ class ApplicationSelectionDialogFragment : DialogFragment() {
 
     companion object {
         fun createInstance(
-            onSelectListener: DialogListener<ApplicationInfo>? = null
+            onSelectListener: DialogListener<ApplicationItem>? = null
         ) = ApplicationSelectionDialogFragment().also {
             it.setOnSelectListener(onSelectListener)
         }
@@ -65,7 +65,7 @@ class ApplicationSelectionDialogFragment : DialogFragment() {
         ) { bind, item -> bind.item = item }
 
         adapter.setOnClickItemListener {
-            viewModel.onSelect?.invoke(this, it.item!!.applicationInfo)
+            viewModel.onSelect?.invoke(this, it.item!!)
             dismiss()
         }
 
@@ -75,7 +75,7 @@ class ApplicationSelectionDialogFragment : DialogFragment() {
     // ------ //
 
     /** アプリを選択したときの処理をセット */
-    fun setOnSelectListener(l: DialogListener<ApplicationInfo>?) = lifecycleScope.launchWhenCreated {
+    fun setOnSelectListener(l: DialogListener<ApplicationItem>?) = lifecycleScope.launchWhenCreated {
         viewModel.onSelect = l
     }
 
@@ -88,7 +88,7 @@ class ApplicationSelectionDialogFragment : DialogFragment() {
 
         // ------ //
 
-        var onSelect : DialogListener<ApplicationInfo>? = null
+        var onSelect : DialogListener<ApplicationItem>? = null
 
         // ------ //
 

@@ -37,6 +37,9 @@ class SettingEditorViewModel(private val application: Application) : ViewModel()
     val applicationInfo : LiveData<ApplicationInfo?> by lazy { _applicationInfo }
     private val _applicationInfo = MutableLiveData<ApplicationInfo?>()
 
+    /** 表示名 */
+    val displayName = MutableLiveData<String>()
+
     /** キーワード */
     val keyword = MutableLiveData<String>()
 
@@ -134,6 +137,7 @@ class SettingEditorViewModel(private val application: Application) : ViewModel()
                     it.copy(
                         keyword = keyword.value.orEmpty(),
                         keywordMatchingType = keywordMatchingType.value ?: KeywordMatchingType.NONE,
+                        displayName = displayName.value!!,
                         setting = notificationSetting.value!!
                     )
                 )
@@ -169,6 +173,7 @@ class SettingEditorViewModel(private val application: Application) : ViewModel()
                 else application.packageManager.getApplicationInfo(entity.packageName, 0)
             keyword.value = entity.keyword
             keywordMatchingType.value = entity.keywordMatchingType
+            displayName.value = entity.displayName
 
             entity.setting.let { setting ->
                 notificationColor.value = setting.color

@@ -4,6 +4,7 @@ import android.service.notification.StatusBarNotification
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.suihan74.notificationreporter.database.notification.NotificationEntity
+import com.suihan74.notificationreporter.database.notification.isDefault
 import com.suihan74.utilities.extensions.text
 import com.suihan74.utilities.extensions.title
 
@@ -27,7 +28,7 @@ object TextViewBindingAdapters {
             textView.text = when {
                 sbn?.packageName == null -> ""
 
-                entity?.displayName?.isNotBlank() == true -> entity.displayName
+                entity?.displayName != null && !entity.isDefault -> entity.displayName
 
                 else -> {
                     val pm = textView.context.packageManager

@@ -110,9 +110,10 @@ class SettingsListViewModel(
      * 編集対象アプリを選択し，通知設定エディタを開く
      */
     fun createNewNotificationSetting(fragmentManager: FragmentManager, setting: NotificationSetting? = null) {
-        val dialog = ApplicationSelectionDialogFragment.createInstance { f, appInfo ->
+        val dialog = ApplicationSelectionDialogFragment.createInstance { f, item ->
             val entity = NotificationEntity(
-                packageName = appInfo.packageName,
+                packageName = item.applicationInfo.packageName,
+                displayName = item.appName,
                 setting = setting ?: defaultSettingEntity?.setting ?: NotificationSetting()
             )
             f.activity.alsoAs<PreferencesActivity> { activity ->
@@ -139,6 +140,7 @@ data class SettingItem(
 
         override fun areContentsTheSame(oldItem: SettingItem, newItem: SettingItem) =
             oldItem.entity.keyword == newItem.entity.keyword &&
-                    oldItem.entity.keywordMatchingType == newItem.entity.keywordMatchingType
+                    oldItem.entity.keywordMatchingType == newItem.entity.keywordMatchingType &&
+                    oldItem.entity.displayName == newItem.entity.displayName
     }
 }

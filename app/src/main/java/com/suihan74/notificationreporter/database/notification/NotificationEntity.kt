@@ -18,10 +18,8 @@ data class NotificationEntity(
 
     /**
      * 表示名
-     *
-     * `null`のとき通知を発生させたアプリ名を取得して表示する
      */
-    val displayName : String? = null,
+    val displayName : String = "",
 
     /** 通知表示設定 */
     val setting : NotificationSetting = NotificationSetting(),

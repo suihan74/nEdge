@@ -43,25 +43,42 @@
         <item name="android:textColor">@color/preferencesTextColor</item>
         <item name="android:textColorPrimary">@color/preferencesTextColor</item>
         <item name="colorOnSurface">@color/preferencesTextColor</item>
+        <item name="colorSurface">@color/preferencesBackgroundColor</item>
 
         <item name="alertDialogTheme">@style/AlertDialog</item>
         <item name="switchTextAppearance">@style/SwitchTextAppearance</item>
+        <item name="switchStyle">@style/SwitchStyle</item>
         <item name="android:checkboxStyle">@style/CheckBoxStyle</item>
     </style>
 
-    <style name="SearchAppsTextInputLayout" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+    <!-- テキスト入力エリア(枠線有り) -->
+    <style name="TextInputLayout.OutlinedBox" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="android:textColorHint">@color/preferencesTextColor</item>
         <item name="hintTextColor">@color/preferencesTextColor</item>
     </style>
 
-    <style name="SearchAppsTextInputEditText">
+    <!-- テキスト入力エリア(枠線無し) -->
+    <style name="TextInputLayout.FilledBox" parent="@style/Widget.MaterialComponents.TextInputLayout.FilledBox">
+        <item name="android:textColorHint">@color/preferencesTextColor</item>
+        <item name="hintTextColor">@color/preferencesTextColor</item>
+    </style>
+
+    <!-- テキスト入力部分 -->
+    <style name="TextInputEditText">
         <item name="android:textColor">@color/preferencesTextColor</item>
     </style>
 
+    <!-- Switch - トグルスイッチ -->
+    <style name="SwitchStyle" parent="Widget.MaterialComponents.CompoundButton.Switch">
+        <item name="thumbTint">@color/switch_thumb</item>
+    </style>
+
+    <!-- Switch - トグルスイッチの説明文 -->
     <style name="SwitchTextAppearance">
         <item name="android:textColor">@color/preferencesTextColor</item>
     </style>
 
+    <!-- CheckBox -->
     <style name="CheckBoxStyle" parent="Widget.MaterialComponents.CompoundButton.CheckBox">
         <item name="android:textColor">@color/preferencesTextColor</item>
     </style>

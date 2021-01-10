@@ -63,24 +63,63 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"/>
 
-                    <com.suihan74.utilities.view.UnFocusableEditText
-                        android:id="@+id/keywordEditText"
-                        android:text="@={vm.keyword}"
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/displayNameTextInputLayout"
                         android:visibility="@{vm.applicationInfo != null}"
-                        android:layout_marginTop="4dp"
-                        app:layout_constraintStart_toStartOf="@id/appIcon"
-                        app:layout_constraintEnd_toStartOf="@id/keywordTypeSpinner"
+                        style="@style/TextInputLayout.FilledBox"
+                        android:hint="@string/prefs_display_name_hint"
                         app:layout_constraintTop_toBottomOf="@id/appIcon"
-                        app:layout_constraintHorizontal_chainStyle="packed"
+                        app:layout_constraintStart_toStartOf="@id/appIcon"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_marginTop="12dp"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content">
+
+                        <com.suihan74.utilities.view.UnFocusableTextInputEditText
+                            android:id="@+id/displayNameEditText"
+                            style="@style/TextInputEditText"
+                            android:text="@={vm.displayName}"
+                            android:inputType="text"
+                            android:imeOptions="actionDone"
+                            android:selectAllOnFocus="true"
+                            android:importantForAutofill="no"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/keywordTextInputLayout"
+                        android:visibility="@{vm.applicationInfo != null}"
+                        style="@style/TextInputLayout.FilledBox"
+                        android:hint="@string/prefs_keyword_hint"
+                        app:layout_constraintTop_toBottomOf="@id/displayNameTextInputLayout"
+                        app:layout_constraintStart_toStartOf="@id/displayNameTextInputLayout"
+                        app:layout_constraintEnd_toStartOf="@id/keywordTypeSpinner"
+                        app:layout_constraintHorizontal_chainStyle="packed"
+                        android:layout_marginTop="12dp"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content">
+
+                        <com.suihan74.utilities.view.UnFocusableTextInputEditText
+                            android:id="@+id/keywordEditText"
+                            style="@style/TextInputEditText"
+                            android:text="@={vm.keyword}"
+                            android:inputType="text"
+                            android:imeOptions="actionDone"
+                            android:selectAllOnFocus="true"
+                            android:importantForAutofill="no"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
 
                     <androidx.appcompat.widget.AppCompatSpinner
                         android:id="@+id/keywordTypeSpinner"
                         android:visibility="@{vm.applicationInfo != null}"
-                        app:layout_constraintStart_toEndOf="@id/keywordEditText"
+                        app:layout_constraintStart_toEndOf="@id/keywordTextInputLayout"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintBottom_toBottomOf="@id/keywordEditText"
+                        app:layout_constraintBottom_toBottomOf="@id/keywordTextInputLayout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
 
@@ -141,7 +180,7 @@
                     android:layout_height="wrap_content">
 
                     <CheckBox
-                        android:text="@{@string/prefs_enabled_edge(`上`)}"
+                        android:text="@{@string/prefs_enabled_edge(@string/top)}"
                         android:checked="@={vm.topEdgeEnabled}"
                         tools:checked="true"
                         tools:text="@string/prefs_enabled_edge"
@@ -149,43 +188,43 @@
                         android:layout_height="wrap_content"/>
 
                     <CheckBox
-                        android:text="@{@string/prefs_enabled_edge(`下`)}"
+                        android:text="@{@string/prefs_enabled_edge(@string/bottom)}"
                         android:checked="@={vm.bottomEdgeEnabled}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
 
                     <CheckBox
-                        android:text="@{@string/prefs_enabled_edge(`左`)}"
+                        android:text="@{@string/prefs_enabled_edge(@string/left)}"
                         android:checked="@={vm.leftEdgeEnabled}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
 
                     <CheckBox
-                        android:text="@{@string/prefs_enabled_edge(`右`)}"
+                        android:text="@{@string/prefs_enabled_edge(@string/right)}"
                         android:checked="@={vm.rightEdgeEnabled}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
 
                     <CheckBox
-                        android:text="@{@string/prefs_enabled_corner(`左上`)}"
+                        android:text="@{@string/prefs_enabled_corner(@string/top_left)}"
                         android:checked="@={vm.topLeftCornerEnabled}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
 
                     <CheckBox
-                        android:text="@{@string/prefs_enabled_corner(`右上`)}"
+                        android:text="@{@string/prefs_enabled_corner(@string/top_right)}"
                         android:checked="@={vm.topRightCornerEnabled}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
 
                     <CheckBox
-                        android:text="@{@string/prefs_enabled_corner(`左下`)}"
+                        android:text="@{@string/prefs_enabled_corner(@string/bottom_left)}"
                         android:checked="@={vm.bottomLeftCornerEnabled}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
 
                     <CheckBox
-                        android:text="@{@string/prefs_enabled_corner(`右下`)}"
+                        android:text="@{@string/prefs_enabled_corner(@string/bottom_right)}"
                         android:checked="@={vm.bottomRightCornerEnabled}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
@@ -196,7 +235,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="@{@string/prefs_corner_radius_desc(`上部`)}" />
+                    android:text="@string/prefs_top_corner_radius_desc" />
 
                 <com.google.android.material.slider.Slider
                     editing="@={vm.editingTopCornerRadius}"
@@ -210,7 +249,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{@string/prefs_corner_radius_desc(`下部`)}" />
+                    android:text="@string/prefs_bottom_corner_radius_desc" />
 
                 <com.google.android.material.slider.Slider
                     editing="@={vm.editingBottomCornerRadius}"

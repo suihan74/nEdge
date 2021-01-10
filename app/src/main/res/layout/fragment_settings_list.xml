@@ -15,7 +15,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/searchTextInputLayout"
-            style="@style/SearchAppsTextInputLayout"
+            style="@style/TextInputLayout.OutlinedBox"
             android:hint="@string/prefs_settings_list_search_hint"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -26,7 +26,7 @@
 
             <com.suihan74.utilities.view.UnFocusableTextInputEditText
                 android:id="@+id/searchEditText"
-                style="@style/SearchAppsTextInputEditText"
+                style="@style/TextInputEditText"
                 android:inputType="text"
                 android:imeOptions="actionSearch"
                 android:selectAllOnFocus="true"

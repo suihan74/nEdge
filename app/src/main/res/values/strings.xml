@@ -6,6 +6,16 @@
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">Cancel</string>
 
+    <!-- direction -->
+    <string name="top">上</string>
+    <string name="bottom">下</string>
+    <string name="left">左</string>
+    <string name="right">右</string>
+    <string name="top_left">左上</string>
+    <string name="top_right">右上</string>
+    <string name="bottom_left">左下</string>
+    <string name="bottom_right">右下</string>
+
     <!-- ====== -->
 
     <!-- PreferencesActivity -->
@@ -33,12 +43,15 @@
     <!-- SettingEditorFragment -->
     <string name="prefs_save">Save</string>
     <string name="prefs_cancel">Cancel</string>
+    <string name="prefs_display_name_hint">表示名</string>
+    <string name="prefs_keyword_hint">追加条件</string>
     <string name="prefs_line_width_desc">線の太さ</string>
     <string name="prefs_blur_size_desc">ブラー効果の強さ (0で無効化)</string>
     <string name="prefs_enabled_outlines_desc">輪郭線を表示する辺・角</string>
     <string name="prefs_enabled_edge">%s辺</string>
     <string name="prefs_enabled_corner">%s角</string>
-    <string name="prefs_corner_radius_desc">%sの角丸半径</string>
+    <string name="prefs_top_corner_radius_desc">画面上部の角の丸み</string>
+    <string name="prefs_bottom_corner_radius_desc">画面下部の角の丸み</string>
     <string name="prefs_default_notification_color_desc">線の色</string>
     <string name="prefs_top_notch_type_selection_desc">画面上部ノッチタイプ</string>
     <string name="prefs_bottom_notch_type_selection_desc">画面下部ノッチタイプ</string>

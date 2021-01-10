@@ -29,7 +29,7 @@
 
         <TextView
             android:id="@+id/appName"
-            android:text="@{item.appName}"
+            android:text="@{item.entity.displayName}"
             android:background="@android:color/transparent"
             android:textSize="14sp"
             android:singleLine="true"
