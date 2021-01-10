@@ -18,11 +18,13 @@ interface NotificationDao {
 
     // ------ //
 
-    @Query("""
+    @Query(
+        """
         SELECT * FROM NotificationEntity
-        WHERE appName = :appName
-    """)
-    suspend fun findByAppName(appName: String) : List<NotificationEntity>
+        WHERE packageName = :packageName
+    """
+    )
+    suspend fun findByAppName(packageName: String) : List<NotificationEntity>
 
     @Query("""
         SELECT * FROM NotificationEntity
@@ -36,7 +38,7 @@ interface NotificationDao {
     @Transaction
     suspend fun getDefaultEntity() : NotificationEntity {
         return findByAppName(DEFAULT_SETTING_NAME).firstOrNull()
-            ?: NotificationEntity(appName = DEFAULT_SETTING_NAME, setting = NotificationSetting())
+            ?: NotificationEntity(packageName = DEFAULT_SETTING_NAME, setting = NotificationSetting())
     }
 
     @Transaction
@@ -53,7 +55,7 @@ interface NotificationDao {
     suspend fun insertDefaultSetting(setting: NotificationSetting) {
         insert(
             NotificationEntity(
-                appName = DEFAULT_SETTING_NAME,
+                packageName = DEFAULT_SETTING_NAME,
                 setting = setting
             )
         )

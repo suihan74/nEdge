@@ -59,7 +59,7 @@ class SettingsListViewModel(
     private val packageManager by lazy { application.packageManager }
 
     private fun settingItem(entity: NotificationEntity) : SettingItem {
-        val appInfo = packageManager.getApplicationInfo(entity.appName, PackageManager.GET_META_DATA)
+        val appInfo = packageManager.getApplicationInfo(entity.packageName, PackageManager.GET_META_DATA)
         return SettingItem(
             appName = packageManager.getApplicationLabel(appInfo).toString(),
             appInfo = appInfo,
@@ -112,7 +112,7 @@ class SettingsListViewModel(
     fun createNewNotificationSetting(fragmentManager: FragmentManager, setting: NotificationSetting? = null) {
         val dialog = ApplicationSelectionDialogFragment.createInstance { f, appInfo ->
             val entity = NotificationEntity(
-                appName = appInfo.packageName,
+                packageName = appInfo.packageName,
                 setting = setting ?: defaultSettingEntity?.setting ?: NotificationSetting()
             )
             f.activity.alsoAs<PreferencesActivity> { activity ->

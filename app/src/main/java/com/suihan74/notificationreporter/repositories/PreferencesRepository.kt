@@ -42,7 +42,7 @@ class PreferencesRepository(
         setting: NotificationSetting = NotificationSetting()
     ) {
         NotificationEntity(
-            appName = appName,
+            packageName = appName,
             keyword = keyword,
             keywordMatchingType = keywordMatchingType,
             setting = setting
@@ -101,7 +101,7 @@ class PreferencesRepository(
 
     suspend fun getNotificationSettingOrDefault(entity: NotificationEntity) : NotificationSetting {
         return getNotificationSettingOrDefault(
-            entity.appName,
+            entity.packageName,
             entity.keyword,
             entity.keywordMatchingType
         )

@@ -7,8 +7,8 @@ import com.suihan74.notificationreporter.models.NotificationSetting
 
 @Entity
 data class NotificationEntity(
-    /** 対象アプリ名 (com.suihan74.satena など) */
-    val appName : String,
+    /** 対象パッケージ名 (com.suihan74.satena など) */
+    val packageName : String,
 
     /** 追加のキーワード */
     val keyword : String = "",
@@ -25,4 +25,4 @@ data class NotificationEntity(
 
 /** デフォルト設定である */
 val NotificationEntity.isDefault : Boolean
-    get() = appName == NotificationDao.DEFAULT_SETTING_NAME
+    get() = packageName == NotificationDao.DEFAULT_SETTING_NAME

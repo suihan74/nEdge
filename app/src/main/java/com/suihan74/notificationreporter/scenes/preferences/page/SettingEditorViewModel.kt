@@ -166,7 +166,7 @@ class SettingEditorViewModel(private val application: Application) : ViewModel()
             _targetEntity.value = entity
             _applicationInfo.value =
                 if (entity.isDefault) null
-                else application.packageManager.getApplicationInfo(entity.appName, 0)
+                else application.packageManager.getApplicationInfo(entity.packageName, 0)
             keyword.value = entity.keyword
             keywordMatchingType.value = entity.keywordMatchingType
 
