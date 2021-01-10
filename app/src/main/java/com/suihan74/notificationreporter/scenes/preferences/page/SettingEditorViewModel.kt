@@ -170,7 +170,7 @@ class SettingEditorViewModel(private val application: Application) : ViewModel()
             keyword.value = entity.keyword
             keywordMatchingType.value = entity.keywordMatchingType
 
-            application.preferencesRepository.getNotificationSettingOrDefault(entity).let { setting ->
+            entity.setting.let { setting ->
                 notificationColor.value = setting.color
                 lineThickness.value = setting.thickness
                 blurSize.value = setting.blurSize
