@@ -130,7 +130,7 @@ class SettingEditorViewModel(private val application: Application) : ViewModel()
     suspend fun saveSettings() {
         targetEntity.value?.let {
             currentTargetMutex.withLock {
-                application.preferencesRepository.updateNotificationSetting(
+                application.preferencesRepository.updateNotificationEntity(
                     it.copy(
                         keyword = keyword.value.orEmpty(),
                         keywordMatchingType = keywordMatchingType.value ?: KeywordMatchingType.NONE,

@@ -6,7 +6,6 @@ import com.suihan74.notificationreporter.dataStore.Preferences
 import com.suihan74.notificationreporter.database.notification.NotificationDao
 import com.suihan74.notificationreporter.database.notification.NotificationEntity
 import com.suihan74.notificationreporter.models.KeywordMatchingType
-import com.suihan74.notificationreporter.models.NotificationSetting
 import com.suihan74.utilities.extensions.contains
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
@@ -19,10 +18,25 @@ class PreferencesRepository(
     private val notificationDao: NotificationDao
 ) {
     /**
+     * 設定をDBに保存する
+     */
+    suspend fun updateNotificationEntity(entity: NotificationEntity) {
+        notificationDao.insert(entity)
+    }
+
+    suspend fun deleteNotificationEntity(entity: NotificationEntity) {
+        notificationDao.delete(entity)
+    }
+
+    // ------ //
+
+    /**
      * すべての通知表示設定を取得する
      */
     val allNotificationSettingsFlow : Flow<List<NotificationEntity>>
         get() = notificationDao.getAllSettingsFlow()
+
+    // ------ //
 
     suspend fun getDefaultNotificationEntity() : NotificationEntity {
         return notificationDao.getDefaultEntity()
@@ -32,33 +46,7 @@ class PreferencesRepository(
         return notificationDao.findById(id)
     }
 
-    /**
-     * 設定をDBに保存する
-     */
-    suspend fun updateNotificationSetting(
-        appName: String,
-        keyword: String = "",
-        keywordMatchingType: KeywordMatchingType = KeywordMatchingType.NONE,
-        setting: NotificationSetting = NotificationSetting()
-    ) {
-        NotificationEntity(
-            packageName = appName,
-            keyword = keyword,
-            keywordMatchingType = keywordMatchingType,
-            setting = setting
-        ).let {
-            notificationDao.insert(it)
-        }
-    }
-
-    /**
-     * 設定をDBに保存する
-     */
-    suspend fun updateNotificationSetting(entity: NotificationEntity) {
-        notificationDao.insert(entity)
-    }
-
-    suspend fun getNotificationSettingOrNull(sbn: StatusBarNotification) : NotificationSetting? {
+    suspend fun getNotificationEntityOrNull(sbn: StatusBarNotification) : NotificationEntity? {
         return notificationDao.findByAppName(sbn.packageName)
             .sortedByDescending { it.keywordMatchingType.importance }
             .firstOrNull {
@@ -72,43 +60,10 @@ class PreferencesRepository(
                         sbn.notification?.contains(it.keyword) == false
                 }
             }
-            ?.setting
     }
 
-    suspend fun getNotificationSettingOrDefault(sbn: StatusBarNotification) : NotificationSetting =
-        getNotificationSettingOrNull(sbn) ?: notificationDao.getDefaultSetting()
-
-    suspend fun getNotificationSettingOrNull(
-        appName: String,
-        keyword: String = "",
-        keywordMatchingType: KeywordMatchingType = KeywordMatchingType.NONE
-    ) : NotificationSetting? {
-        return notificationDao.findByAppName(appName)
-            .firstOrNull { it.keyword == keyword && it.keywordMatchingType == keywordMatchingType }
-            ?.setting
-    }
-
-    suspend fun getNotificationSettingOrDefault(
-        appName: String,
-        keyword: String = "",
-        keywordMatchingType: KeywordMatchingType = KeywordMatchingType.NONE
-    ) : NotificationSetting {
-        return notificationDao.findByAppName(appName)
-            .firstOrNull { it.keyword == keyword && it.keywordMatchingType == keywordMatchingType }
-            ?.setting
-            ?: notificationDao.getDefaultSetting()
-    }
-
-    suspend fun getNotificationSettingOrDefault(entity: NotificationEntity) : NotificationSetting {
-        return getNotificationSettingOrDefault(
-            entity.packageName,
-            entity.keyword,
-            entity.keywordMatchingType
-        )
-    }
-
-    suspend fun deleteNotificationEntity(entity: NotificationEntity) {
-        notificationDao.delete(entity)
+    suspend fun getNotificationEntityOrDefault(sbn: StatusBarNotification) : NotificationEntity {
+        return getNotificationEntityOrNull(sbn) ?: notificationDao.getDefaultEntity()
     }
 
     // ------ //

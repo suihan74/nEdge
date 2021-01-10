@@ -7,13 +7,17 @@ import android.view.View
 import android.view.Window
 import androidx.lifecycle.*
 import com.suihan74.notificationreporter.Application
+import com.suihan74.notificationreporter.database.notification.NotificationEntity
 import com.suihan74.notificationreporter.models.MultipleNotificationsSolution
-import com.suihan74.notificationreporter.models.NotificationSetting
+import com.suihan74.utilities.extensions.between
 import kotlinx.coroutines.*
 import org.threeten.bp.LocalDateTime
+import org.threeten.bp.LocalTime
 import kotlin.random.Random
 
-class LockScreenViewModel(application: Application) : ViewModel() {
+class LockScreenViewModel(
+    private val application: Application
+) : ViewModel() {
 
     private val batteryRepo = application.batteryRepository
 
@@ -27,9 +31,15 @@ class LockScreenViewModel(application: Application) : ViewModel() {
     val currentTime : LiveData<LocalDateTime> by lazy { _currentTime }
     private val _currentTime = MutableLiveData<LocalDateTime>()
 
-    /** 通知バーの描画設定 */
-    val notificationSetting by lazy { _notificationSetting }
-    private val _notificationSetting = MutableLiveData<NotificationSetting>()
+    /** 現在通知に対応する設定 */
+    val notificationEntity : LiveData<NotificationEntity> by lazy { _notificationEntity }
+    private val _notificationEntity = MutableLiveData<NotificationEntity>()
+
+    /** 表示しない開始時刻 */
+    private var silentTimezoneStart : LocalTime? = null
+
+    /** 表示しない終了時刻 */
+    private var silentTimezoneEnd : LocalTime? = null
 
     /** バックライト最低レベルまで暗くするか */
     val lightOff : LiveData<Boolean> by lazy { _lightOff }
@@ -87,7 +97,7 @@ class LockScreenViewModel(application: Application) : ViewModel() {
         currentNotice.observe(lifecycleOwner, Observer {
             if (it == null) return@Observer
             viewModelScope.launch(Dispatchers.Main.immediate) {
-                _notificationSetting.value = prefRepo.getNotificationSettingOrDefault(it)
+                _notificationEntity.value = prefRepo.getNotificationEntityOrDefault(it)
             }
         })
 
@@ -107,6 +117,8 @@ class LockScreenViewModel(application: Application) : ViewModel() {
                 _lightOff.value = false
                 multipleNotificationsSolution = prefs.multipleNotificationsSolution
                 switchNotificationsDuration = prefs.switchNotificationsDuration
+                silentTimezoneStart = prefs.silentTimezoneStart
+                silentTimezoneEnd = prefs.silentTimezoneEnd
             }
 
             // 時刻更新開始
@@ -118,7 +130,7 @@ class LockScreenViewModel(application: Application) : ViewModel() {
         if (previewEntityId != -1L) {
             viewModelScope.launch(Dispatchers.Main.immediate) {
                 prefRepo.getNotificationEntityOrNull(previewEntityId)?.let {
-                    notificationSetting.value = it.setting
+                    _notificationEntity.value = it
                 }
             }
         }
@@ -204,6 +216,10 @@ class LockScreenViewModel(application: Application) : ViewModel() {
         while (true) {
             LocalDateTime.now().let { now ->
                 _currentTime.value = now
+
+                if (now.toLocalTime().between(silentTimezoneStart!!, silentTimezoneEnd!!)) {
+                    // TODO: 表示しない時間になったら画面を消す
+                }
 
                 // 1分間隔で時計を更新する
                 delay(
