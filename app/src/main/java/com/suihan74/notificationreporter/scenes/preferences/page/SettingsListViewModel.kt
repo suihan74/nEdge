@@ -77,13 +77,13 @@ class SettingsListViewModel(
                     it.openSettingEditor(item.entity)
                 }
             },
-            R.string.prefs_settings_list_item_menu_preview to { _ ->
+            R.string.prefs_settings_list_item_menu_preview to {
                 LockScreenActivity.startPreview(application, item.entity)
             },
             R.string.prefs_settings_list_item_menu_copy to { f ->
                 createNewNotificationSetting(f.parentFragmentManager, item.entity.setting)
             },
-            R.string.prefs_settings_list_item_menu_delete to { _ ->
+            R.string.prefs_settings_list_item_menu_delete to {
                 viewModelScope.launch(Dispatchers.Default) {
                     application.preferencesRepository.deleteNotificationEntity(item.entity)
                     settings.postValue(
