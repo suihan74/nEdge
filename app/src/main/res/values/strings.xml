@@ -69,7 +69,7 @@
 
     <string name="prefs_settings_list_item_menu_edit">編集</string>
     <string name="prefs_settings_list_item_menu_preview">プレビュー</string>
-    <string name="prefs_settings_list_item_menu_copy">これを基にして新規作成</string>
+    <string name="prefs_settings_list_item_menu_copy">同じ設定で新規作成</string>
     <string name="prefs_settings_list_item_menu_delete">削除</string>
 
     <!-- InformationFragment -->
