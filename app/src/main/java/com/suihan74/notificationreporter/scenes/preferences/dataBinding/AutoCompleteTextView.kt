@@ -1,7 +1,5 @@
 package com.suihan74.notificationreporter.scenes.preferences.dataBinding
 
-import android.view.View
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import androidx.databinding.BindingAdapter
@@ -13,37 +11,34 @@ import com.suihan74.notificationreporter.models.KeywordMatchingType
 object AutoCompleteTextViewBindingAdapters {
     @JvmStatic
     @BindingAdapter("android:value")
-    fun bindValue(view: AutoCompleteTextView, value: KeywordMatchingType?) {
+    fun bindKeywordMatchingType(view: AutoCompleteTextView, value: KeywordMatchingType?) {
+        val context = view.context
         if (view.adapter == null) {
-            val context = view.context
             val items = KeywordMatchingType.values().map { context.getString(it.textId) }
-            view.setAdapter(ArrayAdapter(context, R.layout.list_item_dropdown, items))
+            val adapter = ArrayAdapter(context, R.layout.list_item_dropdown, items)
+            view.setAdapter(adapter)
         }
-        view.listSelection = KeywordMatchingType.values().indexOf(value)
+
+        if (value != null) {
+            // 第二引数にfalseを与えると、入力後の内容によってドロップダウンの表示項目がフィルタされなくなる
+            view.setText(context.getString(value.textId), false)
+        }
     }
 
     @JvmStatic
     @InverseBindingAdapter(attribute = "android:value")
-    fun bindValueInverse(view: AutoCompleteTextView) : KeywordMatchingType {
-        return KeywordMatchingType.values().getOrElse(view.listSelection) { KeywordMatchingType.NONE }
+    fun bindKeywordMatchingTypeInverse(view: AutoCompleteTextView) : KeywordMatchingType {
+        val context = view.context
+        return KeywordMatchingType.values().firstOrNull {
+            context.getString(it.textId) == view.text.toString()
+        } ?: KeywordMatchingType.NONE
     }
 
     @JvmStatic
     @BindingAdapter("android:valueAttrChanged")
     fun bindListeners(view: AutoCompleteTextView, listener: InverseBindingListener?) {
-        view.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                listener?.onChange()
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                listener?.onChange()
-            }
+        view.setOnItemClickListener { _, _, _, _ ->
+            listener?.onChange()
         }
     }
 }
