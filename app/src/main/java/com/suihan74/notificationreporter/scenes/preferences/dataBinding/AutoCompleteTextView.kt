@@ -29,8 +29,9 @@ object AutoCompleteTextViewBindingAdapters {
     @InverseBindingAdapter(attribute = "android:value")
     fun bindKeywordMatchingTypeInverse(view: AutoCompleteTextView) : KeywordMatchingType {
         val context = view.context
+        val text = view.text!!.toString()
         return KeywordMatchingType.values().firstOrNull {
-            context.getString(it.textId) == view.text.toString()
+            context.getString(it.textId) == text
         } ?: KeywordMatchingType.NONE
     }
 
