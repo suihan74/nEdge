@@ -1,5 +1,6 @@
 package com.suihan74.notificationreporter.models
 
+import com.suihan74.notificationreporter.R
 import kotlinx.serialization.Serializable
 
 /**
@@ -7,16 +8,17 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 enum class KeywordMatchingType(
-    val importance : Int
+    val importance : Int,
+    val textId: Int
 ) {
     /** キーワード設定なし */
-    NONE(0),
+    NONE(0, R.string.keyword_matching_type_none),
 
     /** キーワードを含む */
-    INCLUDE(2),
+    INCLUDE(2, R.string.keyword_matching_type_include),
 
     /** キーワードを除く */
-    EXCLUDE(1),
+    EXCLUDE(1, R.string.keyword_matching_type_exclude),
 
     /*
     /** キーワードと完全一致 */

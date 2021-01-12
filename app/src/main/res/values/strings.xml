@@ -108,4 +108,9 @@
     <!-- UnknownNotificationSolution -->
     <string name="unknown_notice_solution_default">デフォルト設定で表示</string>
     <string name="unknown_notice_solution_ignore">通知を表示しない</string>
+
+    <!-- KeywordMatchingType -->
+    <string name="keyword_matching_type_none">無効</string>
+    <string name="keyword_matching_type_include">含む</string>
+    <string name="keyword_matching_type_exclude">含まない</string>
 </resources>
