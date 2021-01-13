@@ -6,6 +6,7 @@ import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.*
@@ -18,6 +19,7 @@ import com.suihan74.utilities.DialogListener
 import com.suihan74.utilities.lazyProvideViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.*
 
 class ApplicationSelectionDialogFragment : DialogFragment() {
 
@@ -47,6 +49,16 @@ class ApplicationSelectionDialogFragment : DialogFragment() {
             it.vm = viewModel
             it.lifecycleOwner = lifecycleOwner
             initializeRecyclerView(it, lifecycleOwner)
+        }
+
+        binding.searchEditText.also { editText ->
+            editText.setOnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    editText.hideSoftInputMethod(binding.recyclerView)
+                    true
+                }
+                else false
+            }
         }
 
         return AlertDialog.Builder(requireContext(), R.style.AlertDialog)
@@ -86,6 +98,17 @@ class ApplicationSelectionDialogFragment : DialogFragment() {
         val applications : LiveData<List<ApplicationItem>> by lazy { _applications }
         private val _applications = MutableLiveData<List<ApplicationItem>>()
 
+        /** (検索クエリによるフィルタリングが施された表示用の)アプリ一覧 */
+        val filteredApplications : LiveData<List<ApplicationItem>> by lazy { _filteredApplications }
+        private val _filteredApplications = MutableLiveData<List<ApplicationItem>>()
+
+        /** 検索クエリ */
+        val searchQuery = MutableLiveData<String>().also { it ->
+            it.observeForever { query ->
+                createList(query, applications.value)
+            }
+        }
+
         // ------ //
 
         var onSelect : DialogListener<ApplicationItem>? = null
@@ -105,6 +128,21 @@ class ApplicationSelectionDialogFragment : DialogFragment() {
                     }
                     .sortedBy { it.appName }
                 _applications.postValue(apps)
+                createList(searchQuery.value, apps)
+            }
+        }
+
+        private fun createList(query: String?, apps: List<ApplicationItem>?) = viewModelScope.launch(Dispatchers.Default) {
+            if (query.isNullOrBlank()) {
+                _filteredApplications.postValue(apps.orEmpty())
+            }
+            else {
+                val q = query.toLowerCase(Locale.getDefault())
+                _filteredApplications.postValue(
+                    apps.orEmpty().filter { item ->
+                        item.appName.toLowerCase(Locale.getDefault()).contains(q)
+                    }
+                )
             }
         }
     }

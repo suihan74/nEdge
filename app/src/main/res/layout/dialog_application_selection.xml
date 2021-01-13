@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
     <data>
+        <import type="android.view.View"/>
         <variable
             name="vm"
             type="com.suihan74.notificationreporter.scenes.preferences.dialog.ApplicationSelectionDialogFragment.DialogViewModel" />
@@ -9,17 +10,55 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:paddingTop="12dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/searchTextInputLayout"
+            style="@style/TextInputLayout.OutlinedBox"
+            android:hint="@string/prefs_settings_list_search_hint"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintWidth_percent="0.9"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content">
+
+            <com.suihan74.utilities.view.UnFocusableTextInputEditText
+                android:id="@+id/searchEditText"
+                style="@style/TextInputEditText"
+                android:text="@={vm.searchQuery}"
+                android:inputType="text"
+                android:imeOptions="actionSearch"
+                android:selectAllOnFocus="true"
+                android:importantForAutofill="no"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             style="@style/RecyclerView.Linear"
-            applications="@{vm.applications}"
-            app:layout_constraintTop_toTopOf="parent"
+            applications="@{vm.filteredApplications}"
+            app:layout_constraintTop_toBottomOf="@id/searchTextInputLayout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="4dp"
+            android:minHeight="64dp"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <ProgressBar
+            android:visibility="@{vm.applications}"
+            trueVisibility="@{View.GONE}"
+            falseVisibility="@{View.VISIBLE}"
+            app:layout_constraintTop_toTopOf="@id/recyclerView"
+            app:layout_constraintBottom_toBottomOf="@id/recyclerView"
+            app:layout_constraintStart_toStartOf="@id/recyclerView"
+            app:layout_constraintEnd_toEndOf="@id/recyclerView"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

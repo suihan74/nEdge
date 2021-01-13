@@ -6,6 +6,8 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.transition.Fade
@@ -17,6 +19,7 @@ import com.suihan74.notificationreporter.database.notification.NotificationEntit
 import com.suihan74.notificationreporter.databinding.FragmentSettingEditorBinding
 import com.suihan74.notificationreporter.scenes.preferences.PreferencesActivity
 import com.suihan74.notificationreporter.scenes.preferences.dataBinding.SliderBindingAdapters
+import com.suihan74.utilities.extensions.hideSoftInputMethod
 import com.suihan74.utilities.lazyProvideViewModel
 import kotlinx.coroutines.launch
 
@@ -82,6 +85,33 @@ class SettingEditorFragment : Fragment() {
 
         binding.cancelButton.setOnClickListener {
             preferencesActivity.closeSettingEditor()
+        }
+
+        val actionDone = TextView.OnEditorActionListener { view, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                view.hideSoftInputMethod(binding.mainLayout)
+                true
+            }
+            else false
+        }
+
+        val focusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                preferencesViewModel.showSystemUI()
+            }
+            else {
+                preferencesViewModel.hideSystemUI()
+            }
+        }
+
+        binding.displayNameEditText.apply {
+            setOnEditorActionListener(actionDone)
+            onFocusChangeListener = focusChangeListener
+        }
+
+        binding.keywordEditText.apply {
+            setOnEditorActionListener(actionDone)
+            onFocusChangeListener = focusChangeListener
         }
 
         viewModel.observeTopNotchType(

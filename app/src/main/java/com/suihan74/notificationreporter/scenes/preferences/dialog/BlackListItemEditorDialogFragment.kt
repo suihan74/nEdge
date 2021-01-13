@@ -47,6 +47,7 @@ class BlackListItemEditorDialogFragment : DialogFragment() {
             it.vm = viewModel
             it.lifecycleOwner = parentFragment?.viewLifecycleOwner ?: requireActivity()
         }
+
         return AlertDialog.Builder(requireContext())
             .setTitle(R.string.prefs_black_list_item_editor_title)
             .setView(binding.root)

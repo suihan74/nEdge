@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import com.suihan74.notificationreporter.databinding.FragmentGeneralPrefsBinding
 import com.suihan74.notificationreporter.scenes.preferences.PreferencesActivity
 import com.suihan74.notificationreporter.scenes.preferences.dataBinding.SliderBindingAdapters
-import com.suihan74.utilities.extensions.hideSoftInputMethod
 
 /**
  * 全般設定画面
@@ -44,14 +43,10 @@ class GeneralPrefsFragment : Fragment() {
         binding.lightOffIntervalEditText.also { editText ->
             editText.setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    editText.clearFocus()
+                    editText.hideSoftInputMethod(binding.mainLayout)
+                    true
                 }
-                false
-            }
-            editText.setOnFocusChangeListener { _, hasFocus ->
-                if (!hasFocus) {
-                    preferencesActivity.hideSoftInputMethod(binding.mainLayout)
-                }
+                else false
             }
         }
 
