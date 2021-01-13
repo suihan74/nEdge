@@ -7,8 +7,8 @@
     xmlns:motion="http://schemas.android.com/apk/res-auto">
 
     <Transition
-        motion:constraintSetStart="@id/start"
-        motion:constraintSetEnd="@id/end">
+        motion:constraintSetStart="@id/compact"
+        motion:constraintSetEnd="@id/full">
 
         <OnSwipe
             motion:touchAnchorId="@+id/menuRecyclerView"
@@ -20,13 +20,17 @@
     </Transition>
 
     <Transition
-        motion:constraintSetEnd="@id/start">
+        android:id="@+id/close"
+        motion:constraintSetStart="@id/full"
+        motion:constraintSetEnd="@id/compact">
         <OnClick
             motion:targetId="@+id/clickGuard"
             motion:clickAction="transitionToEnd" />
     </Transition>
 
-    <ConstraintSet android:id="@+id/start">
+    <!-- === -->
+
+    <ConstraintSet android:id="@+id/compact">
         <Constraint
             android:id="@id/clickGuard"
             android:visibility="invisible"
@@ -46,7 +50,7 @@
             motion:layout_constraintStart_toStartOf="parent" />
     </ConstraintSet>
 
-    <ConstraintSet android:id="@+id/end">
+    <ConstraintSet android:id="@+id/full">
         <Constraint
             android:id="@id/clickGuard"
             android:visibility="visible"

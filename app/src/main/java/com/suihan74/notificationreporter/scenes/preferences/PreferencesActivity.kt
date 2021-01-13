@@ -69,8 +69,10 @@ class PreferencesActivity : AppCompatActivity() {
             }
 
             list.adapter = adapter.apply {
-                setOnClickItemListener { binding ->
-                    viewModel.selectedMenuItem.value = binding.item
+                setOnClickItemListener {
+                    viewModel.selectedMenuItem.value = it.item
+                    binding.motionLayout.setTransition(R.id.close)
+                    binding.motionLayout.transitionToEnd()
                 }
 
                 submit(
