@@ -51,9 +51,7 @@ class BlackListItemEditorDialogFragment : DialogFragment() {
             .setTitle(R.string.prefs_black_list_item_editor_title)
             .setView(binding.root)
             .setNegativeButton(R.string.dialog_cancel, null)
-            .setPositiveButton(R.string.dialog_ok) { _, _ ->
-                viewModel.complete(this)
-            }
+            .setPositiveButton(R.string.dialog_ok) { _, _ -> viewModel.complete(this) }
             .create()
     }
 

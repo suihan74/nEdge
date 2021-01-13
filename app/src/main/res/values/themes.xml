@@ -15,6 +15,11 @@
         <item name="android:windowLightStatusBar">true</item>
     </style>
 
+    <style name="Theme.NotificationReporter.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar">
+        <!-- App Bar の文字色 -->
+        <item name="android:textColorPrimary">@color/preferencesTextColor</item>
+    </style>
+
     <!-- ====== -->
 
     <style name="LockScreenActivity" parent="Theme.NotificationReporter">

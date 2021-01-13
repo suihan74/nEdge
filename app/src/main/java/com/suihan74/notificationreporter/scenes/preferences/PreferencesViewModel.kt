@@ -1,9 +1,9 @@
 package com.suihan74.notificationreporter.scenes.preferences
 
+import android.view.View
+import android.view.Window
 import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.R
 import com.suihan74.notificationreporter.dataStore.Preferences
@@ -122,6 +122,89 @@ class PreferencesViewModel(
                 )
             }
         }
+    }
+
+    // ------ //
+
+    private var window : Window? = null
+
+    fun onAttachedToWindow(owner: LifecycleOwner, window: Window) {
+        this.window = window
+        showSystemUI()
+
+        // 画面明度のプレビュー
+        previewLightLevel.observe(owner, Observer {
+            window.attributes = window.attributes.also { lp ->
+                lp.screenBrightness =
+                    when {
+                        // システム設定値(-1.0fよりも小さい値のとき)
+                        it == null || it < -1.0f -> -1.0f
+
+                        // バックライト0+さらに暗くする
+                        it < .0f -> 0.01f
+
+                        // バックライト使用
+                        else -> 0.01f + (1.0f - 0.01f) * it
+                    }
+            }
+        })
+
+        editingLightLevel.observe(owner, Observer {
+            when (it) {
+                EditingLightLevel.NONE ->
+                    observeScreenBrightness(owner, null)
+
+                EditingLightLevel.ON ->
+                    observeScreenBrightness(owner, lightLevelOn)
+
+                EditingLightLevel.OFF ->
+                    observeScreenBrightness(owner, lightLevelOff)
+
+                else -> {}
+            }
+        })
+    }
+
+    private var previewLightLevelObserver : Observer<Float>? = null
+
+    private fun observeScreenBrightness(owner: LifecycleOwner, liveData: LiveData<Float>?) {
+        previewLightLevelObserver?.let { observer ->
+            lightLevelOn.removeObserver(observer)
+            lightLevelOff.removeObserver(observer)
+        }
+
+        if (liveData == null) {
+            previewLightLevel.value = -100.0f
+            return
+        }
+
+        val observer = Observer<Float> {
+            previewLightLevel.value = it
+        }
+        previewLightLevelObserver = observer
+
+        liveData.observe(owner, observer)
+    }
+
+    /** ステータスバーとナビゲーションバーを隠してフルスクリーンにする */
+    fun hideSystemUI() {
+        window?.decorView?.systemUiVisibility =
+            View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+                    View.SYSTEM_UI_FLAG_FULLSCREEN or
+                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
+                    View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
+                    View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
+                    View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+    }
+
+    /**
+     * ステータスバーとナビゲーションバーを表示する
+     *
+     * ステータスバーは背景を透過しフルスクリーンで表示したアクティビティに重ねて表示する
+     */
+    fun showSystemUI() {
+        window?.decorView?.systemUiVisibility =
+            View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
     }
 
     // ------ //

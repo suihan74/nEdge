@@ -15,6 +15,7 @@ import com.suihan74.notificationreporter.R
 import com.suihan74.notificationreporter.database.notification.NotificationEntity
 import com.suihan74.notificationreporter.database.notification.isDefault
 import com.suihan74.notificationreporter.models.*
+import com.suihan74.notificationreporter.scenes.preferences.PreferencesViewModel
 import com.suihan74.notificationreporter.scenes.preferences.dialog.ColorPickerDialogFragment
 import com.suihan74.notificationreporter.scenes.preferences.notch.NotchPosition
 import com.suihan74.notificationreporter.scenes.preferences.notch.PunchHoleNotchSettingFragment
@@ -27,7 +28,10 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 
-class SettingEditorViewModel(private val application: Application) : ViewModel() {
+class SettingEditorViewModel(
+    private val application: Application,
+    private val preferencesViewModel: PreferencesViewModel
+) : ViewModel() {
 
     /** 編集対象のエンティティ */
     val targetEntity : LiveData<NotificationEntity> by lazy { _targetEntity }
@@ -372,6 +376,11 @@ class SettingEditorViewModel(private val application: Application) : ViewModel()
             }
             .setNegativeButton(R.string.dialog_cancel)
             .create()
+
+        dialog.setOnDismissListener {
+            preferencesViewModel.hideSystemUI()
+        }
+
         dialog.show(fragmentManager, null)
     }
 
@@ -400,6 +409,9 @@ class SettingEditorViewModel(private val application: Application) : ViewModel()
             val g = Color.green(value)
             val b = Color.blue(value)
             notificationColor.value = Color.argb(255, r, g, b)
+        }
+        dialog.setOnDismissListener {
+            preferencesViewModel.hideSystemUI()
         }
         dialog.show(fragmentManager, null)
     }

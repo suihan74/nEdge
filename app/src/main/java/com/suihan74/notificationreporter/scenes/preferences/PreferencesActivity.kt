@@ -2,10 +2,7 @@ package com.suihan74.notificationreporter.scenes.preferences
 
 import android.os.Bundle
 import android.view.MotionEvent
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.R
@@ -34,8 +31,6 @@ class PreferencesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setTheme(R.style.PreferencesActivity)
 
-        hideSystemUI()
-
         binding = ActivityPreferencesBinding.inflate(layoutInflater).also {
             it.lifecycleOwner = this
         }
@@ -54,68 +49,8 @@ class PreferencesActivity : AppCompatActivity() {
     // スクリーン輪郭線・ノッチ輪郭線の描画がウィンドウアタッチ後でないとできないため
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
+        viewModel.onAttachedToWindow(this, window)
         binding.vm = viewModel
-
-        // 画面明度のプレビュー
-        viewModel.previewLightLevel.observe(this, {
-            window.attributes = window.attributes.also { lp ->
-                lp.screenBrightness =
-                    when {
-                        // システム設定値(-1.0fよりも小さい値のとき)
-                        it == null || it < -1.0f -> -1.0f
-
-                        // バックライト0+さらに暗くする
-                        it < .0f -> 0.01f
-
-                        // バックライト使用
-                        else -> 0.01f + (1.0f - 0.01f) * it
-                    }
-            }
-        })
-
-        viewModel.editingLightLevel.observe(this, {
-            when (it) {
-                PreferencesViewModel.EditingLightLevel.NONE ->
-                    observeScreenBrightness(null)
-
-                PreferencesViewModel.EditingLightLevel.ON ->
-                    observeScreenBrightness(viewModel.lightLevelOn)
-
-                PreferencesViewModel.EditingLightLevel.OFF ->
-                    observeScreenBrightness(viewModel.lightLevelOff)
-
-                else -> {}
-            }
-        })
-    }
-
-    private var previewLightLevelObserver : Observer<Float>? = null
-
-    private fun observeScreenBrightness(liveData: LiveData<Float>?) {
-        previewLightLevelObserver?.let { observer ->
-            viewModel.lightLevelOn.removeObserver(observer)
-            viewModel.lightLevelOff.removeObserver(observer)
-        }
-
-        if (liveData == null) {
-            viewModel.previewLightLevel.value = -100.0f
-            return
-        }
-
-        val observer = Observer<Float> {
-            viewModel.previewLightLevel.value = it
-        }
-        previewLightLevelObserver = observer
-
-        liveData.observe(this, observer)
-    }
-
-    /** ダイアログなどから復帰時にImmersiveモードを再適用する */
-    override fun onWindowFocusChanged(hasFocus: Boolean) {
-        super.onWindowFocusChanged(hasFocus)
-        if (hasFocus) {
-            hideSystemUI()
-        }
     }
 
     // ------ //
@@ -181,25 +116,5 @@ class PreferencesActivity : AppCompatActivity() {
     /** 通知設定編集画面を閉じる */
     fun closeSettingEditor() {
         supportFragmentManager.popBackStackImmediate()
-    }
-
-    // ------ //
-
-    fun hideSystemUI() {
-        // 全画面表示する
-        window.decorView.systemUiVisibility =
-            View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-            View.SYSTEM_UI_FLAG_FULLSCREEN or
-            View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
-            View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
-            View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
-            View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-    }
-
-    fun showSystemUI() {
-        window.decorView.let {
-            it.systemUiVisibility =
-                it.systemUiVisibility xor View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-        }
     }
 }

@@ -38,8 +38,13 @@ class SettingEditorFragment : Fragment() {
     private val preferencesActivity
         get() = requireActivity() as PreferencesActivity
 
+    private val preferencesViewModel
+        get() = preferencesActivity.viewModel
+
+    // ------ //
+
     val viewModel by lazyProvideViewModel {
-        SettingEditorViewModel(Application.instance)
+        SettingEditorViewModel(Application.instance, preferencesViewModel)
     }
 
     // ------ //
@@ -101,8 +106,18 @@ class SettingEditorFragment : Fragment() {
         }
     }
 
+    override fun onDetach() {
+        super.onDetach()
+        preferencesViewModel.showSystemUI()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         SliderBindingAdapters.onTerminateLifecycle(this)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        preferencesViewModel.hideSystemUI()
     }
 }

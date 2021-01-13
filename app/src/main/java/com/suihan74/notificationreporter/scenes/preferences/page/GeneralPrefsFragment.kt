@@ -49,12 +49,8 @@ class GeneralPrefsFragment : Fragment() {
                 false
             }
             editText.setOnFocusChangeListener { _, hasFocus ->
-                if (hasFocus) {
-                    preferencesActivity.showSystemUI()
-                }
-                else {
+                if (!hasFocus) {
                     preferencesActivity.hideSoftInputMethod(binding.mainLayout)
-                    preferencesActivity.hideSystemUI()
                 }
             }
         }
