@@ -9,4 +9,6 @@
     <dimen name="prefMenuIconSize">24dp</dimen>
     <!-- メニューアイコン余白(prefMenuIconSize + prefMenuIconPadding * 2 == prefMenuWidthCompact) -->
     <dimen name="prefMenuIconPadding">12dp</dimen>
+    <!-- コンテンツトップ余白(フルスクリーンなので、ノッチなどを回避するため) -->
+    <dimen name="prefContentMarginTop">80dp</dimen>
 </resources>
