@@ -9,6 +9,7 @@ import androidx.lifecycle.*
 import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.database.notification.NotificationEntity
 import com.suihan74.notificationreporter.models.MultipleNotificationsSolution
+import com.suihan74.notificationreporter.models.UnknownNotificationSolution
 import com.suihan74.utilities.extensions.between
 import kotlinx.coroutines.*
 import org.threeten.bp.LocalDateTime
@@ -18,6 +19,13 @@ import kotlin.random.Random
 class LockScreenViewModel(
     private val application: Application
 ) : ViewModel() {
+
+    enum class Extra {
+        /** プレビューする設定ID */
+        PREVIEW_ENTITY_ID
+    }
+
+    // ------ //
 
     private val batteryRepo = application.batteryRepository
 
@@ -280,8 +288,56 @@ class LockScreenViewModel(
 
     // ------ //
 
-    enum class Extra {
-        /** プレビューする設定ID */
-        PREVIEW_ENTITY_ID
+    companion object {
+        /**
+         * `LockScreenActivity`に遷移するべきかをチェックする
+         *
+         * 遷移を拒否する条件
+         * - 通知が不正(=null)
+         * - 画面が点灯中
+         * - バッテリレベルが指定値未満
+         * - 通知を行わない時間帯
+         *
+         * @return 遷移できる: true, 遷移できない: false
+         */
+        suspend fun checkNotifiable(sbn: StatusBarNotification?) : Boolean {
+            val app = Application.instance
+            val prefRepo = app.preferencesRepository
+            val batteryRepo = app.batteryRepository
+            val screenRepo = app.screenRepository
+
+            // 通知が不正, 画面が点いている
+            if (sbn?.notification == null || screenRepo.screenOn.value == true) {
+                return false
+            }
+
+            val prefs = prefRepo.preferences()
+
+            // バッテリレベルが指定値未満
+            val batteryLevel = batteryRepo.batteryLevel.value ?: 0
+            val requiredBatteryLevel = prefs.requiredBatteryLevel
+            if (batteryLevel < requiredBatteryLevel && batteryRepo.batteryCharging.value != true) {
+                return false
+            }
+
+            // 通知を行わない時間帯
+            if (LocalTime.now().between(prefs.silentTimezoneStart, prefs.silentTimezoneEnd)) {
+                return false
+            }
+
+            // 無視する通知
+            if (prefs.unknownNotificationSolution == UnknownNotificationSolution.IGNORE) {
+                if (null == prefRepo.getNotificationEntityOrNull(sbn)) {
+                    return false
+                }
+            }
+
+            // ブラックリスト設定に含まれるか確認
+            if (prefRepo.isBlackListed(sbn)) {
+                return false
+            }
+
+            return true
+        }
     }
 }

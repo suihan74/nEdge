@@ -39,7 +39,7 @@ class SettingsListViewModel(
     // ------ //
 
     init {
-        application.preferencesRepository.allNotificationSettingsFlow
+        application.preferencesRepository.allNotificationEntitiesFlow
             .onEach {
                 defaultSettingEntity =
                     it.firstOrNull { entity -> entity.isDefault }

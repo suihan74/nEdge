@@ -3,6 +3,7 @@ package com.suihan74.notificationreporter.repositories
 import android.service.notification.StatusBarNotification
 import androidx.datastore.core.DataStore
 import com.suihan74.notificationreporter.dataStore.Preferences
+import com.suihan74.notificationreporter.database.notification.BlackListEntity
 import com.suihan74.notificationreporter.database.notification.NotificationDao
 import com.suihan74.notificationreporter.database.notification.NotificationEntity
 import com.suihan74.notificationreporter.models.KeywordMatchingType
@@ -24,7 +25,26 @@ class PreferencesRepository(
         notificationDao.insert(entity)
     }
 
+    /**
+     * 設定を削除する
+     */
     suspend fun deleteNotificationEntity(entity: NotificationEntity) {
+        notificationDao.delete(entity)
+    }
+
+    // ------ //
+
+    /**
+     * ブラックリスト項目を保存する
+     */
+    suspend fun updateBlackListEntity(entity: BlackListEntity) {
+        notificationDao.insert(entity)
+    }
+
+    /**
+     * ブラックリスト項目を削除する
+     */
+    suspend fun deleteBlackListEntity(entity: BlackListEntity) {
         notificationDao.delete(entity)
     }
 
@@ -33,8 +53,14 @@ class PreferencesRepository(
     /**
      * すべての通知表示設定を取得する
      */
-    val allNotificationSettingsFlow : Flow<List<NotificationEntity>>
+    val allNotificationEntitiesFlow : Flow<List<NotificationEntity>>
         get() = notificationDao.getAllSettingsFlow()
+
+    /**
+     * すべてのブラックリスト項目を取得する
+     */
+    val allBlackListEntitiesFlow : Flow<List<BlackListEntity>>
+        get() = notificationDao.getAllBlackListItemsFlow()
 
     // ------ //
 
@@ -49,21 +75,42 @@ class PreferencesRepository(
     suspend fun getNotificationEntityOrNull(sbn: StatusBarNotification) : NotificationEntity? {
         return notificationDao.findByAppName(sbn.packageName)
             .sortedByDescending { it.keywordMatchingType.importance }
-            .firstOrNull {
-                when (it.keywordMatchingType) {
-                    KeywordMatchingType.NONE -> true
-
-                    KeywordMatchingType.INCLUDE ->
-                        sbn.notification?.contains(it.keyword) == true
-
-                    KeywordMatchingType.EXCLUDE ->
-                        sbn.notification?.contains(it.keyword) == false
-                }
-            }
+            .firstOrNull { isMatchKeyword(sbn, it.keyword, it.keywordMatchingType) }
     }
 
     suspend fun getNotificationEntityOrDefault(sbn: StatusBarNotification) : NotificationEntity {
         return getNotificationEntityOrNull(sbn) ?: notificationDao.getDefaultEntity()
+    }
+
+    // ------ //
+
+    /**
+     * ブラックリスト対象通知か確認する
+     *
+     * @return true - ブラックリスト対象
+     */
+    suspend fun isBlackListed(sbn: StatusBarNotification) : Boolean {
+        return notificationDao.findBlackListItemByAppName(sbn.packageName)
+            .any { isMatchKeyword(sbn, it.keyword, it.keywordMatchingType) }
+    }
+
+    // ------ //
+
+    /**
+     * キーワードにマッチするテキストを含む通知であるか確認する
+     */
+    private fun isMatchKeyword(
+        sbn: StatusBarNotification,
+        keyword: String,
+        keywordMatchingType: KeywordMatchingType
+    ) : Boolean = when (keywordMatchingType) {
+        KeywordMatchingType.NONE -> true
+
+        KeywordMatchingType.INCLUDE ->
+            sbn.notification?.contains(keyword) == true
+
+        KeywordMatchingType.EXCLUDE ->
+            sbn.notification?.contains(keyword) == false
     }
 
     // ------ //

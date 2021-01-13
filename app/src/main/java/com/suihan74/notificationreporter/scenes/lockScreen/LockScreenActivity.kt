@@ -18,72 +18,23 @@ import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.R
 import com.suihan74.notificationreporter.database.notification.NotificationEntity
 import com.suihan74.notificationreporter.databinding.ActivityLockScreenBinding
-import com.suihan74.notificationreporter.models.UnknownNotificationSolution
-import com.suihan74.utilities.extensions.between
 import com.suihan74.utilities.lazyProvideViewModel
-import org.threeten.bp.LocalTime
 
 class LockScreenActivity : AppCompatActivity() {
     companion object {
         /**
          * 可能なら`LockScreenActivity`に遷移する
          *
-         * @see checkNotifiable
+         * @see LockScreenViewModel.checkNotifiable
          */
         suspend fun startWhenAvailable(context: Context, sbn: StatusBarNotification?) {
-            if (checkNotifiable(sbn)) {
+            if (LockScreenViewModel.checkNotifiable(sbn)) {
                 val intent = Intent(context, LockScreenActivity::class.java).also {
                     it.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 }
                 context.startActivity(intent)
                 Log.i("Notification", sbn!!.packageName)
             }
-        }
-
-        /**
-         * `LockScreenActivity`に遷移するべきかをチェックする
-         *
-         * 遷移を拒否する条件
-         * - 通知が不正(=null)
-         * - 画面が点灯中
-         * - バッテリレベルが指定値未満
-         * - 通知を行わない時間帯
-         *
-         * @return 遷移できる: true, 遷移できない: false
-         */
-        suspend fun checkNotifiable(sbn: StatusBarNotification?) : Boolean {
-            val app = Application.instance
-            val prefRepo = app.preferencesRepository
-            val batteryRepo = app.batteryRepository
-            val screenRepo = app.screenRepository
-
-            // 通知が不正, 画面が点いている
-            if (sbn?.notification == null || screenRepo.screenOn.value == true) {
-                return false
-            }
-
-            val prefs = prefRepo.preferences()
-
-            // バッテリレベルが指定値未満
-            val batteryLevel = batteryRepo.batteryLevel.value ?: 0
-            val requiredBatteryLevel = prefs.requiredBatteryLevel
-            if (batteryLevel < requiredBatteryLevel && batteryRepo.batteryCharging.value != true) {
-                return false
-            }
-
-            // 通知を行わない時間帯
-            if (LocalTime.now().between(prefs.silentTimezoneStart, prefs.silentTimezoneEnd)) {
-                return false
-            }
-
-            // 無視する通知
-            if (prefs.unknownNotificationSolution == UnknownNotificationSolution.IGNORE) {
-                if (null == prefRepo.getNotificationEntityOrNull(sbn)) {
-                    return false
-                }
-            }
-
-            return true
         }
 
         /** プレビュー用に`LockScreenActivity`を開く */

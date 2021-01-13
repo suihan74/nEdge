@@ -56,6 +56,9 @@
     <string name="prefs_top_notch_type_selection_desc">画面上部ノッチタイプ</string>
     <string name="prefs_bottom_notch_type_selection_desc">画面下部ノッチタイプ</string>
 
+    <!-- BlackListItemEditorDialogFragment -->
+    <string name="prefs_black_list_item_editor_title">通知表示しないアプリを設定</string>
+
     <!-- RectangleNotchSettingFragment -->
     <string name="prefs_rectangle_notch_major_width_adjustment_desc">外側の幅調整</string>
     <string name="prefs_rectangle_notch_minor_width_adjustment_desc">内側の幅調整</string>

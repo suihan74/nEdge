@@ -5,6 +5,7 @@ import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
 import com.suihan74.notificationreporter.R
+import com.suihan74.notificationreporter.scenes.preferences.page.BlackListFragment
 import com.suihan74.notificationreporter.scenes.preferences.page.GeneralPrefsFragment
 import com.suihan74.notificationreporter.scenes.preferences.page.InformationFragment
 import com.suihan74.notificationreporter.scenes.preferences.page.SettingsListFragment
@@ -32,7 +33,7 @@ enum class MenuItem(
     BLACK_LIST(
         R.string.prefs_menu_label_black_list,
         R.drawable.ic_notifications_off,
-        { Fragment() }
+        { BlackListFragment.createInstance() }
     ),
 
     INFORMATION(

@@ -11,10 +11,10 @@ interface NotificationDao {
     }
 
     @Query("SELECT * FROM NotificationEntity")
-    suspend fun getAll() : List<NotificationEntity>
-
-    @Query("SELECT * FROM NotificationEntity")
     fun getAllSettingsFlow() : Flow<List<NotificationEntity>>
+
+    @Query("SELECT * FROM BlackListEntity")
+    fun getAllBlackListItemsFlow() : Flow<List<BlackListEntity>>
 
     // ------ //
 
@@ -32,6 +32,12 @@ interface NotificationDao {
         LIMIT 1
     """)
     suspend fun findById(id: Long) : NotificationEntity?
+
+    @Query("""
+        SELECT * FROM BlackListEntity
+        WHERE packageName = :packageName
+    """)
+    suspend fun findBlackListItemByAppName(packageName: String) : List<BlackListEntity>
 
     // ------ //
 
@@ -61,8 +67,14 @@ interface NotificationDao {
         )
     }
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(entity: BlackListEntity)
+
     // ------ //
 
     @Delete
     suspend fun delete(entity: NotificationEntity)
+
+    @Delete
+    suspend fun delete(entity: BlackListEntity)
 }
