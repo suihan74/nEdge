@@ -26,10 +26,22 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/prefContentMarginTop"
             android:paddingBottom="72dp"
-            android:paddingHorizontal="24dp"
+            android:paddingHorizontal="12dp"
             android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/pageTitle"
+                android:text="@string/prefs_menu_label_generals"
+                android:background="@android:color/transparent"
+                android:textAlignment="viewStart"
+                android:textSize="20sp"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:layout_marginTop="@dimen/prefContentMarginTop"
+                android:layout_marginBottom="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
             <Button
                 android:id="@+id/previewButton"

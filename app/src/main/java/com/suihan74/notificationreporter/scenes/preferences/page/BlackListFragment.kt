@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.R
 import com.suihan74.notificationreporter.databinding.FragmentBlackListBinding
+import com.suihan74.notificationreporter.databinding.ListFooterWithFabBinding
+import com.suihan74.notificationreporter.databinding.ListHeaderBlackListItemsBinding
 import com.suihan74.notificationreporter.databinding.ListItemBlackListItemsBinding
 import com.suihan74.utilities.BindingListAdapter
 import com.suihan74.utilities.lazyProvideViewModel
@@ -73,7 +75,17 @@ class BlackListFragment : Fragment() {
         }
 
         viewModel.settings.observe(viewLifecycleOwner, {
-            adapter.submit(items = it)
+            adapter.submit(
+                items = it,
+                header = { parent ->
+                    val binding = ListHeaderBlackListItemsBinding.inflate(layoutInflater, parent, false)
+                    binding.root
+                },
+                footer = { parent ->
+                    val binding = ListFooterWithFabBinding.inflate(layoutInflater, parent, false)
+                    binding.root
+                }
+            )
         })
     }
 }

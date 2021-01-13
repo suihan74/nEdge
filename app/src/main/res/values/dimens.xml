@@ -10,5 +10,7 @@
     <!-- メニューアイコン余白(prefMenuIconSize + prefMenuIconPadding * 2 == prefMenuWidthCompact) -->
     <dimen name="prefMenuIconPadding">12dp</dimen>
     <!-- コンテンツトップ余白(フルスクリーンなので、ノッチなどを回避するため) -->
-    <dimen name="prefContentMarginTop">80dp</dimen>
+    <dimen name="prefContentMarginTop">72dp</dimen>
+    <!-- FAB部分を回避するためのリストフッタ用マージン -->
+    <dimen name="prefFooterMarginWithFAB">80dp</dimen>
 </resources>

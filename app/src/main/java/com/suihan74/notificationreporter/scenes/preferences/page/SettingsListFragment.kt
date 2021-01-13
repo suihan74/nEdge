@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.R
 import com.suihan74.notificationreporter.databinding.FragmentSettingsListBinding
+import com.suihan74.notificationreporter.databinding.ListFooterWithFabBinding
 import com.suihan74.notificationreporter.databinding.ListHeaderNotificationSettingItemsBinding
 import com.suihan74.notificationreporter.databinding.ListItemNotificationSettingItemsBinding
 import com.suihan74.notificationreporter.scenes.preferences.PreferencesActivity
@@ -85,16 +86,16 @@ class SettingsListFragment : Fragment() {
             adapter.submit(
                 items = it,
                 header = { parent ->
-                    val binding = ListHeaderNotificationSettingItemsBinding.inflate(
-                        LayoutInflater.from(parent.context),
-                        parent,
-                        false
-                    )
+                    val binding = ListHeaderNotificationSettingItemsBinding.inflate(layoutInflater, parent, false)
                     binding.mainLayout.setOnClickListener {
                         viewModel.defaultSettingEntity?.let { entity ->
                             preferencesActivity.openSettingEditor(entity)
                         }
                     }
+                    binding.root
+                },
+                footer = { parent ->
+                    val binding = ListFooterWithFabBinding.inflate(layoutInflater, parent, false)
                     binding.root
                 }
             )

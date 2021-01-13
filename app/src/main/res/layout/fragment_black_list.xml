@@ -10,37 +10,13 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/mainLayout"
-        android:paddingTop="@dimen/prefContentMarginTop"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/searchTextInputLayout"
-            style="@style/TextInputLayout.OutlinedBox"
-            android:hint="@string/prefs_settings_list_search_hint"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintWidth_percent="0.8"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content">
-
-            <com.suihan74.utilities.view.UnFocusableTextInputEditText
-                android:id="@+id/searchEditText"
-                style="@style/TextInputEditText"
-                android:inputType="text"
-                android:imeOptions="actionSearch"
-                android:selectAllOnFocus="true"
-                android:importantForAutofill="no"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-        </com.google.android.material.textfield.TextInputLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             style="@style/RecyclerView.Linear"
-            app:layout_constraintTop_toBottomOf="@id/searchTextInputLayout"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
