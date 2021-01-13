@@ -10,13 +10,26 @@ import androidx.databinding.BindingAdapter
  * 真偽値で`android:visibility`を設定
  */
 @BindingAdapter(
-    value = ["android:visibility", "falseVisibility"],
+    value = ["android:visibility", "trueVisibility", "falseVisibility"],
     requireAll = false
 )
-fun View.setVisibility(b: Boolean?, falseVisibility: Int? = View.GONE) {
+fun View.setVisibility(b: Boolean?, trueVisibility: Int? = View.VISIBLE, falseVisibility: Int? = View.GONE) {
     this.visibility =
-        if (b == true) View.VISIBLE
+        if (b == true) trueVisibility ?: View.VISIBLE
         else falseVisibility ?: View.GONE
+}
+
+/**
+ * リストが空の場合非表示にする
+ */
+@BindingAdapter(
+    value = ["android:visibility", "trueVisibility", "falseVisibility"],
+    requireAll = false
+)
+fun View.setVisibility(list: List<*>?, trueVisibility: Int? = View.VISIBLE, falseVisibility: Int? = View.GONE) {
+    this.visibility =
+        if (list.isNullOrEmpty()) falseVisibility ?: View.GONE
+        else trueVisibility ?: View.VISIBLE
 }
 
 // ------ //
