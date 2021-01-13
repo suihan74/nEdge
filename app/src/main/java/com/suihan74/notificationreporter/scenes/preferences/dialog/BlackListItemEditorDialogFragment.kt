@@ -12,7 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.suihan74.notificationreporter.R
 import com.suihan74.notificationreporter.database.notification.BlackListEntity
-import com.suihan74.notificationreporter.databinding.FragmentBlackListItemEditorBinding
+import com.suihan74.notificationreporter.databinding.DialogBlackListItemEditorBinding
 import com.suihan74.notificationreporter.models.KeywordMatchingType
 import com.suihan74.notificationreporter.repositories.PreferencesRepository
 import com.suihan74.notificationreporter.scenes.preferences.page.BlackListItem
@@ -43,7 +43,7 @@ class BlackListItemEditorDialogFragment : DialogFragment() {
     // ------ //
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val binding = FragmentBlackListItemEditorBinding.inflate(layoutInflater, null, false).also {
+        val binding = DialogBlackListItemEditorBinding.inflate(layoutInflater, null, false).also {
             it.vm = viewModel
             it.lifecycleOwner = parentFragment?.viewLifecycleOwner ?: requireActivity()
         }
