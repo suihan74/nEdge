@@ -62,16 +62,33 @@ class BlackListItemEditorDialogFragment : DialogFragment() {
     class DialogViewModel : ViewModel() {
         private var prefsRepo : PreferencesRepository? = null
 
+        /**
+         * 編集対象のエンティティ
+         *
+         * 既存ならIDが入っているので、保存時にはこれをコピーして更新する
+         */
         private var entity : BlackListEntity? = null
 
+        /**
+         * 対象アプリ情報
+         */
         val applicationInfo = MutableLiveData<ApplicationInfo>()
 
+        /**
+         * キーワード
+         */
         val keyword = MutableLiveData<String>()
 
+        /**
+         * キーワードマッチ方法
+         */
         val keywordMatchingType = MutableLiveData<KeywordMatchingType>()
 
         // ------ //
 
+        /**
+         * 編集対象の情報をセットする
+         */
         suspend fun initialize(item: BlackListItem, repository: PreferencesRepository) = withContext(Dispatchers.Main) {
             prefsRepo = repository
             entity = item.entity
@@ -80,6 +97,9 @@ class BlackListItemEditorDialogFragment : DialogFragment() {
             keywordMatchingType.value = item.entity.keywordMatchingType
         }
 
+        /**
+         * 編集内容を保存してダイアログを閉じる
+         */
         fun complete(dialog: BlackListItemEditorDialogFragment) = viewModelScope.launch(Dispatchers.Main) {
             try {
                 val entity = entity!!.copy(
