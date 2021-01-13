@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import com.suihan74.notificationreporter.databinding.FragmentGeneralPrefsBinding
 import com.suihan74.notificationreporter.scenes.preferences.PreferencesActivity
 import com.suihan74.notificationreporter.scenes.preferences.dataBinding.SliderBindingAdapters
+import com.suihan74.utilities.extensions.hideSoftInputMethod
 
 /**
  * 全般設定画面

@@ -16,6 +16,7 @@ import com.suihan74.notificationreporter.databinding.DialogApplicationSelectionB
 import com.suihan74.notificationreporter.databinding.ListItemApplicationItemsBinding
 import com.suihan74.utilities.BindingListAdapter
 import com.suihan74.utilities.DialogListener
+import com.suihan74.utilities.extensions.hideSoftInputMethod
 import com.suihan74.utilities.lazyProvideViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
