@@ -9,6 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import com.azeesoft.lib.colorpicker.ColorPickerDialog
 import com.suihan74.notificationreporter.R
 import com.suihan74.utilities.DialogListener
+import com.suihan74.utilities.Listener
 import com.suihan74.utilities.fragment.withArguments
 import com.suihan74.utilities.lazyProvideViewModel
 
@@ -49,11 +50,17 @@ class ColorPickerDialogFragment : DialogFragment() {
         viewModel.onColorPicked = l
     }
 
+    fun setOnDismissListener(l : Listener<ColorPickerDialogFragment>?) = lifecycleScope.launchWhenCreated {
+        viewModel.onDismiss = l
+    }
+
     // ------ //
 
     class DialogViewModel(
         val initialColor: Int
     ) : ViewModel() {
         var onColorPicked : DialogListener<Int>? = null
+
+        var onDismiss : Listener<ColorPickerDialogFragment>? = null
     }
 }
