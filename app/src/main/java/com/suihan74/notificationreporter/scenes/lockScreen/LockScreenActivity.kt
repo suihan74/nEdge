@@ -80,7 +80,7 @@ class LockScreenActivity : AppCompatActivity() {
                 }
 
                 override fun onTransitionCompleted(motionLayout: MotionLayout?, currentId: Int) {
-                    if (currentId == R.id.full) {
+                    if (currentId == R.id.end) {
                         finish()
                     }
                 }
