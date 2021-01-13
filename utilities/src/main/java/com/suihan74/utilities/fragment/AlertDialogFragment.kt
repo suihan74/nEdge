@@ -54,6 +54,11 @@ class AlertDialogFragment : DialogFragment() {
         return viewModel.createDialog(this)
     }
 
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        viewModel.onDismiss?.invoke(this)
+    }
+
     // ------ //
 
     /** singleChoiceItemsで選択されている項目 */
@@ -66,28 +71,32 @@ class AlertDialogFragment : DialogFragment() {
 
     // ------ //
 
-    fun setDismissOnClickButton(flag: Boolean) = lifecycleScope.launchWhenStarted {
+    fun setDismissOnClickButton(flag: Boolean) = lifecycleScope.launchWhenCreated {
         viewModel.dismissOnClickButton = flag
     }
 
-    fun setDismissOnClickItem(flag: Boolean) = lifecycleScope.launchWhenStarted {
+    fun setDismissOnClickItem(flag: Boolean) = lifecycleScope.launchWhenCreated {
         viewModel.dismissOnClickItem = flag
     }
 
-    fun setOnClickPositiveButton(listener: Listener<AlertDialogFragment>?) = lifecycleScope.launchWhenStarted {
+    fun setOnClickPositiveButton(listener: Listener<AlertDialogFragment>?) = lifecycleScope.launchWhenCreated {
         viewModel.onClickPositiveButton = listener
     }
 
-    fun setOnClickNegativeButton(listener: Listener<AlertDialogFragment>?) = lifecycleScope.launchWhenStarted {
+    fun setOnClickNegativeButton(listener: Listener<AlertDialogFragment>?) = lifecycleScope.launchWhenCreated {
         viewModel.onClickNegativeButton = listener
     }
 
-    fun setOnClickNeutralButton(listener: Listener<AlertDialogFragment>?) = lifecycleScope.launchWhenStarted {
+    fun setOnClickNeutralButton(listener: Listener<AlertDialogFragment>?) = lifecycleScope.launchWhenCreated {
         viewModel.onClickNeutralButton = listener
     }
 
-    fun setOnClickItem(listener: ((AlertDialogFragment, Int)->Unit)?) = lifecycleScope.launchWhenStarted {
+    fun setOnClickItem(listener: ((AlertDialogFragment, Int)->Unit)?) = lifecycleScope.launchWhenCreated {
         viewModel.onClickItem = listener
+    }
+
+    fun setOnDismissListener(listener: Listener<AlertDialogFragment>?) = lifecycleScope.launchWhenCreated {
+        viewModel.onDismiss = listener
     }
 
     // ------ //
@@ -156,6 +165,9 @@ class AlertDialogFragment : DialogFragment() {
 
         /** リスト項目のクリック時処理 */
         var onClickItem : ((AlertDialogFragment, Int)->Unit)? = null
+
+        /** ダイアログを閉じたときの処理 */
+        var onDismiss : Listener<AlertDialogFragment>? = null
 
         // ------ //
 
