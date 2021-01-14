@@ -102,20 +102,11 @@ class LockScreenActivity : AppCompatActivity() {
     // ノッチ情報の取得はウィンドウアタッチ後でないとできない
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-
-        // バックライトの制御
-        viewModel.observeScreenBrightness(this, window)
-
-        val notificationDrawer = NotificationDrawer(window)
-        viewModel.notificationEntity.observe(this, {
-            notificationDrawer.draw(binding.notificationBar, it.setting)
-        })
+        viewModel.onAttachedToWindow(this, window, binding.notificationBar)
     }
 
-    /**
-     * 常にフルスクリーンでロック画面より上に表示し，画面を完全に消灯しない
-     */
-    private fun overlapLockScreenAndKeepScreenOn() {
+    /** 常に画面を点灯する設定 */
+    private fun keepScreenOn() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
             setShowWhenLocked(true)
             setTurnScreenOn(true)
@@ -127,6 +118,13 @@ class LockScreenActivity : AppCompatActivity() {
             window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED)
         }
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+    }
+
+    /**
+     * 常にフルスクリーンでロック画面より上に表示し，画面を完全に消灯しない
+     */
+    private fun overlapLockScreenAndKeepScreenOn() {
+        keepScreenOn()
 
         window.decorView.let { decorView ->
             val flags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or

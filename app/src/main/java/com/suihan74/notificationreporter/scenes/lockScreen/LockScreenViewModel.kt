@@ -1,10 +1,14 @@
 package com.suihan74.notificationreporter.scenes.lockScreen
 
+import android.app.Service
+import android.app.admin.DevicePolicyManager
 import android.content.Intent
 import android.service.notification.StatusBarNotification
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.Window
+import android.widget.ImageView
 import androidx.lifecycle.*
 import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.database.notification.NotificationEntity
@@ -32,6 +36,8 @@ class LockScreenViewModel(
     private val notificationRepo = application.notificationRepository
 
     private val prefRepo = application.preferencesRepository
+
+    private val screenRepo = application.screenRepository
 
     // ------ //
 
@@ -144,6 +150,30 @@ class LockScreenViewModel(
         }
     }
 
+    /** アクティビティがウィンドウにアタッチされている必要がある初期化処理 */
+    fun onAttachedToWindow(owner: LifecycleOwner, window: Window, edgeImageView: ImageView) {
+        // バックライトの制御
+        observeScreenBrightness(owner, window)
+
+        // 輪郭線の描画
+        val notificationDrawer = NotificationDrawer(window)
+        notificationEntity.observe(owner, Observer {
+            notificationDrawer.draw(edgeImageView, it.setting)
+        })
+    }
+
+    /** 強制的にロックして消灯する */
+    private fun sleep() {
+        try {
+            val dpm =
+                application.getSystemService(Service.DEVICE_POLICY_SERVICE) as DevicePolicyManager
+            dpm.lockNow()
+        }
+        catch (e: Throwable) {
+            Log.e("DevicePolicyManager", Log.getStackTraceString(e))
+        }
+    }
+
     /** アクティビティから抜ける際に通知スタックをクリア */
     fun onFinishActivity() = GlobalScope.launch {
         notificationRepo.clearNotifications()
@@ -226,7 +256,7 @@ class LockScreenViewModel(
                 _currentTime.value = now
 
                 if (now.toLocalTime().between(silentTimezoneStart!!, silentTimezoneEnd!!)) {
-                    // TODO: 表示しない時間になったら画面を消す
+                    sleep()
                 }
 
                 // 1分間隔で時計を更新する
@@ -239,6 +269,7 @@ class LockScreenViewModel(
 
     // ------ //
 
+    /** 画面タッチでライトオン状態にする */
     val onTouchScreen : (View, MotionEvent)->Boolean = { _, motionEvent ->
         when (motionEvent.action) {
             MotionEvent.ACTION_DOWN -> {
@@ -250,7 +281,7 @@ class LockScreenViewModel(
 
     // ------ //
 
-    fun observeScreenBrightness(owner: LifecycleOwner, window: Window) {
+    private fun observeScreenBrightness(owner: LifecycleOwner, window: Window) {
         lightOff.observe(owner, Observer { lightOff ->
             window.attributes = window.attributes.also { lp ->
                 lp.screenBrightness =

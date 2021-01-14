@@ -1,6 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE resources [
+    <!ENTITY appName "NotificationReporter">
+    <!ENTITY author "suihan">
+]>
+
 <resources>
-    <string name="app_name">NotificationReporter</string>
-    <string name="copyright">Copyright \u00A9 %s &lt;a href=&quot;https://suihan74.github.io&quot;&gt;suihan&lt;/a&gt;</string>
+    <string name="app_name">&appName;</string>
+    <string name="copyright">Copyright \u00A9 %s &lt;a href=&quot;https://suihan74.github.io&quot;&gt;&author;&lt;/a&gt;</string>
 
     <!-- dialog -->
     <string name="dialog_ok">OK</string>
@@ -17,6 +23,9 @@
     <string name="bottom_right">右下</string>
 
     <!-- ====== -->
+
+    <!-- DEVICE_ADMIN -->
+    <string name="device_admin_desc">&appName; から画面をロック・消灯するために使用します</string>
 
     <!-- PreferencesActivity -->
 
