@@ -14,7 +14,7 @@ class NotificationService : NotificationListenerService() {
         super.onNotificationPosted(sbn)
 
         Application.instance.let { app -> app.coroutineScope.launch {
-            app.notificationRepository.pushNotification(sbn)
+            app.notificationRepository.pushNotification(sbn, app.preferencesRepository)
             LockScreenActivity.startWhenAvailable(applicationContext, sbn)
         } }
     }

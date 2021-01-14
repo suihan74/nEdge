@@ -13,7 +13,6 @@ import androidx.lifecycle.*
 import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.database.notification.NotificationEntity
 import com.suihan74.notificationreporter.models.MultipleNotificationsSolution
-import com.suihan74.notificationreporter.models.UnknownNotificationSolution
 import com.suihan74.utilities.extensions.between
 import kotlinx.coroutines.*
 import org.threeten.bp.LocalDateTime
@@ -336,6 +335,7 @@ class LockScreenViewModel(
             val prefRepo = app.preferencesRepository
             val batteryRepo = app.batteryRepository
             val screenRepo = app.screenRepository
+            val notificationRepo = app.notificationRepository
 
             // 通知が不正, 画面が点いている
             if (sbn?.notification == null || screenRepo.screenOn.value == true) {
@@ -357,18 +357,7 @@ class LockScreenViewModel(
             }
 
             // 無視する通知
-            if (prefs.unknownNotificationSolution == UnknownNotificationSolution.IGNORE) {
-                if (null == prefRepo.getNotificationEntityOrNull(sbn)) {
-                    return false
-                }
-            }
-
-            // ブラックリスト設定に含まれるか確認
-            if (prefRepo.isBlackListed(sbn)) {
-                return false
-            }
-
-            return true
+            return notificationRepo.validateNotification(sbn, prefRepo, prefs)
         }
     }
 }
