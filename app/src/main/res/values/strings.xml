@@ -5,8 +5,8 @@
     ]>
 
 <resources>
-    <string name="app_name">&appName;</string>
-    <string name="copyright">Copyright \u00A9 %s &lt;a href=&quot;https://suihan74.github.io&quot;&gt;&author;&lt;/a&gt;</string>
+    <string name="app_name" translatable="false">&appName;</string>
+    <string name="copyright" translatable="false">Copyright \u00A9 %s &lt;a href=&quot;https://suihan74.github.io&quot;&gt;&author;&lt;/a&gt;</string>
 
     <!-- dialog -->
     <string name="dialog_ok">OK</string>
