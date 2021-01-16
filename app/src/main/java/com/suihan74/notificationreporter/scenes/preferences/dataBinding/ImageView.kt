@@ -6,7 +6,7 @@ import android.util.Log
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import com.suihan74.notificationreporter.models.NotificationSetting
-import com.suihan74.notificationreporter.scenes.lockScreen.NotificationDrawer
+import com.suihan74.notificationreporter.outline.OutlineDrawer
 
 object ImageViewBindingAdapters {
     /**
@@ -22,8 +22,8 @@ object ImageViewBindingAdapters {
 
         try {
             val activity = imageView.context as? Activity ?: return
-            val notificationDrawer = NotificationDrawer(activity.window)
-            notificationDrawer.draw(imageView, setting)
+            val outlineDrawer = OutlineDrawer(activity.window)
+            outlineDrawer.draw(imageView, setting)
         }
         catch (e: Throwable) {
             Log.e("notificationSetting", Log.getStackTraceString(e))

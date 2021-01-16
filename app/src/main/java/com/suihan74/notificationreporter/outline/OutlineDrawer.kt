@@ -1,4 +1,4 @@
-package com.suihan74.notificationreporter.scenes.lockScreen
+package com.suihan74.notificationreporter.outline
 
 import android.graphics.*
 import android.os.Build
@@ -13,7 +13,7 @@ import kotlin.math.*
 /**
  * 通知表示を生成する
  */
-class NotificationDrawer(
+class OutlineDrawer(
     private val window: Window
 ) {
     /** 画面サイズ */

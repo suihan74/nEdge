@@ -13,6 +13,7 @@ import androidx.lifecycle.*
 import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.database.notification.NotificationEntity
 import com.suihan74.notificationreporter.models.MultipleNotificationsSolution
+import com.suihan74.notificationreporter.outline.OutlineDrawer
 import com.suihan74.utilities.extensions.between
 import kotlinx.coroutines.*
 import org.threeten.bp.LocalDateTime
@@ -35,8 +36,6 @@ class LockScreenViewModel(
     private val notificationRepo = application.notificationRepository
 
     private val prefRepo = application.preferencesRepository
-
-    private val screenRepo = application.screenRepository
 
     // ------ //
 
@@ -155,9 +154,9 @@ class LockScreenViewModel(
         observeScreenBrightness(owner, window)
 
         // 輪郭線の描画
-        val notificationDrawer = NotificationDrawer(window)
+        val outlineDrawer = OutlineDrawer(window)
         notificationEntity.observe(owner, Observer {
-            notificationDrawer.draw(edgeImageView, it.setting)
+            outlineDrawer.draw(edgeImageView, it.setting)
         })
     }
 
