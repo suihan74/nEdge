@@ -4,11 +4,13 @@ import android.graphics.*
 import android.os.Build
 import android.view.Window
 import android.widget.ImageView
-import androidx.annotation.RequiresApi
-import com.suihan74.notificationreporter.models.*
+import com.suihan74.notificationreporter.models.NotchSetting
+import com.suihan74.notificationreporter.models.NotchType
+import com.suihan74.notificationreporter.models.NotificationSetting
+import com.suihan74.notificationreporter.models.PunchHoleNotchSetting
+import com.suihan74.notificationreporter.outline.notch.EdgeNotchDrawer
 import com.suihan74.utilities.extensions.dp
 import com.suihan74.utilities.extensions.onNot
-import kotlin.math.*
 
 /**
  * 通知表示を生成する
@@ -176,7 +178,7 @@ class OutlineDrawer(
         val topCornerRadius = notificationSetting.outlinesSetting.topCornerRadius.dp
 
         path.moveTo(offset + topCornerRadius, offset)
-        drawTopNotch(path, thickness, notificationSetting.topNotchSetting)
+        drawTopNotch(path, thickness, topCornerRadius, notificationSetting.topNotchSetting)
         path.lineTo(right - topCornerRadius, offset)
     }
 
@@ -194,7 +196,7 @@ class OutlineDrawer(
         val bottomCornerRadius = notificationSetting.outlinesSetting.bottomCornerRadius.dp
 
         path.moveTo(right - bottomCornerRadius, bottom)
-        drawBottomNotch(path, thickness, notificationSetting.bottomNotchSetting)
+        drawBottomNotch(path, thickness, bottomCornerRadius, notificationSetting.bottomNotchSetting)
         path.lineTo(offset + bottomCornerRadius, bottom)
     }
 
@@ -203,6 +205,7 @@ class OutlineDrawer(
     private fun drawTopNotch(
         path: Path,
         thickness: Float,
+        cornerRadius: Float,
         notchSetting: NotchSetting
     ) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) return
@@ -213,20 +216,13 @@ class OutlineDrawer(
                 it.top < verticalCenter
             } ?: return
 
-        when (notchSetting.type) {
-            NotchType.RECTANGLE ->
-                drawTopRectangleNotch(path, rect, thickness, notchSetting as RectangleNotchSetting)
-
-            NotchType.WATER_DROP ->
-                drawTopWaterDropNotch(path, rect, thickness, notchSetting as WaterDropNotchSetting)
-
-            else -> {}
-        }
+        EdgeNotchDrawer.draw(displayRealSize, path, rect, thickness, cornerRadius, notchSetting)
     }
 
     private fun drawBottomNotch(
         path: Path,
         thickness: Float,
+        cornerRadius: Float,
         notchSetting: NotchSetting
     ) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) return
@@ -237,15 +233,7 @@ class OutlineDrawer(
                 it.top > verticalCenter
             } ?: return
 
-        when (notchSetting.type) {
-            NotchType.RECTANGLE ->
-                drawBottomRectangleNotch(path, rect, thickness, notchSetting as RectangleNotchSetting)
-
-            NotchType.WATER_DROP ->
-                drawBottomWaterDropNotch(path, rect, thickness, notchSetting as WaterDropNotchSetting)
-
-            else -> {}
-        }
+        EdgeNotchDrawer.draw(displayRealSize, path, rect, thickness, cornerRadius, notchSetting)
     }
 
     private fun drawFloatingNotch(
@@ -253,8 +241,6 @@ class OutlineDrawer(
         thickness: Float,
         notchSetting: NotchSetting
     ) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) return
-
         when (notchSetting.type) {
             NotchType.PUNCH_HOLE ->
                 drawPunchHoleNotch(path, notchSetting as PunchHoleNotchSetting)
@@ -266,249 +252,8 @@ class OutlineDrawer(
     // ------ //
 
     /**
-     * 矩形ノッチ(画面上部)
-     */
-    @RequiresApi(Build.VERSION_CODES.P)
-    private fun drawTopRectangleNotch(
-        path: Path,
-        rect: Rect,
-        thickness: Float,
-        notchSetting: RectangleNotchSetting
-    ) {
-        val offset = thickness / 2
-        val majorWidth = rect.width() * notchSetting.majorWidthAdjustment
-        val minorWidth = rect.width() * min(notchSetting.minorWidthAdjustment, notchSetting.majorWidthAdjustment)
-        val height = rect.height() * notchSetting.heightAdjustment
-
-        val top = rect.top + offset
-        val bottom = rect.bottom + offset + height
-
-        val rad =
-            if (majorWidth == minorWidth) (PI * .5)
-            else atan((bottom - top) / (majorWidth - minorWidth) / .5)
-        val deg = (180 * rad / PI).toFloat()
-
-        val sin = sin(rad)
-        val cos = cos(rad)
-        val tanHalf = tan(rad / 2)
-
-        path.run {
-            notchSetting.majorRadius.dp.let { r ->
-                val left = rect.left - offset - majorWidth * .5f
-                val cx = (left - r * tanHalf).toFloat()
-                val cy = top + r
-
-                // top edge (left of the notch)
-                lineTo(cx, top)
-                // top left corner
-                arcTo(cx - r, cy - r, cx + r, cy + r, 270f, deg, false)
-            }
-
-            notchSetting.minorRadius.dp.let { r ->
-                val left = rect.left - offset - minorWidth * .5f
-                val right = rect.right + offset + minorWidth * .5f
-                val cy = bottom - r
-                val lcx = left + r * tanHalf
-                val rcx = (right - r * tanHalf).toFloat()
-                val lex = (lcx - r * sin).toFloat()
-                val ley = (cy + r * cos).toFloat()
-
-                // left edge
-                lineTo(lex, ley)
-                // bottom left corner
-                lcx.toFloat().let {
-                    arcTo(it - r, cy - r, it + r, cy + r, 90f + deg, -deg, false)
-                }
-                // bottom edge
-                lineTo(rcx, bottom)
-                // bottom right corner
-                arcTo(rcx - r, cy - r, rcx + r, cy + r, 90f, -deg, false)
-            }
-
-            notchSetting.majorRadius.dp.let { r ->
-                val right = rect.right + offset + majorWidth * .5f
-                val cx = right + r * tanHalf
-                val cy = top + r
-                val rex = (cx - r * sin).toFloat()
-                val rey = (cy - r * cos).toFloat()
-
-                // right edge
-                lineTo(rex, rey)
-                // top right corner
-                cx.toFloat().let {
-                    arcTo(it - r, cy - r, it + r, cy + r, 270f - deg, deg, false)
-                }
-            }
-        }
-    }
-
-    /**
-     * 矩形ノッチ(画面下部)
-     */
-    @RequiresApi(Build.VERSION_CODES.P)
-    private fun drawBottomRectangleNotch(
-        path: Path,
-        rect: Rect,
-        thickness: Float,
-        notchSetting: RectangleNotchSetting
-    ) {
-        val offset = thickness / 2
-        val majorWidth = rect.width() * notchSetting.majorWidthAdjustment
-        val minorWidth = rect.width() * min(notchSetting.minorWidthAdjustment, notchSetting.majorWidthAdjustment)
-        val height = rect.height() * notchSetting.heightAdjustment
-
-        val top = rect.top - offset - height
-        val bottom = rect.bottom - offset
-
-        val rad =
-            if (minorWidth == majorWidth) (PI * .5)
-            else atan((bottom - top) / (majorWidth - minorWidth) / .5)
-        val deg = (180 * rad / PI).toFloat()
-
-        val sin = sin(rad)
-        val cos = cos(rad)
-        val tanHalf = tan(rad / 2)
-
-        path.apply {
-            notchSetting.majorRadius.dp.let { r ->
-                val right = rect.right + offset + majorWidth * .5f
-                val cx = (right + r * tanHalf).toFloat()
-                val cy = bottom - r
-
-                // bottom edge (right of the notch)
-                lineTo(cx, bottom)
-                // bottom right corner
-                arcTo(cx - r, cy - r, cx + r, cy + r, 90f, deg, false)
-            }
-
-            notchSetting.minorRadius.dp.let { r ->
-                val left = rect.left - offset - minorWidth * .5f
-                val right = rect.right + offset + minorWidth * .5f
-                val cy = top + r
-                val rcx = right - r * tanHalf
-                val lcx = (left + r * tanHalf).toFloat()
-                val rex = (rcx + r * sin).toFloat()
-                val rey = (cy - r * cos).toFloat()
-
-                // right edge
-                lineTo(rex, rey)
-                // top right corner
-                rcx.toFloat().let {
-                    arcTo(it - r, cy - r, it + r, cy + r, 270f + deg, -deg, false)
-                }
-                // top edge
-                lineTo(lcx, top)
-                // top left corner
-                arcTo(lcx - r, cy - r, lcx + r, cy + r, 270f, -deg, false)
-            }
-
-            notchSetting.majorRadius.dp.let { r ->
-                val left = rect.left - offset - majorWidth * .5f
-                val cx = left - r * tanHalf
-                val cy = bottom - r
-                val lex = (cx + r * sin).toFloat()
-                val ley = (cy + r * cos).toFloat()
-
-                // left edge
-                lineTo(lex, ley)
-                // bottom left corner
-                cx.toFloat().let {
-                    arcTo(it - r, cy - r, it + r, cy + r, 90f - deg, deg, false)
-                }
-            }
-        }
-    }
-
-    /**
-     * 水滴ノッチ縁(画面上部)
-     */
-    @RequiresApi(Build.VERSION_CODES.P)
-    private fun drawTopWaterDropNotch(
-        path: Path,
-        rect: Rect,
-        thickness: Float,
-        notchSetting: WaterDropNotchSetting
-    ) {
-        val offset = thickness / 2
-        val widthAdjustmentPx = rect.width() * .5f * notchSetting.widthAdjustment
-
-        val rootRadius = notchSetting.majorRadius.dp
-        val rootDegree = notchSetting.heightAdjustment.dp
-
-        val left = rect.left - offset - widthAdjustmentPx
-        val right = rect.right + offset + widthAdjustmentPx
-        val top = rect.top + offset
-
-        val lx = left - rootRadius
-        val rx = right + rootRadius
-        val wy = top + rootRadius
-
-        path.apply {
-            // top left
-            lineTo(lx, top)
-            arcTo(lx - rootRadius, top, lx + rootRadius, wy + rootRadius, 270f, rootDegree, false)
-
-            // water drop
-            val (sin, cos) = (PI * rootDegree / 180f).let {
-                sin(it) to cos(it)
-            }
-            val r = ((rx - lx - 2 * rootRadius * sin) / (2 * sin)).toFloat()
-            val cx = (lx + (rootRadius + r) * sin).toFloat()
-            val cy = (wy - (rootRadius + r) * cos).toFloat()
-            arcTo(cx - r, cy - r, cx + r, cy + r, 90f + rootDegree, -rootDegree * 2, false)
-
-            // top right
-            arcTo(right, top, rx + rootRadius, wy + rootRadius, 270f - rootDegree, rootDegree, false)
-        }
-    }
-
-    /**
-     * 水滴ノッチ(画面下部)
-     */
-    @RequiresApi(Build.VERSION_CODES.P)
-    private fun drawBottomWaterDropNotch(
-        path: Path,
-        rect: Rect,
-        thickness: Float,
-        notchSetting: WaterDropNotchSetting
-    ) {
-        val offset = thickness / 2
-        val widthAdjustmentPx = rect.width() * .5f * notchSetting.widthAdjustment
-
-        val rootRadius = notchSetting.majorRadius.dp
-        val rootDegree = notchSetting.heightAdjustment.dp
-
-        val left = rect.left - offset - widthAdjustmentPx
-        val right = rect.right + offset + widthAdjustmentPx
-        val bottom = rect.bottom - offset
-
-        val lx = left - rootRadius
-        val rx = right + rootRadius
-        val wy = bottom - rootRadius
-
-        path.apply {
-            // bottom right
-            lineTo(rx, bottom)
-            arcTo(right, wy - rootRadius, rx + rootRadius, bottom, 90f, rootDegree, false)
-
-            // water drop
-            val (sin, cos) = (PI * rootDegree / 180f).let {
-                sin(it) to -cos(it)
-            }
-            val r = ((rx - lx - 2 * rootRadius * sin) / (2 * sin)).toFloat()
-            val cx = (lx + (rootRadius + r) * sin).toFloat()
-            val cy = (wy - (rootRadius + r) * cos).toFloat()
-            arcTo(cx - r, cy - r, cx + r, cy + r, 270f + rootDegree, -rootDegree * 2, false)
-
-            // bottom left
-            arcTo(lx - rootRadius, wy - rootRadius, lx + rootRadius, bottom, 90f - rootDegree , rootDegree, false)
-        }
-    }
-
-    /**
      * パンチホールノッチ
      */
-    @RequiresApi(Build.VERSION_CODES.P)
     private fun drawPunchHoleNotch(
         path: Path,
         notchSetting: PunchHoleNotchSetting
