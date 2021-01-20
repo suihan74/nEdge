@@ -105,7 +105,7 @@
         <item name="android:textColor">@color/gray_300</item>
         <item name="android:textColorSecondary">@color/gray_300</item>
         <item name="textColorAlertDialogListItem">@color/gray_300</item>
-        <item name="android:background">@color/preferencesBackgroundColor</item>
+        <item name="android:windowBackground">@color/preferencesBackgroundColor</item>
 
         <item name="android:windowMinWidthMajor">90%</item>
         <item name="android:windowMinWidthMinor">90%</item>
