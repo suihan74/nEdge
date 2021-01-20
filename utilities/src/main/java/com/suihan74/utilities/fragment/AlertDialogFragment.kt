@@ -172,7 +172,9 @@ class AlertDialogFragment : DialogFragment() {
         // ------ //
 
         fun createDialog(fragment: AlertDialogFragment) : AlertDialog {
-            val builder = AlertDialog.Builder(fragment.requireContext(), themeId ?: 0)
+            val builder =
+                if (themeId == null) AlertDialog.Builder(fragment.requireContext())
+                else AlertDialog.Builder(fragment.requireContext(), themeId)
 
             titleId.onNot(0) {
                 builder.setTitle(it)
