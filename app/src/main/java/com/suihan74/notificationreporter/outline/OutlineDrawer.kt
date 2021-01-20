@@ -200,6 +200,38 @@ class OutlineDrawer(
         path.lineTo(offset + bottomCornerRadius, bottom)
     }
 
+    private fun drawTopLeftCorner(
+        path: Path,
+        thickness: Float,
+        notificationSetting: NotificationSetting,
+    ) {
+//        if (notificationSetting.topNotchSetting.type == NotchType.CORNER) {
+//            drawTopCornerNotch(path, thickness, notificationSetting.topNotchSetting)
+//        }
+//        else {
+            val topCornerRadius = notificationSetting.outlinesSetting.topCornerRadius.dp
+            val offset = thickness / 2
+            val end = offset + topCornerRadius * 2f
+            path.arcTo(offset, offset, end, end, 180f, 90f, true)
+//        }
+    }
+
+    private fun drawTopRightCorner(
+        path: Path,
+        thickness: Float,
+        notificationSetting: NotificationSetting,
+    ) {
+//        if (notificationSetting.topNotchSetting.type == NotchType.CORNER) {
+//            drawTopCornerNotch(path, thickness, notificationSetting.topNotchSetting)
+//        }
+//        else {
+            val topCornerRadius = notificationSetting.outlinesSetting.topCornerRadius.dp
+            val offset = thickness / 2
+            val right = screenWidth - offset
+            path.arcTo(right - topCornerRadius * 2, offset, right, offset + topCornerRadius * 2, 270f, 90f, true)
+//        }
+    }
+
     // ------ //
 
     private fun drawTopNotch(
