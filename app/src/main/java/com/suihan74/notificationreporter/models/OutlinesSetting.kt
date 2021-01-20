@@ -23,7 +23,7 @@ data class OutlinesSetting (
     val topLeftCornerEnabled : Boolean = true,
 
     /** 右上角を描画する */
-    val topRightCornerEdgeEnabled : Boolean = true,
+    val topRightCornerEnabled : Boolean = true,
 
     /** 左下角を描画する */
     val bottomLeftCornerEnabled : Boolean = true,

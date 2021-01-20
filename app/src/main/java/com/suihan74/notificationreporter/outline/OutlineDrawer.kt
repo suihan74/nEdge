@@ -102,8 +102,8 @@ class OutlineDrawer(
             }
 
             // top right corner
-            if (topRightCornerEdgeEnabled) {
-                path.arcTo(right - topCornerRadius * 2, top, right, top + topCornerRadius * 2 + offset, 270f, 90f, true)
+            if (topRightCornerEnabled) {
+                drawTopRightCorner(path, thickness, notificationSetting)
             }
             else {
                 path.moveTo(right, top + topCornerRadius)
@@ -166,7 +166,7 @@ class OutlineDrawer(
     }
 
     /**
-     * 上辺のみ描画
+     * 上辺の描画
      */
     private fun drawTopOutLine(
         path: Path,
@@ -183,7 +183,7 @@ class OutlineDrawer(
     }
 
     /**
-     * 下辺のみ描画
+     * 下辺の描画
      */
     private fun drawBottomOutLine(
         path: Path,

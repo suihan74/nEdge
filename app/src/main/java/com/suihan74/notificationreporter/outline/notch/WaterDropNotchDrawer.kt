@@ -9,6 +9,9 @@ import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
+/**
+ * 水滴ノッチの描画処理
+ */
 class WaterDropNotchDrawer(displaySize: Point) : EdgeNotchDrawer<WaterDropNotchSetting>(displaySize) {
     override fun draw(
         path: Path,

@@ -7,6 +7,9 @@ import com.suihan74.notificationreporter.models.RectangleNotchSetting
 import com.suihan74.utilities.extensions.dp
 import kotlin.math.*
 
+/**
+ * 矩形ノッチの描画処理
+ */
 class RectangleNotchDrawer(displaySize: Point) : EdgeNotchDrawer<RectangleNotchSetting>(displaySize) {
     override fun draw(
         path: Path,

@@ -193,7 +193,7 @@ class SettingEditorViewModel(
                     leftEdgeEnabled.value = outlines.leftEdgeEnabled
                     rightEdgeEnabled.value = outlines.rightEdgeEnabled
                     topLeftCornerEnabled.value = outlines.topLeftCornerEnabled
-                    topRightCornerEnabled.value = outlines.topRightCornerEdgeEnabled
+                    topRightCornerEnabled.value = outlines.topRightCornerEnabled
                     bottomLeftCornerEnabled.value = outlines.bottomLeftCornerEnabled
                     bottomRightCornerEnabled.value = outlines.bottomRightCornerEnabled
                 }
@@ -240,7 +240,7 @@ class SettingEditorViewModel(
                     leftEdgeEnabled = leftEdgeEnabled.value!!,
                     rightEdgeEnabled = rightEdgeEnabled.value!!,
                     topLeftCornerEnabled = topLeftCornerEnabled.value!!,
-                    topRightCornerEdgeEnabled = topRightCornerEnabled.value!!,
+                    topRightCornerEnabled = topRightCornerEnabled.value!!,
                     bottomLeftCornerEnabled = bottomLeftCornerEnabled.value!!,
                     bottomRightCornerEnabled = bottomRightCornerEnabled.value!!
                 ),
