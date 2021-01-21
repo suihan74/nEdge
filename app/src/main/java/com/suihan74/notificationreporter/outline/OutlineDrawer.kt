@@ -9,6 +9,7 @@ import com.suihan74.notificationreporter.models.NotchType
 import com.suihan74.notificationreporter.models.NotificationSetting
 import com.suihan74.notificationreporter.models.PunchHoleNotchSetting
 import com.suihan74.notificationreporter.outline.notch.EdgeNotchDrawer
+import com.suihan74.notificationreporter.outline.notch.PunchHoleNotchDrawer
 import com.suihan74.utilities.extensions.dp
 import com.suihan74.utilities.extensions.onNot
 
@@ -275,7 +276,8 @@ class OutlineDrawer(
     ) {
         when (notchSetting.type) {
             NotchType.PUNCH_HOLE ->
-                drawPunchHoleNotch(path, notchSetting as PunchHoleNotchSetting)
+                PunchHoleNotchDrawer(displayRealSize).draw(path, Rect(), thickness, notchSetting as PunchHoleNotchSetting)
+            // TODO: Rectの扱い
 
             else -> {}
         }
