@@ -5,10 +5,7 @@ import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
 import com.suihan74.notificationreporter.R
-import com.suihan74.notificationreporter.scenes.preferences.page.BlackListFragment
-import com.suihan74.notificationreporter.scenes.preferences.page.GeneralPrefsFragment
-import com.suihan74.notificationreporter.scenes.preferences.page.InformationFragment
-import com.suihan74.notificationreporter.scenes.preferences.page.SettingsListFragment
+import com.suihan74.notificationreporter.scenes.preferences.page.*
 
 /**
  * 設定画面ページ遷移用メニュー項目
@@ -40,6 +37,12 @@ enum class MenuItem(
         R.string.prefs_menu_label_information,
         R.drawable.ic_info,
         { InformationFragment.createInstance() }
+    ),
+
+    RELEASE_NOTES(
+        R.string.prefs_menu_label_release_notes,
+        R.drawable.ic_update,
+        { ReleaseNotesFragment.createInstance() }
     ),
 
     ;

@@ -34,6 +34,7 @@
     <string name="prefs_menu_label_notification_settings">Notifications</string>
     <string name="prefs_menu_label_black_list">Black List</string>
     <string name="prefs_menu_label_information">App Info</string>
+    <string name="prefs_menu_label_release_notes">Release Notes</string>
 
     <!-- GeneralPrefsFragment -->
     <string name="prefs_preview_button_text">Preview</string>

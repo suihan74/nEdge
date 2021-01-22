@@ -34,6 +34,7 @@
     <string name="prefs_menu_label_notification_settings">通知表示設定</string>
     <string name="prefs_menu_label_black_list">ブラックリスト</string>
     <string name="prefs_menu_label_information">情報</string>
+    <string name="prefs_menu_label_release_notes">更新履歴</string>
 
     <!-- GeneralPrefsFragment -->
     <string name="prefs_preview_button_text">プレビュー</string>

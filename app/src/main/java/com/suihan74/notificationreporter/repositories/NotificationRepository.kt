@@ -2,9 +2,12 @@ package com.suihan74.notificationreporter.repositories
 
 import android.service.notification.StatusBarNotification
 import androidx.lifecycle.MutableLiveData
+import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.dataStore.Preferences
 import com.suihan74.notificationreporter.models.UnknownNotificationSolution
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.withContext
 
 /**
@@ -45,6 +48,9 @@ class NotificationRepository {
 
     // ------ //
 
+    /** 設定のキャッシュ */
+    private var prefs: Preferences? = null
+
     /** このアプリで扱う通知かを判別する */
     suspend fun validateNotification(
         sbn: StatusBarNotification?,
@@ -53,8 +59,16 @@ class NotificationRepository {
     ) : Boolean {
         if (sbn?.notification == null) return false
 
+        // 設定をキャッシュし設定画面で変更が行われた場合は追従するようにする
+        if (prefs == null && this.prefs == null) {
+            this.prefs = prefRepo.preferences()
+            prefRepo.preferencesFlow
+                .onEach { this.prefs = it }
+                .launchIn(Application.instance.coroutineScope)
+        }
+
         // 無視する通知
-        when ((prefs ?: prefRepo.preferences()).unknownNotificationSolution) {
+        when ((prefs ?: this.prefs!!).unknownNotificationSolution) {
             UnknownNotificationSolution.IGNORE ->
                 if (null == prefRepo.getNotificationEntityOrNull(sbn)) {
                     return false

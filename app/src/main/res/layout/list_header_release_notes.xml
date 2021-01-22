@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@android:color/transparent"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/pageTitle"
+        android:text="@string/prefs_menu_label_release_notes"
+        android:background="@android:color/transparent"
+        android:textAlignment="viewStart"
+        android:textSize="20sp"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:paddingHorizontal="12dp"
+        android:layout_marginTop="@dimen/prefContentMarginTop"
+        android:layout_marginBottom="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</FrameLayout>
