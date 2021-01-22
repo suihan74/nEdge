@@ -3,11 +3,11 @@ package com.suihan74.notificationreporter.scenes.preferences.page
 import android.content.pm.ApplicationInfo
 import android.graphics.Color
 import android.graphics.Point
+import android.graphics.Rect
 import android.os.Build
 import android.util.Log
 import android.view.Window
 import androidx.annotation.IdRes
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.*
 import com.suihan74.notificationreporter.Application
@@ -17,10 +17,7 @@ import com.suihan74.notificationreporter.database.notification.isDefault
 import com.suihan74.notificationreporter.models.*
 import com.suihan74.notificationreporter.scenes.preferences.PreferencesViewModel
 import com.suihan74.notificationreporter.scenes.preferences.dialog.ColorPickerDialogFragment
-import com.suihan74.notificationreporter.scenes.preferences.notch.NotchPosition
-import com.suihan74.notificationreporter.scenes.preferences.notch.PunchHoleNotchSettingFragment
-import com.suihan74.notificationreporter.scenes.preferences.notch.RectangleNotchSettingFragment
-import com.suihan74.notificationreporter.scenes.preferences.notch.WaterDropNotchSettingFragment
+import com.suihan74.notificationreporter.scenes.preferences.notch.*
 import com.suihan74.utilities.fragment.AlertDialogFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -94,6 +91,9 @@ class SettingEditorViewModel(
     val bottomRightCornerEnabled = mutableLiveData<Boolean>()
 
     // --- //
+
+    /** ノッチ領域リスト */
+    private val notchRects = MutableLiveData<List<Rect>>()
 
     /** 画面上部ノッチが設定可能 */
     val topNotchEnabled = MutableLiveData(false)
@@ -271,6 +271,8 @@ class SettingEditorViewModel(
                 it.top > verticalCenter
             }
 
+            notchRects.value = window.decorView.rootWindowInsets.displayCutout?.boundingRects.orEmpty()
+
             topNotchEnabled.value = topRect != null
             bottomNotchEnabled.value = bottomRect != null
         }
@@ -299,19 +301,7 @@ class SettingEditorViewModel(
             }
 
         notchType.observe(lifecycleOwner, Observer {
-            val fragment = when (it) {
-                NotchType.RECTANGLE ->
-                    RectangleNotchSettingFragment.createInstance(notchPosition)
-
-                NotchType.WATER_DROP ->
-                    WaterDropNotchSettingFragment.createInstance(notchPosition)
-
-                NotchType.PUNCH_HOLE ->
-                    PunchHoleNotchSettingFragment.createInstance(notchPosition)
-
-                else -> Fragment()
-            }
-
+            val fragment = it.createSettingFragment(notchPosition)
             fragmentManager.beginTransaction()
                 .replace(targetViewId, fragment)
                 .commit()
@@ -359,6 +349,12 @@ class SettingEditorViewModel(
             else -> throw IllegalArgumentException()
         }
 
+        val rect = when (notchType) {
+            topNotchType -> notchRects.value?.first { it.top < 100 }
+            bottomNotchType -> notchRects.value?.first { it.top > 100 }
+            else -> throw IllegalArgumentException()
+        }
+
         val dialog = AlertDialogFragment.Builder()
             .setTitle(titleId)
             .setSingleChoiceItems(labels, initialSelected) { _, which ->
@@ -367,10 +363,10 @@ class SettingEditorViewModel(
 
                 when (notchType) {
                     topNotchType ->
-                        topNotchSetting.value = NotchSetting.createInstance(type)
+                        topNotchSetting.value = NotchSetting.createInstance(type, rect)
 
                     bottomNotchType ->
-                        bottomNotchSetting.value = NotchSetting.createInstance(type)
+                        bottomNotchSetting.value = NotchSetting.createInstance(type, rect)
                 }
                 notchType.value = type
             }

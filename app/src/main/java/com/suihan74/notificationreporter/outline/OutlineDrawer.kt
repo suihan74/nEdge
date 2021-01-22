@@ -4,10 +4,8 @@ import android.graphics.*
 import android.os.Build
 import android.view.Window
 import android.widget.ImageView
-import com.suihan74.notificationreporter.models.NotchSetting
-import com.suihan74.notificationreporter.models.NotchType
-import com.suihan74.notificationreporter.models.NotificationSetting
-import com.suihan74.notificationreporter.models.PunchHoleNotchSetting
+import com.suihan74.notificationreporter.models.*
+import com.suihan74.notificationreporter.outline.notch.CornerNotchDrawer
 import com.suihan74.notificationreporter.outline.notch.EdgeNotchDrawer
 import com.suihan74.notificationreporter.outline.notch.PunchHoleNotchDrawer
 import com.suihan74.utilities.extensions.dp
@@ -88,7 +86,7 @@ class OutlineDrawer(
 
             // top left corner
             if (topLeftCornerEnabled) {
-                path.arcTo(left, top, left + topCornerRadius * 2f, top + topCornerRadius * 2, 180f, 90f, true)
+                drawTopLeftCorner(path, thickness, notificationSetting)
             }
             else {
                 path.moveTo(left + topCornerRadius, top)
@@ -241,15 +239,7 @@ class OutlineDrawer(
         cornerRadius: Float,
         notchSetting: NotchSetting
     ) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) return
-
-        val verticalCenter = screenHeight / 2
-        val rect =
-            window.decorView.rootWindowInsets.displayCutout?.boundingRects?.firstOrNull {
-                it.top < verticalCenter
-            } ?: return
-
-        EdgeNotchDrawer.draw(displayRealSize, path, rect, thickness, cornerRadius, notchSetting)
+        EdgeNotchDrawer.draw(displayRealSize, path, thickness, cornerRadius, notchSetting)
     }
 
     private fun drawBottomNotch(
@@ -258,15 +248,7 @@ class OutlineDrawer(
         cornerRadius: Float,
         notchSetting: NotchSetting
     ) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) return
-
-        val verticalCenter = screenHeight / 2
-        val rect =
-            window.decorView.rootWindowInsets.displayCutout?.boundingRects?.firstOrNull {
-                it.top > verticalCenter
-            } ?: return
-
-        EdgeNotchDrawer.draw(displayRealSize, path, rect, thickness, cornerRadius, notchSetting)
+        EdgeNotchDrawer.draw(displayRealSize, path, thickness, cornerRadius, notchSetting)
     }
 
     private fun drawFloatingNotch(

@@ -25,7 +25,7 @@ class WaterDropNotchSettingViewModel(
     }
 
     override suspend fun updateNotchSetting() {
-        setting.value = WaterDropNotchSetting(
+        setting.value = setting.value!!.copy(
             widthAdjustment = widthAdjustment.value!!,
             heightAdjustment = heightAdjustment.value!!,
             majorRadius = majorRadius.value!!,

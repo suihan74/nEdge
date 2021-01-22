@@ -441,25 +441,19 @@
             android:layout_width="48dp"
             android:layout_height="48dp"/>
 
-        <View
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintWidth_percent="0.5"
+        <ImageView
+            android:contentDescription="@null"
+            android:clickable="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
             android:visibility="@{vm.editingTopNotch}"
-            android:background="#ff00ff"
-            android:layout_width="0dp"
-            android:layout_height="64dp"/>
+            topNotchSetting="@{vm.topNotchSetting}"
+            bottomNotchSetting="@{vm.bottomNotchSetting}"
+            editingTopNotch="@{vm.editingTopNotch}"
+            editingBottomNotch="@{vm.editingBottomNotch}"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
-        <View
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintWidth_percent="0.5"
-            android:visibility="@{vm.editingBottomNotch}"
-            android:background="#ff00ff"
-            android:layout_width="0dp"
-            android:layout_height="64dp"/>
         <!-- はみ出し確認用の背景ここまで -->
 
         <ImageView

@@ -23,6 +23,9 @@ enum class NotchType(
     /** ○の切り抜き (辺に接しない) */
     PUNCH_HOLE(R.string.notch_type_punch_hole, R.drawable.ic_notch_punch_hole),
 
+    /** コーナー */
+    CORNER(R.string.notch_type_corner, R.drawable.ic_notch_corner),
+
     ;
 
     companion object {

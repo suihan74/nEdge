@@ -31,7 +31,7 @@ class RectangleNotchSettingViewModel(
     }
 
     override suspend fun updateNotchSetting() {
-        setting.value = RectangleNotchSetting(
+        setting.value = setting.value!!.copy(
             majorWidthAdjustment = majorWidthAdjustment.value!!,
             minorWidthAdjustment = minorWidthAdjustment.value!!,
             heightAdjustment = heightAdjustment.value!!,

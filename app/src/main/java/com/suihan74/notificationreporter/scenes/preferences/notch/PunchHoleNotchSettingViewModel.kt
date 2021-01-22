@@ -31,7 +31,7 @@ class PunchHoleNotchSettingViewModel(
     }
 
     override suspend fun updateNotchSetting() {
-        setting.value = PunchHoleNotchSetting(
+        setting.value = setting.value!!.copy(
             cx = cx.value!!,
             cy = cy.value!!,
             radius = radius.value!!,

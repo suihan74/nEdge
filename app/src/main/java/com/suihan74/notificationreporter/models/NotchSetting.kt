@@ -1,5 +1,7 @@
 package com.suihan74.notificationreporter.models
 
+import android.graphics.Rect
+import com.suihan74.utilities.serialization.RectSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -12,26 +14,35 @@ sealed class NotchSetting(
     @SerialName("notch_type")
     val type: NotchType
 ) {
+    @Serializable(RectSerializer::class)
+    abstract val rect: Rect
+
     companion object {
-        fun createInstance(type: NotchType) = when(type) {
+        /**
+         * ノッチ種類に対応した設定の実体を生成
+         */
+        fun createInstance(type: NotchType, rect: Rect? = null) = when(type) {
             NotchType.NONE -> EmptyNotchSetting()
 
-            NotchType.RECTANGLE -> RectangleNotchSetting()
+            NotchType.RECTANGLE -> RectangleNotchSetting(rect!!)
 
-            NotchType.WATER_DROP -> WaterDropNotchSetting()
+            NotchType.WATER_DROP -> WaterDropNotchSetting(rect!!)
 
-            NotchType.PUNCH_HOLE -> PunchHoleNotchSetting()
+            NotchType.PUNCH_HOLE -> PunchHoleNotchSetting(rect!!)
+
+            NotchType.CORNER -> CornerNotchSetting(rect!!)
         }
     }
 }
-
-// ------ //
 
 /**
  * ノッチ設定なし
  */
 @Serializable
-class EmptyNotchSetting : NotchSetting(type = NotchType.NONE)
+class EmptyNotchSetting : NotchSetting(type = NotchType.NONE) {
+    @Serializable(RectSerializer::class)
+    override val rect: Rect = Rect()
+}
 
 // ------ //
 
@@ -40,6 +51,9 @@ class EmptyNotchSetting : NotchSetting(type = NotchType.NONE)
  */
 @Serializable
 data class RectangleNotchSetting(
+    @Serializable(RectSerializer::class)
+    override val rect: Rect,
+
     /** 上部の角丸半径 */
     val majorRadius: Float = 0f,
 
@@ -50,12 +64,12 @@ data class RectangleNotchSetting(
     val majorWidthAdjustment: Float = 0f,
 
     /** 下部幅の伸縮調整 */
-    val minorWidthAdjustment: Float = 0f,
+    val minorWidthAdjustment: Float = .7f,
 
     /** 高さの伸縮調整 */
-    val heightAdjustment: Float = 0f,
+    val heightAdjustment: Float = 0f
 
-    ) : NotchSetting(NotchType.RECTANGLE)
+) : NotchSetting(NotchType.RECTANGLE)
 
 // ------ //
 
@@ -64,6 +78,9 @@ data class RectangleNotchSetting(
  */
 @Serializable
 data class WaterDropNotchSetting(
+    @Serializable(RectSerializer::class)
+    override val rect: Rect,
+
     /** 上部の角丸半径 */
     val majorRadius: Float = 10f,
 
@@ -71,7 +88,7 @@ data class WaterDropNotchSetting(
     val widthAdjustment: Float = 0f,
 
     /** 高さの伸縮調整 */
-    val heightAdjustment: Float = 10f,
+    val heightAdjustment: Float = 10f
 
 ) : NotchSetting(NotchType.WATER_DROP)
 
@@ -82,6 +99,9 @@ data class WaterDropNotchSetting(
  */
 @Serializable
 data class PunchHoleNotchSetting(
+    @Serializable(RectSerializer::class)
+    override val rect: Rect,
+
     /** 中心位置X */
     val cx: Float = 0f,
 
@@ -95,5 +115,6 @@ data class PunchHoleNotchSetting(
     val horizontalEdgeSize: Float = 0f,
 
     /** 左右辺 */
-    val verticalEdgeSize: Float = 0f,
+    val verticalEdgeSize: Float = 0f
+
 ) : NotchSetting(NotchType.PUNCH_HOLE)
