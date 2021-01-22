@@ -32,5 +32,5 @@ data class NotificationSetting (
     val topNotchSetting: NotchSetting = NotchSetting.createInstance(NotchType.NONE),
 
     /** 画面下部ノッチ描画設定 */
-    val bottomNotchSetting: NotchSetting = NotchSetting.createInstance(NotchType.RECTANGLE),
+    val bottomNotchSetting: NotchSetting = NotchSetting.createInstance(NotchType.NONE),
 )
