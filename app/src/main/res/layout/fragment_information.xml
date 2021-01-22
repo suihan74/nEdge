@@ -48,30 +48,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/appVersion"
-        app:layout_constraintBottom_toTopOf="@id/showReleaseNotesButton"
+        app:layout_constraintBottom_toTopOf="@id/showLicensesButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="4dp"/>
 
     <Button
-        android:id="@+id/showReleaseNotesButton"
-        android:text="@string/pref_information_release_notes_desc"
+        android:id="@+id/showLicensesButton"
+        android:text="@string/pref_information_licenses_desc"
         app:layout_constraintTop_toBottomOf="@id/copyright"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/showLicensesButton"
-        app:layout_constraintHorizontal_chainStyle="spread"
-        android:layout_marginTop="16dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
-    <Button
-        android:id="@+id/showLicensesButton"
-        android:text="@string/pref_information_licenses_desc"
-        app:layout_constraintTop_toTopOf="@id/showReleaseNotesButton"
-        app:layout_constraintBottom_toBottomOf="@id/showReleaseNotesButton"
-        app:layout_constraintStart_toEndOf="@id/showReleaseNotesButton"
         app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="24dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
