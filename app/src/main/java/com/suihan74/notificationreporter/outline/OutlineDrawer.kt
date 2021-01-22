@@ -265,37 +265,19 @@ class OutlineDrawer(
         }
     }
 
-    // ------ //
-
-    /**
-     * パンチホールノッチ
-     */
-    private fun drawPunchHoleNotch(
+    private fun drawTopCornerNotch(
         path: Path,
-        notchSetting: PunchHoleNotchSetting
+        thickness: Float,
+        notchSetting: NotchSetting
     ) {
-        val cx = screenWidth * notchSetting.cx
-        val cy = screenHeight * notchSetting.cy
-        val radius = notchSetting.radius.dp
-        if (notchSetting.horizontalEdgeSize == 0f && notchSetting.verticalEdgeSize == 0f) {
-            path.addCircle(cx, cy, radius, Path.Direction.CW)
-        }
-        else {
-            val widthHalf = (notchSetting.horizontalEdgeSize.dp + radius * 2) / 2
-            val heightHalf = (notchSetting.verticalEdgeSize.dp + radius * 2) / 2
-            path.addRoundRect(
-                cx - widthHalf,
-                cy - heightHalf,
-                cx + widthHalf,
-                cy + heightHalf,
-                floatArrayOf(
-                    radius, radius,
-                    radius, radius,
-                    radius, radius,
-                    radius, radius
-                ),
-                Path.Direction.CW
-            )
-        }
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) return
+
+        val verticalCenter = screenHeight / 2
+        val rect =
+            window.decorView.rootWindowInsets.displayCutout?.boundingRects?.firstOrNull {
+                it.top < verticalCenter
+            } ?: return
+
+        CornerNotchDrawer().draw(displayRealSize, path, rect, thickness, notchSetting as CornerNotchSetting)
     }
 }

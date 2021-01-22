@@ -118,3 +118,33 @@ data class PunchHoleNotchSetting(
     val verticalEdgeSize: Float = 0f
 
 ) : NotchSetting(NotchType.PUNCH_HOLE)
+
+// ------ //
+
+/**
+ * 角部ノッチ用の描画設定
+ */
+@Serializable
+data class CornerNotchSetting(
+    @Serializable(RectSerializer::class)
+    override val rect: Rect,
+
+    /** 横方向の辺からノッチへの角丸 */
+    val majorRadius: Float = 0f,
+
+    /** 画面内側の角丸 */
+    val middleRadius: Float = 0f,
+
+    /** ノッチから縦方向の辺への角丸 */
+    val minorRadius: Float = 0f,
+
+    /** 上部幅の伸縮調整 */
+    val majorWidthAdjustment: Float = 0f,
+
+    /** 下部幅の伸縮調整 */
+    val minorWidthAdjustment: Float = .7f,
+
+    /** 高さの伸縮調整 */
+    val heightAdjustment: Float = 0f
+
+) : NotchSetting(NotchType.CORNER)

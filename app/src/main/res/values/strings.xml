@@ -88,6 +88,14 @@
     <string name="prefs_punch_hole_horizontal_edge_size_desc">Additional width</string>
     <string name="prefs_punch_hole_vertical_edge_size_desc">Additional height</string>
 
+    <!-- CornerNotchSettingFragment -->
+    <string name="prefs_corner_notch_major_width_adjustment_desc">Major width adjustment ratio</string>
+    <string name="prefs_corner_notch_minor_width_adjustment_desc">Minor width adjustment ratio</string>
+    <string name="prefs_corner_notch_height_adjustment_desc">Height adjustment ratio</string>
+    <string name="prefs_corner_notch_major_radius_desc">Radius from a horizontal edge to the notch</string>
+    <string name="prefs_corner_notch_middle_radius_desc">Radius of the notch</string>
+    <string name="prefs_corner_notch_minor_radius_desc">Radius from the notch to a vertical edge</string>
+
     <!-- SettingsListFragment -->
     <string name="prefs_settings_list_default_setting_text">Default Settings</string>
     <string name="prefs_settings_list_search_hint">Search items</string>
@@ -112,6 +120,7 @@
     <string name="notch_type_rectangle">Rectangle</string>
     <string name="notch_type_water_drop">Water drop</string>
     <string name="notch_type_punch_hole">Punch hole</string>
+    <string name="notch_type_corner">Corner</string>
 
     <!-- MultipleNotificationsSolution -->
     <string name="multi_notices_solution_latest">Only Latest one</string>

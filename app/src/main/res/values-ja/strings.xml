@@ -88,6 +88,14 @@
     <string name="prefs_punch_hole_horizontal_edge_size_desc">横に伸ばす</string>
     <string name="prefs_punch_hole_vertical_edge_size_desc">縦に伸ばす</string>
 
+    <!-- CornerNotchSettingFragment -->
+    <string name="prefs_corner_notch_major_width_adjustment_desc">外側の幅調整</string>
+    <string name="prefs_corner_notch_minor_width_adjustment_desc">内側の幅調整</string>
+    <string name="prefs_corner_notch_height_adjustment_desc">高さ調整</string>
+    <string name="prefs_corner_notch_major_radius_desc">横辺からノッチへの角丸</string>
+    <string name="prefs_corner_notch_middle_radius_desc">ノッチの角丸</string>
+    <string name="prefs_corner_notch_minor_radius_desc">ノッチから縦辺への角丸</string>
+
     <!-- SettingsListFragment -->
     <string name="prefs_settings_list_default_setting_text">デフォルト設定</string>
     <string name="prefs_settings_list_search_hint">項目を検索</string>
@@ -112,6 +120,7 @@
     <string name="notch_type_rectangle">矩形</string>
     <string name="notch_type_water_drop">水滴</string>
     <string name="notch_type_punch_hole">ホール</string>
+    <string name="notch_type_corner">コーナー</string>
 
     <!-- MultipleNotificationsSolution -->
     <string name="multi_notices_solution_latest">最新一件のみ表示</string>

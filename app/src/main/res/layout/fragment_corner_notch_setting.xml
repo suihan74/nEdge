@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <variable
+            name="vm"
+            type="com.suihan74.notificationreporter.scenes.preferences.notch.CornerNotchSettingViewModel"/>
+    </data>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="@string/prefs_corner_notch_major_width_adjustment_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.google.android.material.slider.Slider
+            android:valueFrom="-0.7"
+            android:valueTo="0.7"
+            android:stepSize="0.01"
+            android:value="@={vm.majorWidthAdjustment}"
+            editing="@={vm.editing}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:text="@string/prefs_corner_notch_minor_width_adjustment_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.google.android.material.slider.Slider
+            android:valueFrom="-0.7"
+            android:valueTo="0.7"
+            android:stepSize="0.01"
+            android:value="@={vm.minorWidthAdjustment}"
+            editing="@={vm.editing}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:text="@string/prefs_corner_notch_height_adjustment_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/heightAdjustmentSlider"
+            android:valueFrom="-1.0"
+            android:valueTo="1.0"
+            android:stepSize="0.01"
+            android:value="@={vm.heightAdjustment}"
+            editing="@={vm.editing}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:text="@string/prefs_corner_notch_major_radius_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.google.android.material.slider.Slider
+            android:valueFrom="0.0"
+            android:valueTo="50.0"
+            android:stepSize="0.2"
+            android:value="@={vm.majorRadius}"
+            editing="@={vm.editing}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:text="@string/prefs_corner_notch_minor_radius_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.google.android.material.slider.Slider
+            android:valueFrom="0.0"
+            android:valueTo="50.0"
+            android:stepSize="0.2"
+            android:value="@={vm.minorRadius}"
+            editing="@={vm.editing}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:text="@string/prefs_corner_notch_middle_radius_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.google.android.material.slider.Slider
+            android:valueFrom="0.0"
+            android:valueTo="50.0"
+            android:stepSize="0.2"
+            android:value="@={vm.middleRadius}"
+            editing="@={vm.editing}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+</layout>
