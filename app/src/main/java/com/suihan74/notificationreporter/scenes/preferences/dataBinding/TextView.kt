@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.util.Log
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
+import com.suihan74.notificationreporter.models.KeywordMatchingType
 import org.threeten.bp.DateTimeException
 import org.threeten.bp.LocalTime
 import org.threeten.bp.format.DateTimeFormatter
@@ -68,11 +69,36 @@ object TextViewBindingAdapters {
         }
     }
 
+    /**
+     * アプリ名を表示
+     */
     @JvmStatic
     @BindingAdapter(value = ["applicationName", "defaultName"], requireAll = false)
     fun setApplicationName(textView: TextView, appInfo: ApplicationInfo?, defaultName: String?) {
         textView.text =
             if (appInfo == null) defaultName.orEmpty()
             else textView.context.packageManager.getApplicationLabel(appInfo)
+    }
+
+    /**
+     * 設定リスト項目のキーワード情報を表示
+     */
+    @JvmStatic
+    @BindingAdapter("keywordMatchingType", "keyword")
+    fun setKeywordData(textView: TextView, keywordMatchingType: KeywordMatchingType?, keyword: String?) {
+        when {
+            keywordMatchingType == null || keywordMatchingType == KeywordMatchingType.NONE || keyword.isNullOrBlank() -> {
+                textView.text = ""
+                textView.visibility = TextView.GONE
+            }
+            else -> {
+                val context = textView.context
+                textView.text = String.format("%s: %s",
+                    context.getString(keywordMatchingType.textId),
+                    keyword
+                )
+                textView.visibility = TextView.VISIBLE
+            }
+        }
     }
 }

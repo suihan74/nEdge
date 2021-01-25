@@ -71,7 +71,6 @@ class SettingsListFragment : Fragment() {
         ) { binding, item -> binding.item = item }
 
         recyclerView.adapter = adapter
-        recyclerView.setHasFixedSize(true)
 
         adapter.setOnClickItemListener {
             val entity = it.item!!.entity

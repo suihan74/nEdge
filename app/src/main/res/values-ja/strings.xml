@@ -100,7 +100,6 @@
     <!-- SettingsListFragment -->
     <string name="prefs_settings_list_default_setting_text">デフォルト設定</string>
     <string name="prefs_settings_list_search_hint">項目を検索</string>
-    <string name="prefs_settings_list_keyword_text">キーワード: %s</string>
 
     <string name="prefs_settings_list_item_menu_edit">編集</string>
     <string name="prefs_settings_list_item_menu_preview">プレビュー</string>

@@ -100,7 +100,6 @@
     <!-- SettingsListFragment -->
     <string name="prefs_settings_list_default_setting_text">Default Settings</string>
     <string name="prefs_settings_list_search_hint">Search items</string>
-    <string name="prefs_settings_list_keyword_text">Keyword: %s</string>
 
     <string name="prefs_settings_list_item_menu_edit">Edit</string>
     <string name="prefs_settings_list_item_menu_preview">Preview</string>
