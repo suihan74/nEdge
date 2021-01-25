@@ -34,7 +34,7 @@
 }
 
 # Change here com.yourcompany.yourpackage
--keep,includedescriptorclasses class com.yourcompany.yourpackage.**$$serializer { *; } # <-- change package name to your app's
+-keep,includedescriptorclasses class com.suihan74.*.**$$serializer { *; } # <-- change package name to your app's
 -keepclassmembers class com.suihan74.*.** { # <-- change package name to your app's
     *** Companion;
 }
