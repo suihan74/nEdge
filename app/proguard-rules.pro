@@ -20,8 +20,8 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
-### kotlinx.serialization
 
+##--------------- Begin: kotlinx.serialization ----------
 -keepattributes *Annotation*, InnerClasses
 -dontnote kotlinx.serialization.AnnotationsKt # core serialization annotations
 
@@ -41,5 +41,9 @@
 -keepclasseswithmembers class com.suihan74.*.** { # <-- change package name to your app's
     kotlinx.serialization.KSerializer serializer(...);
 }
+##--------------- End: kotlinx.serialization ----------
 
-###
+##--------------- Begin: Room ----------
+-keep class * extends androidx.room.RoomDatabase
+-dontwarn androidx.room.paging.**
+##--------------- End: Room ----------
