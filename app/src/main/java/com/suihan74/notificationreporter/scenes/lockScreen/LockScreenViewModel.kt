@@ -103,7 +103,7 @@ class LockScreenViewModel(
 
     // ------ //
 
-    fun init(lifecycleOwner: LifecycleOwner, intent: Intent) {
+    suspend fun init(lifecycleOwner: LifecycleOwner, intent: Intent) = withContext(Dispatchers.Main.immediate) {
         var switchNoticeJob : Job? = null
 
         currentNotice.observe(lifecycleOwner, Observer {
@@ -120,36 +120,43 @@ class LockScreenViewModel(
             }
         })
 
-        viewModelScope.launch(Dispatchers.Main.immediate) {
-            prefRepo.preferences().let { prefs ->
-                _lightLevelOn.value = prefs.lightLevelOn
-                _lightLevelOff.value = prefs.lightLevelOff
-                lightOffInterval = prefs.lightOffInterval
-                _useSystemLightLevelOn.value = prefs.useSystemLightLevelOn
-                _lightOff.value = false
-                multipleNotificationsSolution = prefs.multipleNotificationsSolution
-                switchNotificationsDuration = prefs.switchNotificationsDuration
-                silentTimezoneStart = prefs.silentTimezoneStart
-                silentTimezoneEnd = prefs.silentTimezoneEnd
-            }
+        prefRepo.preferences().let { prefs ->
+            _lightLevelOn.value = prefs.lightLevelOn
+            _lightLevelOff.value = prefs.lightLevelOff
+            lightOffInterval = prefs.lightOffInterval
+            _useSystemLightLevelOn.value = prefs.useSystemLightLevelOn
+            _lightOff.value = false
+            multipleNotificationsSolution = prefs.multipleNotificationsSolution
+            switchNotificationsDuration = prefs.switchNotificationsDuration
+            silentTimezoneStart = prefs.silentTimezoneStart
+            silentTimezoneEnd = prefs.silentTimezoneEnd
 
-            // 時刻更新開始
-            launchClockUpdating()
+            // バッテリレベルが指定値を下回ったら消灯する
+            batteryLevel.observe(lifecycleOwner, Observer {
+                if (it < prefs.requiredBatteryLevel) {
+                    sleep()
+                }
+            })
         }
 
-        // プレビューとして開始
+        // 時刻更新開始
+        launchClockUpdating()
+
+        // プレビューとして開始する場合
         val previewEntityId = intent.getLongExtra(Extra.PREVIEW_ENTITY_ID.name, -1L)
         if (previewEntityId != -1L) {
-            viewModelScope.launch(Dispatchers.Main.immediate) {
-                prefRepo.getNotificationEntityOrNull(previewEntityId)?.let {
-                    _notificationEntity.value = it
-                }
+            prefRepo.getNotificationEntityOrNull(previewEntityId)?.let {
+                _notificationEntity.value = it
             }
         }
     }
 
     /** アクティビティがウィンドウにアタッチされている必要がある初期化処理 */
-    fun onAttachedToWindow(owner: LifecycleOwner, window: Window, edgeImageView: ImageView) {
+    suspend fun onAttachedToWindow(
+        owner: LifecycleOwner,
+        window: Window,
+        edgeImageView: ImageView
+    ) = withContext(Dispatchers.Main) {
         // バックライトの制御
         observeScreenBrightness(owner, window)
 
@@ -173,7 +180,7 @@ class LockScreenViewModel(
     }
 
     /** アクティビティから抜ける際に通知スタックをクリア */
-    fun onFinishActivity() = GlobalScope.launch {
+    fun onFinishActivity() = application.coroutineScope.launch {
         notificationRepo.clearNotifications()
     }
 
@@ -279,7 +286,10 @@ class LockScreenViewModel(
 
     // ------ //
 
-    private fun observeScreenBrightness(owner: LifecycleOwner, window: Window) {
+    private suspend fun observeScreenBrightness(
+        owner: LifecycleOwner,
+        window: Window
+    ) = withContext(Dispatchers.Main) {
         lightOff.observe(owner, Observer { lightOff ->
             window.attributes = window.attributes.also { lp ->
                 lp.screenBrightness =

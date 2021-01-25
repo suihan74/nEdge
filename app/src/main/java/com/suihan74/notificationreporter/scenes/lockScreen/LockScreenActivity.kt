@@ -14,6 +14,7 @@ import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.lifecycleScope
 import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.R
 import com.suihan74.notificationreporter.database.notification.NotificationEntity
@@ -21,6 +22,7 @@ import com.suihan74.notificationreporter.databinding.ActivityLockScreenBinding
 import com.suihan74.utilities.exception.TaskFailureException
 import com.suihan74.utilities.extensions.whenTrue
 import com.suihan74.utilities.lazyProvideViewModel
+import kotlinx.coroutines.launch
 
 class LockScreenActivity : AppCompatActivity() {
     companion object {
@@ -86,7 +88,9 @@ class LockScreenActivity : AppCompatActivity() {
         setTheme(R.style.LockScreenActivity)
         overlapLockScreenAndKeepScreenOn()
 
-        viewModel.init(this, intent)
+        lifecycleScope.launch {
+            viewModel.init(this@LockScreenActivity, intent)
+        }
 
         binding = DataBindingUtil.setContentView<ActivityLockScreenBinding>(
                 this,
@@ -125,7 +129,9 @@ class LockScreenActivity : AppCompatActivity() {
     // ノッチ情報の取得はウィンドウアタッチ後でないとできない
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        viewModel.onAttachedToWindow(this, window, binding.notificationBar)
+        lifecycleScope.launch {
+            viewModel.onAttachedToWindow(this@LockScreenActivity, window, binding.notificationBar)
+        }
     }
 
     /** 常に画面を点灯する設定 */
