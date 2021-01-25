@@ -121,6 +121,8 @@ class PreferencesViewModel(
                     unknownNotificationSolution = unknownNotificationSolution.value!!,
                 )
             }
+            // 常駐タスクを再起動する
+            application.startPeriodicWork()
         }
     }
 

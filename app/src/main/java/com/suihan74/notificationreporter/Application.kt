@@ -20,8 +20,11 @@ import com.suihan74.notificationreporter.repositories.BatteryRepository
 import com.suihan74.notificationreporter.repositories.NotificationRepository
 import com.suihan74.notificationreporter.repositories.PreferencesRepository
 import com.suihan74.notificationreporter.repositories.ScreenRepository
+import com.suihan74.notificationreporter.workers.StartupConfirmationWorker
 import com.suihan74.utilities.VersionUtil
 import kotlinx.coroutines.*
+import org.threeten.bp.Duration
+import org.threeten.bp.LocalTime
 import java.util.concurrent.TimeUnit
 
 /**
@@ -38,6 +41,12 @@ class Application : android.app.Application() {
 
         /** 設定データストアの保存先ファイル名 */
         private const val PREFERENCES_DATA_STORE_NAME = "settings.ds"
+    }
+
+    /** `WorkManager`で管理する一意タスクの管理名 */
+    private enum class WorkTag {
+        /** 定期的に起動状態を確認 */
+        PERIODIC_STARTUP_CONFIRMATION,
     }
 
     // ------ //
@@ -153,7 +162,12 @@ class Application : android.app.Application() {
         // アプリが使用する通知チャンネルを作成する
         createNotificationChannel(NOTIFICATION_CHANNEL_DUMMY)
 
-        Log.d("Application", "created")
+        // 定期実行タスクを開始
+        coroutineScope.launch {
+            startPeriodicWork()
+        }
+
+        Log.d("NotificationReporter", "created")
     }
 
     override fun onTerminate() {
@@ -162,7 +176,36 @@ class Application : android.app.Application() {
         _coroutineScope = null
         _instance = null
 
-        Log.d("Application", "terminated")
+        Log.d("NotificationReporter", "terminated")
+    }
+
+    // ------ //
+
+    /**
+     * 定時実行タスクを開始する
+     *
+     * 既に実行状態の場合はインスタンスを置き換えて再登録する
+     */
+    suspend fun startPeriodicWork() {
+        val startAt = preferencesRepository.preferences().silentTimezoneEnd
+        val now = LocalTime.now()
+        val duration = when {
+            now < startAt -> Duration.between(now, startAt)
+            startAt > now -> Duration.between(startAt, now)
+            else -> Duration.ZERO
+        }
+
+        // 毎日「通知しない時間帯」終了時にロック画面を起動するか確認する
+        val request = PeriodicWorkRequestBuilder<StartupConfirmationWorker>(1, TimeUnit.DAYS)
+            .setInitialDelay(duration.toMillis(), TimeUnit.MILLISECONDS)
+            .build()
+
+        WorkManager.getInstance(this)
+            .enqueueUniquePeriodicWork(
+                WorkTag.PERIODIC_STARTUP_CONFIRMATION.name,
+                ExistingPeriodicWorkPolicy.REPLACE,
+                request
+            )
     }
 
     // ------ //
