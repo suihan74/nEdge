@@ -18,6 +18,8 @@ import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.R
 import com.suihan74.notificationreporter.database.notification.NotificationEntity
 import com.suihan74.notificationreporter.databinding.ActivityLockScreenBinding
+import com.suihan74.utilities.exception.TaskFailureException
+import com.suihan74.utilities.extensions.whenTrue
 import com.suihan74.utilities.lazyProvideViewModel
 
 class LockScreenActivity : AppCompatActivity() {
@@ -34,6 +36,27 @@ class LockScreenActivity : AppCompatActivity() {
                 }
                 context.startActivity(intent)
                 Log.i("Notification", sbn!!.packageName)
+            }
+        }
+
+        /**
+         * 通知が存在する場合`LockScreenActivity`を(再作成して)遷移する
+         *
+         * 使用禁止終了時刻での再起動に使用
+         *
+         * @throws TaskFailureException::class
+         */
+        fun start(app: Application) : Boolean {
+            return try {
+                app.notificationRepository.statusBarNotifications.value.isNullOrEmpty().not().whenTrue {
+                    val intent = Intent(app, LockScreenActivity::class.java).also {
+                        it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    }
+                    app.startActivity(intent)
+                }
+            }
+            catch (e: Throwable) {
+                throw TaskFailureException(cause = e)
             }
         }
 
@@ -115,7 +138,9 @@ class LockScreenActivity : AppCompatActivity() {
         }
         else {
             @Suppress("deprecation")
-            window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED)
+            window.addFlags(
+                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
+            )
         }
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }

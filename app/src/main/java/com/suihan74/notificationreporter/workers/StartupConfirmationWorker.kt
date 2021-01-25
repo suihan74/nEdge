@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.suihan74.notificationreporter.Application
+import com.suihan74.notificationreporter.scenes.lockScreen.LockScreenActivity
 
 /**
  * 定時に起動確認する`Worker`
@@ -12,10 +13,8 @@ import com.suihan74.notificationreporter.Application
 class StartupConfirmationWorker(appContext: Context, params: WorkerParameters) : Worker(appContext, params) {
     override fun doWork(): Result {
         val result = runCatching {
-            val app = Application.instance
-            val notifications = app.notificationRepository.statusBarNotifications.value.orEmpty()
-            if (notifications.isNotEmpty()) {
-                Log.d("StartUp", "need to turn screen on")
+            if (LockScreenActivity.start(Application.instance)) {
+                Log.d("StartUp", "turn LockScreenActivity on")
             }
         }
 

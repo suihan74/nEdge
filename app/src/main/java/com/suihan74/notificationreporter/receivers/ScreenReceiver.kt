@@ -27,11 +27,6 @@ class ScreenReceiver : BroadcastReceiver() {
         when (intent?.action) {
             Intent.ACTION_SCREEN_OFF -> {
                 app.screenRepository.setScreenState(false)
-
-                // 画面ON中にスタックに追加されていた通知をどうするか
-                // TODO: 現段階では暫定的に「無視する」
-                app.notificationRepository.clearNotifications()
-
                 Log.i("ScreenReceiver", "detected screen off")
             }
 
