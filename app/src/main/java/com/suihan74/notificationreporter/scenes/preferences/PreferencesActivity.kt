@@ -3,6 +3,8 @@ package com.suihan74.notificationreporter.scenes.preferences
 import android.os.Bundle
 import android.view.MotionEvent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.motion.widget.MotionLayout
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.suihan74.notificationreporter.Application
 import com.suihan74.notificationreporter.R
@@ -12,7 +14,9 @@ import com.suihan74.notificationreporter.databinding.ListHeaderPreferencesMenuBi
 import com.suihan74.notificationreporter.databinding.ListItemPreferencesMenuBinding
 import com.suihan74.notificationreporter.scenes.preferences.page.SettingEditorFragment
 import com.suihan74.utilities.BindingListAdapter
+import com.suihan74.utilities.extensions.hideSoftInputMethod
 import com.suihan74.utilities.lazyProvideViewModel
+import kotlinx.coroutines.launch
 
 /**
  * 設定画面
@@ -49,7 +53,9 @@ class PreferencesActivity : AppCompatActivity() {
     // スクリーン輪郭線・ノッチ輪郭線の描画がウィンドウアタッチ後でないとできないため
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        viewModel.onAttachedToWindow(this, window)
+        lifecycleScope.launch {
+            viewModel.onAttachedToWindow(this@PreferencesActivity, window)
+        }
         binding.vm = viewModel
     }
 
@@ -58,6 +64,7 @@ class PreferencesActivity : AppCompatActivity() {
     /** ページ選択メニューの準備 */
     @Suppress("ClickableViewAccessibility")
     private fun initializeMenu(binding: ActivityPreferencesBinding) {
+        // メニューリスト初期化
         val list = binding.menuRecyclerView.also { list ->
             val adapter = BindingListAdapter<MenuItem, ListItemPreferencesMenuBinding>(
                 R.layout.list_item_preferences_menu,
@@ -86,6 +93,16 @@ class PreferencesActivity : AppCompatActivity() {
                 )
             }
         }
+
+        // メニュー操作時に仮想キーボードを閉じる
+        binding.motionLayout.setTransitionListener(object : MotionLayout.TransitionListener {
+            override fun onTransitionStarted(p0: MotionLayout?, p1: Int, p2: Int) {
+                currentFocus?.hideSoftInputMethod(binding.mainLayout)
+            }
+            override fun onTransitionChange(p0: MotionLayout?, p1: Int, p2: Int, p3: Float) {}
+            override fun onTransitionCompleted(p0: MotionLayout?, p1: Int) {}
+            override fun onTransitionTrigger(p0: MotionLayout?, p1: Int, p2: Boolean, p3: Float) {}
+        })
 
         // `MotionLayout`にタッチイベントを伝播させる
         // リスト、各項目のタッチイベント処理で伝播が止まってしまうので、
