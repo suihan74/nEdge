@@ -49,6 +49,11 @@ class GeneralPrefsFragment : Fragment() {
                 }
                 else false
             }
+            editText.setOnFocusChangeListener { _, hasFocus ->
+                if (!hasFocus) {
+                    editText.hideSoftInputMethod(binding.mainLayout)
+                }
+            }
         }
 
         return binding.root

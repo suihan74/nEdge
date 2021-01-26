@@ -2,6 +2,7 @@ package com.suihan74.notificationreporter.scenes.preferences
 
 import android.view.View
 import android.view.Window
+import androidx.annotation.MainThread
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.*
 import com.suihan74.notificationreporter.Application
@@ -19,6 +20,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
 import org.threeten.bp.LocalTime
 import kotlin.math.absoluteValue
 import kotlin.random.Random
@@ -130,8 +132,8 @@ class PreferencesViewModel(
 
     private var window : Window? = null
 
-    fun onAttachedToWindow(owner: LifecycleOwner, window: Window) {
-        this.window = window
+    suspend fun onAttachedToWindow(owner: LifecycleOwner, window: Window) = withContext(Dispatchers.Main) {
+        this@PreferencesViewModel.window = window
         showSystemUI()
 
         // 画面明度のプレビュー
@@ -169,6 +171,7 @@ class PreferencesViewModel(
 
     private var previewLightLevelObserver : Observer<Float>? = null
 
+    @MainThread
     private fun observeScreenBrightness(owner: LifecycleOwner, liveData: LiveData<Float>?) {
         previewLightLevelObserver?.let { observer ->
             lightLevelOn.removeObserver(observer)
