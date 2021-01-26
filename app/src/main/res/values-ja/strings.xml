@@ -56,6 +56,7 @@
     <string name="prefs_display_name_hint">表示名</string>
     <string name="prefs_keyword_hint">追加条件</string>
     <string name="prefs_clock_text_color_desc">時計部分の文字色</string>
+    <string name="prefs_information_display_mode_desc">通知アプリ名・通知文表示方法</string>
     <string name="prefs_notification_line_color_desc">線の色</string>
     <string name="prefs_line_width_desc">線の太さ</string>
     <string name="prefs_blur_size_desc">ブラー効果の強さ (0で無効化)</string>
@@ -114,6 +115,16 @@
     <string name="pref_app_selection_dialog_title">対象アプリを選択</string>
 
     <!-- ====== -->
+
+    <!-- InformationDisplayMode -->
+    <string name="information_display_mode_none">非表示</string>
+    <string name="information_display_mode_full">ラベル+通知タイトル+通知文</string>
+    <string name="information_display_mode_label">ラベル</string>
+    <string name="information_display_mode_title">通知タイトル</string>
+    <string name="information_display_mode_text">通知文</string>
+    <string name="information_display_mode_title_and_text">通知タイトル+通知文</string>
+    <string name="information_display_mode_label_and_title">ラベル+通知タイトル</string>
+    <string name="information_display_mode_label_and_text">ラベル+通知文</string>
 
     <!-- NotchType -->
     <string name="notch_type_none">なし</string>

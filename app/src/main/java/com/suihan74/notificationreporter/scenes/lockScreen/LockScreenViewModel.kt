@@ -3,6 +3,8 @@ package com.suihan74.notificationreporter.scenes.lockScreen
 import android.app.Service
 import android.app.admin.DevicePolicyManager
 import android.content.Intent
+import android.graphics.Point
+import android.os.Build
 import android.service.notification.StatusBarNotification
 import android.util.Log
 import android.view.MotionEvent
@@ -15,6 +17,7 @@ import com.suihan74.notificationreporter.database.notification.NotificationEntit
 import com.suihan74.notificationreporter.models.MultipleNotificationsSolution
 import com.suihan74.notificationreporter.outline.OutlineDrawer
 import com.suihan74.utilities.extensions.between
+import com.suihan74.utilities.extensions.dp
 import kotlinx.coroutines.*
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.LocalTime
@@ -45,7 +48,7 @@ class LockScreenViewModel(
 
     /** 現在通知に対応する設定 */
     val notificationEntity : LiveData<NotificationEntity> by lazy { _notificationEntity }
-    private val _notificationEntity = MutableLiveData<NotificationEntity>()
+    private val _notificationEntity = MutableLiveData<NotificationEntity>(null)
 
     /** 表示しない開始時刻 */
     private var silentTimezoneStart : LocalTime? = null
@@ -100,6 +103,9 @@ class LockScreenViewModel(
 
     /** 画面に表示中の通知 */
     val currentNotice = MutableLiveData<StatusBarNotification?>()
+
+    /** 画面下部マージン */
+    val marginScreenBottom = MutableLiveData<Float>()
 
     // ------ //
 
@@ -160,10 +166,32 @@ class LockScreenViewModel(
         // バックライトの制御
         observeScreenBrightness(owner, window)
 
+        // 画面下部マージンを設定する
+        // 下部ノッチがある場合追加のマージンを設定してノッチを回避する
+        val defaultMarginBottom = 16.dp
+        marginScreenBottom.value =
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) defaultMarginBottom
+            else {
+                val screenHeight =
+                    with(Point()) {
+                        window.decorView.display.getRealSize(this)
+                        this.y
+                    }
+
+                val rect = window.decorView.rootWindowInsets.displayCutout?.boundingRects?.firstOrNull {
+                    it.bottom == screenHeight
+                }
+
+                if (rect == null) defaultMarginBottom
+                else defaultMarginBottom + rect.height()
+            }
+
         // 輪郭線の描画
         val outlineDrawer = OutlineDrawer(window)
         notificationEntity.observe(owner, Observer {
-            outlineDrawer.draw(edgeImageView, it.setting)
+            if (it?.setting != null) {
+                outlineDrawer.draw(edgeImageView, it.setting)
+            }
         })
     }
 

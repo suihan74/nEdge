@@ -49,6 +49,9 @@ class SettingEditorViewModel(
 
     // --- //
 
+    /** 通知テキストの表示方法 */
+    val informationDisplayMode = mutableLiveData<InformationDisplayMode>()
+
     /** 通知表示の輪郭線の色 */
     val notificationColor = mutableLiveData<Int>()
 
@@ -180,6 +183,7 @@ class SettingEditorViewModel(
             displayName.value = entity.displayName
 
             entity.setting.let { setting ->
+                informationDisplayMode.value = setting.informationDisplayMode
                 notificationColor.value = setting.color
                 lineThickness.value = setting.thickness
                 blurSize.value = setting.blurSize
@@ -229,6 +233,7 @@ class SettingEditorViewModel(
 
         val result = runCatching {
             _notificationSetting.value = NotificationSetting(
+                informationDisplayMode = informationDisplayMode.value!!,
                 color = notificationColor.value!!,
                 thickness = lineThickness.value!!,
                 blurSize = blurSize.value!!,
@@ -409,6 +414,30 @@ class SettingEditorViewModel(
         dialog.setOnDismissListener {
             preferencesViewModel.hideSystemUI()
         }
+        dialog.show(fragmentManager, null)
+    }
+
+    /**
+     * 通知アプリ名・通知文の表示モードを選択するダイアログを開く
+     */
+    fun openInformationDisplayModeSelectionDialog(fragmentManager: FragmentManager) {
+        val items = InformationDisplayMode.values()
+        val labels = items.map { it.textId }
+        val checkedItemIdx = items.indexOf(informationDisplayMode.value)
+
+        val dialog = AlertDialogFragment.Builder()
+            .setTitle(R.string.prefs_information_display_mode_desc)
+            .setNegativeButton(R.string.dialog_cancel)
+            .setSingleChoiceItems(labels, checkedItemIdx) { _, which ->
+                informationDisplayMode.value = items[which]
+            }
+            .dismissOnClickItem(true)
+            .create()
+
+        dialog.setOnDismissListener {
+            preferencesViewModel.hideSystemUI()
+        }
+
         dialog.show(fragmentManager, null)
     }
 }

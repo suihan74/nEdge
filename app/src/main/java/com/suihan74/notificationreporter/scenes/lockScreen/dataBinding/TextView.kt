@@ -5,6 +5,7 @@ import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.suihan74.notificationreporter.database.notification.NotificationEntity
 import com.suihan74.notificationreporter.database.notification.isDefault
+import com.suihan74.notificationreporter.models.InformationDisplayMode
 import com.suihan74.utilities.extensions.text
 import com.suihan74.utilities.extensions.title
 
@@ -23,8 +24,11 @@ object TextViewBindingAdapters {
      */
     @JvmStatic
     @BindingAdapter("notification", "notificationEntity")
-    fun setNotificationAppName(textView: TextView, sbn: StatusBarNotification?, entity: NotificationEntity?) {
-        ViewBindingAdapters.setNotificationVisibility(textView, sbn) {
+    fun setNotificationDisplayName(textView: TextView, sbn: StatusBarNotification?, entity: NotificationEntity?) {
+        val visible =
+            sbn != null && (entity?.setting?.informationDisplayMode?.code?.and(InformationDisplayMode.Label.code) ?: 0) > 0
+
+        ViewBindingAdapters.setNotificationVisibility(textView, visible) {
             textView.text = when {
                 sbn?.packageName == null -> ""
 
@@ -43,15 +47,25 @@ object TextViewBindingAdapters {
      * 通知内容を表示する
      */
     @JvmStatic
-    @BindingAdapter("notificationText")
-    fun setNotificationText(textView: TextView, sbn: StatusBarNotification?) {
-        ViewBindingAdapters.setNotificationVisibility(textView, sbn) {
+    @BindingAdapter("notificationText", "notificationEntity")
+    fun setNotificationText(textView: TextView, sbn: StatusBarNotification?, entity: NotificationEntity?) {
+        val informationDisplayMode = entity?.setting?.informationDisplayMode ?: InformationDisplayMode.NONE
+        val showTitle = informationDisplayMode.code.and(InformationDisplayMode.TITLE.code) > 0
+        val showText = informationDisplayMode.code.and(InformationDisplayMode.TEXT.code) > 0
+        val visible = sbn != null && (showTitle || showText)
+
+        ViewBindingAdapters.setNotificationVisibility(textView, visible) {
             textView.text =
                 sbn?.notification?.let {
                     val title = sbn.notification.title
                     val text = sbn.notification.text
-                    if (title.isBlank() || text.isBlank()) ""
-                    else "$title : $text"
+
+                    when {
+                        showTitle && showText -> "$title : $text"
+                        showTitle -> title
+                        showText -> text
+                        else -> ""
+                    }
                 } ?: ""
         }
     }

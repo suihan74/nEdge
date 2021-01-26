@@ -33,4 +33,7 @@ data class NotificationSetting (
 
     /** 画面下部ノッチ描画設定 */
     val bottomNotchSetting: NotchSetting = NotchSetting.createInstance(NotchType.NONE),
+
+    /** 通知内容を表示する */
+    val informationDisplayMode : InformationDisplayMode = InformationDisplayMode.FULL,
 )

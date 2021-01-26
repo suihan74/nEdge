@@ -53,9 +53,10 @@
     <!-- SettingEditorFragment -->
     <string name="prefs_save">Save</string>
     <string name="prefs_cancel">Cancel</string>
-    <string name="prefs_display_name_hint">Display Name</string>
+    <string name="prefs_display_name_hint">Label (Display name)</string>
     <string name="prefs_keyword_hint">Additional Keywords</string>
     <string name="prefs_clock_text_color_desc">Clock Text Color</string>
+    <string name="prefs_information_display_mode_desc">Notification message displaying mode</string>
     <string name="prefs_notification_line_color_desc">Line Color</string>
     <string name="prefs_line_width_desc">Line Thickness</string>
     <string name="prefs_blur_size_desc">Blur Level (0: disable blur)</string>
@@ -114,6 +115,16 @@
     <string name="pref_app_selection_dialog_title">Select an app</string>
 
     <!-- ====== -->
+
+    <!-- InformationDisplayMode -->
+    <string name="information_display_mode_none">Hidden</string>
+    <string name="information_display_mode_full">Label, Title and Message</string>
+    <string name="information_display_mode_label">Label only</string>
+    <string name="information_display_mode_title">Title only</string>
+    <string name="information_display_mode_text">Message only</string>
+    <string name="information_display_mode_title_and_text">Title and Message</string>
+    <string name="information_display_mode_label_and_title">Label and Title</string>
+    <string name="information_display_mode_label_and_text">Label and Message</string>
 
     <!-- NotchType -->
     <string name="notch_type_none">NONE</string>

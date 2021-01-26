@@ -41,6 +41,7 @@
 
                     <ImageView
                         android:id="@+id/appIcon"
+                        android:visibility="@{vm.applicationInfo != null}"
                         applicationIcon="@{vm.applicationInfo}"
                         android:background="@android:color/transparent"
                         android:contentDescription="@null"
@@ -139,6 +140,18 @@
                     </com.google.android.material.textfield.TextInputLayout>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/prefs_information_display_mode_desc" />
+
+                <Button
+                    textId="@{vm.informationDisplayMode.textId}"
+                    android:onClick="@{() -> vm.openInformationDisplayModeSelectionDialog(fragmentManager)}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -455,7 +468,8 @@
             editingTopNotch="@{vm.editingTopNotch}"
             editingBottomNotch="@{vm.editingBottomNotch}"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            tools:visibility="gone"/>
 
         <!-- はみ出し確認用の背景ここまで -->
 

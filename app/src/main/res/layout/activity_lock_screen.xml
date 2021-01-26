@@ -99,6 +99,8 @@
             app:layout_constraintBottom_toTopOf="@id/notificationText"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_goneMarginBottom="@{vm.marginScreenBottom}"
+            app:layout_constraintVertical_chainStyle="packed"
             android:paddingHorizontal="30dp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"/>
@@ -106,15 +108,16 @@
         <TextView
             android:id="@+id/notificationText"
             notificationText="@{vm.currentNotice}"
+            notificationEntity="@{vm.notificationEntity}"
             android:textColor="@{vm.notificationEntity.setting.color}"
             android:textAlignment="center"
             android:ellipsize="end"
             android:singleLine="true"
-            android:layout_marginBottom="16dp"
             tools:text="dummy : dummy"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="@{vm.marginScreenBottom}"
             android:paddingHorizontal="30dp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"/>
