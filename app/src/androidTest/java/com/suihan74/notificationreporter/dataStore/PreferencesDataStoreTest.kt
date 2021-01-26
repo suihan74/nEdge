@@ -1,8 +1,7 @@
 package com.suihan74.notificationreporter.dataStore
 
-import android.content.Context
 import androidx.datastore.createDataStore
-import androidx.test.core.app.ApplicationProvider
+import androidx.test.platform.app.InstrumentationRegistry
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
@@ -11,7 +10,7 @@ import org.junit.Test
 
 @Suppress("NonAsciiCharacters")
 class PreferencesDataStoreTest {
-    private val context = ApplicationProvider.getApplicationContext<Context>()
+    private val context = InstrumentationRegistry.getInstrumentation().targetContext
     private val dataStore = context.createDataStore(
         fileName = "test.ds",
         serializer = PreferencesSerializer()
