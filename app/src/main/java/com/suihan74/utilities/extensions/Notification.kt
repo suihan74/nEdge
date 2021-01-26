@@ -37,3 +37,6 @@ val Notification.titleBig : CharSequence
 
 fun Notification.contains(keyword: CharSequence) : Boolean =
     title.contains(keyword) || text.contains(keyword)
+
+fun Notification.contains(regex: Regex) : Boolean =
+    title.contains(regex) || text.contains(regex)

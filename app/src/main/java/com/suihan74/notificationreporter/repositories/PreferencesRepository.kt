@@ -103,14 +103,18 @@ class PreferencesRepository(
         sbn: StatusBarNotification,
         keyword: String,
         keywordMatchingType: KeywordMatchingType
-    ) : Boolean = when (keywordMatchingType) {
-        KeywordMatchingType.NONE -> true
+    ) : Boolean {
+        return when (keywordMatchingType) {
+            KeywordMatchingType.NONE -> true
 
-        KeywordMatchingType.INCLUDE ->
-            sbn.notification?.contains(keyword) == true
-
-        KeywordMatchingType.EXCLUDE ->
-            sbn.notification?.contains(keyword) == false
+            KeywordMatchingType.INCLUDE,
+            KeywordMatchingType.EXCLUDE -> {
+                val whiteSpaceRegex = Regex("""\s+""")
+                val keywords = whiteSpaceRegex.split(keyword)
+                val regex = Regex(keywords.joinToString("|") { """\Q$it\E""" })
+                sbn.notification?.contains(regex) == (keywordMatchingType == KeywordMatchingType.INCLUDE)
+            }
+        }
     }
 
     // ------ //
