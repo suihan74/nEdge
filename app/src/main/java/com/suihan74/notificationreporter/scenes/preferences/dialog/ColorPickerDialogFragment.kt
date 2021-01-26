@@ -1,6 +1,7 @@
 package com.suihan74.notificationreporter.scenes.preferences.dialog
 
 import android.app.Dialog
+import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
@@ -42,6 +43,11 @@ class ColorPickerDialogFragment : DialogFragment() {
                 viewModel.onColorPicked?.invoke(this, color)
             }
         }
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        viewModel.onDismiss?.invoke(this)
     }
 
     // ------ //
