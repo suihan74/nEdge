@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.service.notification.StatusBarNotification
 import com.nhaarman.mockitokotlin2.mock
 import com.suihan74.notificationreporter.models.KeywordMatchingType
-import junit.framework.Assert.assertEquals
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.mockito.Mockito.`when`
 
