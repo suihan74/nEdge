@@ -8,9 +8,6 @@ import org.threeten.bp.LocalTime
 
 @Serializable
 data class Preferences(
-    /** 設定バージョン */
-    val version: Int = 1,
-
     /**
      * 画面を暗くした後の時のライトレベル
      *
