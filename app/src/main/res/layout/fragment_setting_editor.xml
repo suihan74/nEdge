@@ -364,6 +364,7 @@
                 <FrameLayout
                     android:id="@+id/topNotchSettingFragmentArea"
                     android:visibility="@{vm.topNotchEnabled}"
+                    android:layout_marginTop="12dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
@@ -387,6 +388,7 @@
                 <FrameLayout
                     android:id="@+id/bottomNotchSettingFragmentArea"
                     android:visibility="@{vm.bottomNotchEnabled}"
+                    android:layout_marginTop="12dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
