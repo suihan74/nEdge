@@ -16,6 +16,11 @@
         android:fullBackupContent="true"
         android:theme="@style/Theme.NotificationReporter" >
 
+        <!-- AdMob -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="@string/admob_app_id"/>
+
         <!-- services -->
 
         <service

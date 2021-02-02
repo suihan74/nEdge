@@ -20,7 +20,7 @@
             android:background="@android:color/transparent"
             app:layoutDescription="@xml/motion_menu_open"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/adViewContainer"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_width="0dp"
@@ -65,6 +65,15 @@
         </androidx.constraintlayout.motion.widget.MotionLayout>
 
         <FrameLayout
+            android:id="@+id/adViewContainer"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content">
+        </FrameLayout>
+
+        <FrameLayout
             android:id="@+id/settingEditorFrame"
             android:background="@null"
             android:layout_width="match_parent"
@@ -81,5 +90,6 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             tools:visibility="gone"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

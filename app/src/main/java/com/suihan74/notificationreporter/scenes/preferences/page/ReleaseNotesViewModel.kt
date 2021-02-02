@@ -18,7 +18,7 @@ class ReleaseNotesViewModel(
 ) : ViewModel() {
     /** 更新履歴 */
     val items : LiveData<List<ReleaseNote>> by lazy { _items }
-    private val _items = MutableLiveData<List<ReleaseNote>>(emptyList())
+    private val _items = MutableLiveData<List<ReleaseNote>>()
 
     // ------ //
 

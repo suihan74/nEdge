@@ -85,12 +85,15 @@ dependencies {
     testImplementation "androidx.room:room-testing:$room_version"
 
     // WorkManager
-    def work_version = "2.4.0"
+    def work_version = "2.5.0"
     implementation "androidx.work:work-runtime:$work_version"
     implementation "androidx.work:work-runtime-ktx:$work_version"
 
     // AndroidPhotoshopColorPicker
     implementation 'com.azeesoft.lib.colorpicker:colorpicker:1.0.8@aar'
+
+    // AdMob
+    implementation 'com.google.android.gms:play-services-ads:19.7.0'
 
     implementation project(":utilities")
 
