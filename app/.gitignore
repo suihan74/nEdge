@@ -1,2 +1,3 @@
 build/
 src/main/res/values/admob.xml
+src/release/res/values/admob.xml
