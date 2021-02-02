@@ -13,7 +13,7 @@ android {
         applicationId "com.suihan74.nedge"
         minSdkVersion 23
         targetSdkVersion 29
-        versionCode 1_00_000_000
+        versionCode 1_00_000_001
         versionName "1.0.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -38,6 +38,16 @@ android {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    flavorDimensions "mode"
+    productFlavors {
+        demo {
+            dimension "mode"
+            versionNameSuffix "-demo"
+        }
+        full {
+            dimension "mode"
         }
     }
     compileOptions {
