@@ -4,7 +4,7 @@
         <import type="android.view.View"/>
         <variable
             name="vm"
-            type="com.suihan74.notificationreporter.scenes.preferences.page.ReleaseNotesViewModel" />
+            type="com.suihan74.nedge.scenes.preferences.page.ReleaseNotesViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

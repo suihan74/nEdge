@@ -1,6 +1,6 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="Theme.NotificationReporter" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.Application" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/blue_500</item>
         <item name="colorPrimaryVariant">@color/blue_700</item>
@@ -15,14 +15,14 @@
         <item name="android:windowLightStatusBar">true</item>
     </style>
 
-    <style name="Theme.NotificationReporter.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar">
+    <style name="Theme.Application.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar">
         <!-- App Bar の文字色 -->
         <item name="android:textColorPrimary">@color/preferencesTextColor</item>
     </style>
 
     <!-- ====== -->
 
-    <style name="LockScreenActivity" parent="Theme.NotificationReporter">
+    <style name="LockScreenActivity" parent="Theme.Application">
         <item name="android:background">@color/black</item>
         <item name="android:textColor">@color/white</item>
     </style>
@@ -40,7 +40,7 @@
 
     <!-- ====== -->
 
-    <style name="PreferencesActivity" parent="Theme.NotificationReporter">
+    <style name="PreferencesActivity" parent="Theme.Application">
         <item name="colorPrimary">@color/blue_700</item>
         <item name="colorOnPrimary">@color/white</item>
 

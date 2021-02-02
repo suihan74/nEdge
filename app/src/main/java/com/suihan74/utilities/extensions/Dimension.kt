@@ -3,7 +3,7 @@ package com.suihan74.utilities.extensions
 import android.app.Service
 import android.hardware.display.DisplayManager
 import android.util.DisplayMetrics
-import com.suihan74.notificationreporter.Application
+import com.suihan74.nedge.Application
 
 private val displayMetrics : DisplayMetrics?
     get() =

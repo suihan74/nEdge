@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
     <data>
-        <import type="com.suihan74.notificationreporter.scenes.preferences.PreferencesViewModel.EditingLightLevel"/>
+        <import type="com.suihan74.nedge.scenes.preferences.PreferencesViewModel.EditingLightLevel"/>
 
         <variable
             name="vm"
-            type="com.suihan74.notificationreporter.scenes.preferences.PreferencesViewModel" />
+            type="com.suihan74.nedge.scenes.preferences.PreferencesViewModel" />
 
         <variable
             name="lifecycle"

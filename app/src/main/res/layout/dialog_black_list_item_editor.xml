@@ -3,7 +3,7 @@
     <data>
         <variable
             name="vm"
-            type="com.suihan74.notificationreporter.scenes.preferences.dialog.BlackListItemEditorDialogFragment.DialogViewModel" />
+            type="com.suihan74.nedge.scenes.preferences.dialog.BlackListItemEditorDialogFragment.DialogViewModel" />
 
         <variable
             name="fragmentManager"

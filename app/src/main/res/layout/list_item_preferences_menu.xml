@@ -2,7 +2,7 @@
 <layout>
     <data>
         <import type="androidx.lifecycle.LiveData"/>
-        <import type="com.suihan74.notificationreporter.scenes.preferences.MenuItem"/>
+        <import type="com.suihan74.nedge.scenes.preferences.MenuItem"/>
 
         <variable
             name="item"

@@ -3,7 +3,7 @@
     <data>
         <variable
             name="vm"
-            type="com.suihan74.notificationreporter.scenes.preferences.page.SettingEditorViewModel" />
+            type="com.suihan74.nedge.scenes.preferences.page.SettingEditorViewModel" />
 
         <variable
             name="fragmentManager"

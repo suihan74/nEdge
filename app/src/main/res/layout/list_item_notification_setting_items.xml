@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
     <data>
-        <import type="com.suihan74.notificationreporter.models.KeywordMatchingType"/>
+        <import type="com.suihan74.nedge.models.KeywordMatchingType"/>
         <variable
             name="item"
-            type="com.suihan74.notificationreporter.scenes.preferences.page.SettingItem"/>
+            type="com.suihan74.nedge.scenes.preferences.page.SettingItem"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

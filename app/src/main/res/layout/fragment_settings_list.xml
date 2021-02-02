@@ -3,7 +3,7 @@
     <data>
         <variable
             name="vm"
-            type="com.suihan74.notificationreporter.scenes.preferences.page.SettingsListViewModel" />
+            type="com.suihan74.nedge.scenes.preferences.page.SettingsListViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

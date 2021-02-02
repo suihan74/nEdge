@@ -4,7 +4,7 @@
     <data>
         <variable
             name="vm"
-            type="com.suihan74.notificationreporter.scenes.lockScreen.LockScreenViewModel" />
+            type="com.suihan74.nedge.scenes.lockScreen.LockScreenViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -95,7 +95,7 @@
             android:ellipsize="end"
             android:singleLine="true"
             android:layout_marginBottom="2dp"
-            tools:text="com.suihan74.notificationreporter"
+            tools:text="com.suihan74.nedge"
             app:layout_constraintBottom_toTopOf="@id/notificationText"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

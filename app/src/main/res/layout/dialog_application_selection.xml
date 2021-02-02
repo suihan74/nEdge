@@ -4,7 +4,7 @@
         <import type="android.view.View"/>
         <variable
             name="vm"
-            type="com.suihan74.notificationreporter.scenes.preferences.dialog.ApplicationSelectionDialogFragment.DialogViewModel" />
+            type="com.suihan74.nedge.scenes.preferences.dialog.ApplicationSelectionDialogFragment.DialogViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

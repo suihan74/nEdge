@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.suihan74.notificationreporter">
+    package="com.suihan74.nedge">
 
     <!-- レシーバからLockScreenActivityを起動するのに必要(API29以上) -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
@@ -14,7 +14,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:fullBackupContent="true"
-        android:theme="@style/Theme.NotificationReporter" >
+        android:theme="@style/Theme.Application" >
 
         <!-- AdMob -->
         <meta-data

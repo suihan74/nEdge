@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:tools="http://schemas.android.com/tools">
     <data>
-        <import type="com.suihan74.notificationreporter.models.WaterDropNotchSetting"/>
+        <import type="com.suihan74.nedge.models.WaterDropNotchSetting"/>
         <variable
             name="vm"
-            type="com.suihan74.notificationreporter.scenes.preferences.PreferencesViewModel" />
+            type="com.suihan74.nedge.scenes.preferences.PreferencesViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

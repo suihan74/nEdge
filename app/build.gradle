@@ -10,7 +10,7 @@ android {
     compileSdkVersion 29
 
     defaultConfig {
-        applicationId "com.suihan74.notificationreporter"
+        applicationId "com.suihan74.nedge"
         minSdkVersion 23
         targetSdkVersion 29
         versionCode 1_00_000_000
