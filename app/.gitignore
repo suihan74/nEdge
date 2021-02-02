@@ -1,2 +1,2 @@
-/build
-/app/src/res/values/admob.xml
+build/
+src/res/values/admob.xml
