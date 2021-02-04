@@ -50,7 +50,7 @@ class TimePickerDialogFragment : DialogFragment(), TimePickerDialog.OnTimeSetLis
             )
         }
 
-        return TimePickerDialog(context, R.style.TimePickerDialog, this, hour, minute, is24HourView)
+        return TimePickerDialog(context, R.style.Theme_Dialog_TimePicker, this, hour, minute, is24HourView)
     }
 
     override fun onTimeSet(timePicker: TimePicker?, hour: Int, minute: Int) {

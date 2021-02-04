@@ -35,7 +35,7 @@ class ColorPickerDialogFragment : DialogFragment() {
     // ------ //
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return ColorPickerDialog.createColorPickerDialog(requireContext(), R.style.ColorPickerDialog).also {
+        return ColorPickerDialog.createColorPickerDialog(requireContext(), R.style.Theme_Dialog_ColorPicker).also {
             it.setInitialColor(viewModel.initialColor)
             it.setPositiveActionText(getString(R.string.dialog_ok))
             it.setNegativeActionText(getString(R.string.dialog_cancel))

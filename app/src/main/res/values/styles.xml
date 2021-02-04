@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="ClockTextView" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textSize">56sp</item>
+        <item name="android:textColor">@color/clockTextColor</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
+    <style name="DateTextView" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/dateTextColor</item>
+    </style>
+
+    <!-- ====== -->
+
+    <!-- テキスト入力エリア(枠線有り) -->
+    <style name="TextInputLayout.OutlinedBox" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="android:textColorHint">@color/preferencesTextColor</item>
+        <item name="hintTextColor">@color/preferencesTextColor</item>
+    </style>
+
+    <!-- テキスト入力エリア(枠線無し) -->
+    <style name="TextInputLayout.FilledBox" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
+        <item name="android:textColorHint">@color/preferencesTextColor</item>
+        <item name="hintTextColor">@color/preferencesTextColor</item>
+    </style>
+
+    <!-- テキスト入力エリア(ドロップダウンメニュー) -->
+    <style name="TextInputLayout.ExposedDropdownMenu" parent="Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu">
+        <item name="android:textColorHint">@color/preferencesTextColor</item>
+        <item name="hintTextColor">@color/preferencesTextColor</item>
+    </style>
+
+    <!-- テキスト入力部分 -->
+    <style name="TextInputEditText">
+        <item name="android:textColor">@color/preferencesTextColor</item>
+    </style>
+
+    <!-- Switch - トグルスイッチ -->
+    <style name="SwitchStyle" parent="Widget.MaterialComponents.CompoundButton.Switch">
+        <item name="thumbTint">@color/switch_thumb</item>
+    </style>
+
+    <!-- Switch - トグルスイッチの説明文 -->
+    <style name="SwitchTextAppearance">
+        <item name="android:textColor">@color/preferencesTextColor</item>
+    </style>
+
+    <!-- CheckBox -->
+    <style name="CheckBoxStyle" parent="Widget.MaterialComponents.CompoundButton.CheckBox">
+        <item name="android:textColor">@color/preferencesTextColor</item>
+    </style>
+
+    <!-- ====== -->
+
+    <!-- TimePicker本体部分(時計盤)のスタイル -->
+    <style name="TimePickerWidgetStyle" parent="@android:style/Widget.Material.TimePicker">
+        <!-- 時計盤の背景色 -->
+        <item name="android:numbersBackgroundColor">@color/gray_300</item>
+        <!-- 時計盤のセレクタの色 -->
+        <item name="android:numbersSelectorColor">@color/blue_700</item>
+        <!-- 時計盤の(外側の)数字の色 -->
+        <item name="android:numbersTextColor">@color/time_picker_numbers_text</item>
+        <!-- 時計盤の内側の数字の色(24時間表示モード) -->
+        <item name="android:numbersInnerTextColor">@color/time_picker_numbers_text</item>
+
+        <!-- ヘッダ部分の文字設定 -->
+        <item name="android:headerTimeTextAppearance">@style/TimePickerHeaderTextAppearance</item>
+        <!-- ヘッダ部分の背景色 -->
+        <item name="android:headerBackground">@android:color/transparent</item>
+        <!-- AM/PMの文字色(12時間表示モード) -->
+        <item name="android:amPmTextColor">@color/white</item>
+    </style>
+
+    <!-- TextView部分の背景色を透過する -->
+    <style name="TimePickerDialogTextViewStyle" parent="Widget.MaterialComponents.TextView">
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <!-- ヘッダ部分の文字設定 -->
+    <style name="TimePickerHeaderTextAppearance">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <!-- ダイアログ下部ボタン(Positive,Negative,Neutral...分けるなら別々に作る) -->
+    <style name="TimePickerDialogButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/blue_700</item>
+    </style>
+
+    <!-- 入力モード切替ボタンのアイコン色 -->
+    <style name="TimePickerDialogImageButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="tint">@color/blue_700</item>
+    </style>
+
+    <!-- 直接入力モード時のAM/PM選択用スピナの"▼"ボタンの色を設定する -->
+    <style name="TimePickerDialogSpinnerStyle" parent="Widget.AppCompat.Spinner">
+        <item name="android:backgroundTint">@color/white</item>
+    </style>
+
+    <!-- ====== -->
+
+    <!-- RecyclerView -->
+    <style name="RecyclerView">
+        <!--
+        <item name="android:scrollbarThumbVertical">@drawable/scrollbar_thumb</item>
+        -->
+        <item name="android:scrollbarSize">4dp</item>
+        <item name="android:scrollbars">vertical</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="RecyclerView.Linear">
+        <item name="layoutManager">androidx.recyclerview.widget.LinearLayoutManager</item>
+    </style>
+
+</resources>

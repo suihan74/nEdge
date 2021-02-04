@@ -38,7 +38,6 @@ class PreferencesActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setTheme(R.style.PreferencesActivity)
 
         binding = ActivityPreferencesBinding.inflate(layoutInflater).also {
             it.lifecycleOwner = this

@@ -62,7 +62,7 @@ class ApplicationSelectionDialogFragment : DialogFragment() {
             }
         }
 
-        return AlertDialog.Builder(requireContext(), R.style.AlertDialog)
+        return AlertDialog.Builder(requireContext(), R.style.Theme_Dialog)
             .setTitle(R.string.pref_app_selection_dialog_title)
             .setNegativeButton(R.string.dialog_cancel, null)
             .setView(binding.root)

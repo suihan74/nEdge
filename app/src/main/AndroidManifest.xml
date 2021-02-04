@@ -48,6 +48,7 @@
         <!-- ロック画面 -->
         <activity
             android:name=".scenes.lockScreen.LockScreenActivity"
+            android:theme="@style/Theme.LockScreenActivity"
             android:showOnLockScreen="true"
             android:screenOrientation="sensorPortrait"
             android:lockTaskMode="if_whitelisted"
@@ -63,6 +64,7 @@
         <!-- 設定画面 -->
         <activity
             android:name=".scenes.preferences.PreferencesActivity"
+            android:theme="@style/Theme.PreferencesActivity"
             android:windowSoftInputMode="adjustPan"
             android:screenOrientation="sensorPortrait"
             android:launchMode="singleTask">
