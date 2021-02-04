@@ -45,6 +45,14 @@
 
         </activity>
 
+        <!-- パーミッションチェック画面 -->
+        <activity
+            android:name=".scenes.permissions.PermissionsValidationActivity"
+            android:theme="@style/Theme.PermissionsValidationActivity"
+            android:screenOrientation="sensorPortrait"
+            android:launchMode="singleTask">
+        </activity>
+
         <!-- ロック画面 -->
         <activity
             android:name=".scenes.lockScreen.LockScreenActivity"

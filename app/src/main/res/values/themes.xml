@@ -3,6 +3,10 @@
     <style name="Theme.Application" parent="Base.Theme"/>
     <style name="Theme.LockScreenActivity" parent="Base.Theme.LockScreenActivity"/>
     <style name="Theme.PreferencesActivity" parent="Base.Theme.PreferencesActivity"/>
+    <style name="Theme.PermissionsValidationActivity" parent="Base.Theme.PreferencesActivity">
+        <item name="android:statusBarColor">@color/preferencesBackgroundColor</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
 
     <style name="Theme.Dialog" parent="Base.Theme.Dialog"/>
     <style name="Theme.Dialog.TimePicker" parent="Base.Theme.Dialog.TimePicker"/>

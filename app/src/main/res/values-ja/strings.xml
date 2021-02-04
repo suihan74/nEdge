@@ -27,6 +27,23 @@
     <!-- DEVICE_ADMIN -->
     <string name="device_admin_desc">&appName; から画面をロック・消灯するために使用します</string>
 
+    <!-- ====== -->
+
+    <!-- PermissionsValidationActivity -->
+    <string name="permission_activity_title">パーミッション設定</string>
+    <string name="permission_activity_desc">全てのパーミッションを許可することで&appName;が使用できるようになります。</string>
+
+    <string name="permission_device_policy_manager_text">デバイス管理アプリとして登録</string>
+    <string name="permission_device_policy_manager_desc">&appName;側から画面消灯を行うために必要です。</string>
+
+    <string name="permission_manage_overlay_text">他のアプリに重ねて描画できる</string>
+    <string name="permission_manage_overlay_desc">&appName;をロック画面より前面に表示するために必要です。</string>
+
+    <string name="permission_notification_listener_text">通知へのアクセス</string>
+    <string name="permission_notification_listener_desc">端末で発生した通知を&appName;が扱うために必要です。</string>
+
+    <!-- ====== -->
+
     <!-- PreferencesActivity -->
 
     <!-- Preferences Menus -->

@@ -27,6 +27,23 @@
     <!-- DEVICE_ADMIN -->
     <string name="device_admin_desc">&appName; requires DEVICE_ADMIN in order to turn screen off and lock from the application</string>
 
+    <!-- ====== -->
+
+    <!-- PermissionsValidationActivity -->
+    <string name="permission_activity_title">Permissions</string>
+    <string name="permission_activity_desc">You need to enable all permissions for using &appName;.</string>
+
+    <string name="permission_device_policy_manager_text">register &appName; as device admin app</string>
+    <string name="permission_device_policy_manager_desc">This permission is required to turn off screen from &appName;.</string>
+
+    <string name="permission_manage_overlay_text">enable drawing &appName; on top of other apps</string>
+    <string name="permission_manage_overlay_desc">This permission is required to overlay &appName; on the lock screen.</string>
+
+    <string name="permission_notification_listener_text">enable to listen all notifications</string>
+    <string name="permission_notification_listener_desc">This permission is required to detect and handle all notifications.</string>
+
+    <!-- ====== -->
+
     <!-- PreferencesActivity -->
 
     <!-- Preferences Menus -->
