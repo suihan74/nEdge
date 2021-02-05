@@ -347,6 +347,32 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="@{@string/prefs_edge_offset_desc(@string/top)}" />
+
+                <com.google.android.material.slider.Slider
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:stepSize="1"
+                    intValue="@={vm.topEdgeOffset}"
+                    android:valueFrom="0"
+                    android:valueTo="500" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{@string/prefs_edge_offset_desc(@string/bottom)}" />
+
+                <com.google.android.material.slider.Slider
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:stepSize="1"
+                    intValue="@={vm.bottomEdgeOffset}"
+                    android:valueFrom="0"
+                    android:valueTo="500" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:visibility="@{vm.topNotchEnabled}"
                     android:text="@string/prefs_top_notch_type_selection_desc" />

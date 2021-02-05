@@ -80,9 +80,9 @@ class OutlineDrawer(
 
             val offset = thickness / 2
             val left = offset
-            val top = offset
+            val top = offset + topEdgeOffset
             val right = screenWidth - offset
-            val bottom = screenHeight - offset
+            val bottom = screenHeight - offset - bottomEdgeOffset
 
             // top left corner
             if (topLeftCornerEnabled) {
@@ -173,12 +173,13 @@ class OutlineDrawer(
         notificationSetting: NotificationSetting,
     ) {
         val offset = thickness / 2
+        val top = offset + notificationSetting.outlinesSetting.topEdgeOffset
         val right = screenWidth - offset
         val topCornerRadius = notificationSetting.outlinesSetting.topCornerRadius.dp
 
-        path.moveTo(offset + topCornerRadius, offset)
-        drawTopNotch(path, thickness, topCornerRadius, notificationSetting.topNotchSetting)
-        path.lineTo(right - topCornerRadius, offset)
+        path.moveTo(offset + topCornerRadius, top)
+        drawTopNotch(path, thickness, topCornerRadius, notificationSetting.outlinesSetting.topEdgeOffset, notificationSetting.topNotchSetting)
+        path.lineTo(right - topCornerRadius, top)
     }
 
     /**
@@ -190,12 +191,12 @@ class OutlineDrawer(
         notificationSetting: NotificationSetting
     ) {
         val offset = thickness / 2
-        val bottom = screenHeight - offset
+        val bottom = screenHeight - offset - notificationSetting.outlinesSetting.bottomEdgeOffset
         val right = screenWidth - offset
         val bottomCornerRadius = notificationSetting.outlinesSetting.bottomCornerRadius.dp
 
         path.moveTo(right - bottomCornerRadius, bottom)
-        drawBottomNotch(path, thickness, bottomCornerRadius, notificationSetting.bottomNotchSetting)
+        drawBottomNotch(path, thickness, bottomCornerRadius, notificationSetting.outlinesSetting.bottomEdgeOffset, notificationSetting.bottomNotchSetting)
         path.lineTo(offset + bottomCornerRadius, bottom)
     }
 
@@ -209,9 +210,11 @@ class OutlineDrawer(
 //        }
 //        else {
             val topCornerRadius = notificationSetting.outlinesSetting.topCornerRadius.dp
-            val offset = thickness / 2
-            val end = offset + topCornerRadius * 2f
-            path.arcTo(offset, offset, end, end, 180f, 90f, true)
+            val left = thickness / 2
+            val top = left + notificationSetting.outlinesSetting.topEdgeOffset
+            val right = left + topCornerRadius * 2f
+            val bottom = top + topCornerRadius * 2f
+            path.arcTo(left, top, right, bottom, 180f, 90f, true)
 //        }
     }
 
@@ -226,8 +229,11 @@ class OutlineDrawer(
 //        else {
             val topCornerRadius = notificationSetting.outlinesSetting.topCornerRadius.dp
             val offset = thickness / 2
+            val top = offset + notificationSetting.outlinesSetting.topEdgeOffset
+            val bottom = top + topCornerRadius * 2
             val right = screenWidth - offset
-            path.arcTo(right - topCornerRadius * 2, offset, right, offset + topCornerRadius * 2, 270f, 90f, true)
+            val left = right - topCornerRadius * 2
+            path.arcTo(left, top, right, bottom, 270f, 90f, true)
 //        }
     }
 
@@ -237,18 +243,20 @@ class OutlineDrawer(
         path: Path,
         thickness: Float,
         cornerRadius: Float,
+        offset: Int,
         notchSetting: NotchSetting
     ) {
-        EdgeNotchDrawer.draw(displayRealSize, path, thickness, cornerRadius, notchSetting)
+        EdgeNotchDrawer.draw(displayRealSize, path, thickness, cornerRadius, offset, notchSetting)
     }
 
     private fun drawBottomNotch(
         path: Path,
         thickness: Float,
         cornerRadius: Float,
+        offset: Int,
         notchSetting: NotchSetting
     ) {
-        EdgeNotchDrawer.draw(displayRealSize, path, thickness, cornerRadius, notchSetting)
+        EdgeNotchDrawer.draw(displayRealSize, path, thickness, cornerRadius, offset, notchSetting)
     }
 
     private fun drawFloatingNotch(

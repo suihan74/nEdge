@@ -82,6 +82,7 @@
     <string name="prefs_enabled_corner">%s corner</string>
     <string name="prefs_top_corner_radius_desc">Corner radius at the top of the screen</string>
     <string name="prefs_bottom_corner_radius_desc">Corner radius at the bottom of the screen</string>
+    <string name="prefs_edge_offset_desc">%s edge offset</string>
     <string name="prefs_top_notch_type_selection_desc">Top notch type</string>
     <string name="prefs_bottom_notch_type_selection_desc">Bottom notch type</string>
 

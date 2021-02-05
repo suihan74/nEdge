@@ -82,6 +82,7 @@
     <string name="prefs_enabled_corner">%s角</string>
     <string name="prefs_top_corner_radius_desc">画面上部の角の丸み</string>
     <string name="prefs_bottom_corner_radius_desc">画面下部の角の丸み</string>
+    <string name="prefs_edge_offset_desc">%s辺を画面内側にずらす</string>
     <string name="prefs_top_notch_type_selection_desc">画面上部ノッチタイプ</string>
     <string name="prefs_bottom_notch_type_selection_desc">画面下部ノッチタイプ</string>
 

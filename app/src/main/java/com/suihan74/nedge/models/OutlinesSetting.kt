@@ -36,4 +36,10 @@ data class OutlinesSetting (
 
     /** 画面下部角の角丸半径 */
     val bottomCornerRadius: Float = 0f,
+
+    /** 上辺を画面内側にずらす */
+    val topEdgeOffset: Int = 0,
+
+    /** 下端を画面内側にずらす */
+    val bottomEdgeOffset: Int = 0,
 )

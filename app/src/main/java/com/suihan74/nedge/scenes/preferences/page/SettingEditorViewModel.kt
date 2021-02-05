@@ -67,6 +67,12 @@ class SettingEditorViewModel(
     /** 輪郭線の角丸半径(画面下部) */
     val bottomCornerRadius = mutableLiveData<Float>()
 
+    /** 輪郭線上辺を画面内側にずらす */
+    val topEdgeOffset = mutableLiveData<Int>()
+
+    /** 輪郭線下辺を画面内側にずらす */
+    val bottomEdgeOffset = mutableLiveData<Int>()
+
     // --- //
 
     /** 上辺を描画する */
@@ -200,6 +206,9 @@ class SettingEditorViewModel(
                     topRightCornerEnabled.value = outlines.topRightCornerEnabled
                     bottomLeftCornerEnabled.value = outlines.bottomLeftCornerEnabled
                     bottomRightCornerEnabled.value = outlines.bottomRightCornerEnabled
+
+                    topEdgeOffset.value = outlines.topEdgeOffset
+                    bottomEdgeOffset.value = outlines.bottomEdgeOffset
                 }
 
                 setting.topNotchSetting.let { notch ->
@@ -247,7 +256,9 @@ class SettingEditorViewModel(
                     topLeftCornerEnabled = topLeftCornerEnabled.value!!,
                     topRightCornerEnabled = topRightCornerEnabled.value!!,
                     bottomLeftCornerEnabled = bottomLeftCornerEnabled.value!!,
-                    bottomRightCornerEnabled = bottomRightCornerEnabled.value!!
+                    bottomRightCornerEnabled = bottomRightCornerEnabled.value!!,
+                    topEdgeOffset = topEdgeOffset.value!!,
+                    bottomEdgeOffset = bottomEdgeOffset.value!!
                 ),
                 topNotchSetting = topNotchSetting.value!!,
                 bottomNotchSetting = bottomNotchSetting.value!!,

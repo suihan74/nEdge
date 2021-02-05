@@ -27,17 +27,18 @@ abstract class EdgeNotchDrawer<SettingType : NotchSetting>(
             path: Path,
             thickness: Float,
             cornerRadius: Float,
+            offset: Int,
             notchSetting: NotchSetting
         ) {
             when (notchSetting.type) {
                 NotchType.RECTANGLE -> {
                     val drawer = RectangleNotchDrawer(displaySize)
-                    drawer.draw(displaySize, path, thickness, cornerRadius, notchSetting as RectangleNotchSetting)
+                    drawer.draw(displaySize, path, thickness, cornerRadius, offset, notchSetting as RectangleNotchSetting)
                 }
 
                 NotchType.WATER_DROP -> {
                     val drawer = WaterDropNotchDrawer(displaySize)
-                    drawer.draw(displaySize, path, thickness, cornerRadius, notchSetting as WaterDropNotchSetting)
+                    drawer.draw(displaySize, path, thickness, cornerRadius, offset, notchSetting as WaterDropNotchSetting)
                 }
 
                 else -> {}
@@ -48,13 +49,21 @@ abstract class EdgeNotchDrawer<SettingType : NotchSetting>(
     /**
      * ノッチ位置によって画面上端・下端を判別して描画処理を切り替える
      */
-    fun draw(displaySize: Point, path: Path, thickness: Float, cornerRadius: Float, notchSetting: SettingType) {
+    fun draw(displaySize: Point, path: Path, thickness: Float, cornerRadius: Float, offset: Int, notchSetting: SettingType) {
         val verticalCenter = displaySize.y / 2
-        val rect = notchSetting.rect
-        if (rect.top < verticalCenter) {
+
+        if (notchSetting.rect.top < verticalCenter) {
+            val rect =
+                if (offset > 0) Rect(notchSetting.rect).also { it.offset(0, offset) }
+                else notchSetting.rect
+
             drawTopEdge(path, rect, thickness, cornerRadius, notchSetting)
         }
         else {
+            val rect =
+                if (offset > 0) Rect(notchSetting.rect).also { it.offset(0, -offset) }
+                else notchSetting.rect
+
             drawBottomEdge(path, rect, thickness, cornerRadius, notchSetting)
         }
     }
@@ -65,7 +74,7 @@ abstract class EdgeNotchDrawer<SettingType : NotchSetting>(
     private fun drawTopEdge(path: Path, rect: Rect, thickness: Float, cornerRadius: Float, notchSetting: SettingType) {
         val notchPath = Path().apply {
             val offset = thickness * .5f
-            moveTo(offset + cornerRadius, offset)
+            moveTo(offset + cornerRadius, offset + rect.top)
         }
         draw(notchPath, rect, thickness, notchSetting)
         path.addPath(notchPath)
@@ -81,7 +90,7 @@ abstract class EdgeNotchDrawer<SettingType : NotchSetting>(
             val offset = thickness * .5f
             moveTo(offset + cornerRadius, offset)
         }
-        val notchRect = Rect(rect.left, 0, rect.right, rect.bottom - rect.top)
+        val notchRect = Rect(rect.left, 0, rect.right, rect.height())
         draw(notchPath, notchRect, thickness, notchSetting)
         path.addPath(notchPath, Matrix().apply {
             preRotate(180f, notchRect.centerX().toFloat(), 0f)
