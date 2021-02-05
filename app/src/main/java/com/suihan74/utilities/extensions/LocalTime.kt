@@ -10,9 +10,10 @@ import org.threeten.bp.LocalTime
  * ex) `start`=23:00, `end`=07:00 の場合など
  */
 fun LocalTime.between(start: LocalTime, end: LocalTime) : Boolean =
-    if (start < end) {
-        this in start..end
-    }
-    else {
-        this >= start || this <= end
+    when {
+        start == end -> false
+
+        start < end -> this in start..end
+
+        else -> this >= start || this <= end
     }

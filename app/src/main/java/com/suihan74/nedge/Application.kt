@@ -187,7 +187,12 @@ class Application : android.app.Application() {
      * 既に実行状態の場合はインスタンスを置き換えて再登録する
      */
     suspend fun startPeriodicWork() {
-        val startAt = preferencesRepository.preferences().silentTimezoneEnd
+        val prefs = preferencesRepository.preferences()
+        val startAt = prefs.silentTimezoneEnd
+        if (startAt == prefs.silentTimezoneStart) {
+            return
+        }
+
         val now = LocalTime.now()
         val duration = when {
             now < startAt -> Duration.between(now, startAt)
