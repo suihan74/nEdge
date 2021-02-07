@@ -6,9 +6,9 @@ import android.util.Log
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.suihan74.nedge.models.KeywordMatchingType
-import org.threeten.bp.DateTimeException
-import org.threeten.bp.LocalTime
-import org.threeten.bp.format.DateTimeFormatter
+import java.time.DateTimeException
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
 object TextViewBindingAdapters {
     /**

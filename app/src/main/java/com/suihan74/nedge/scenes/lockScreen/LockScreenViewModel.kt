@@ -19,8 +19,8 @@ import com.suihan74.nedge.outline.OutlineDrawer
 import com.suihan74.utilities.extensions.between
 import com.suihan74.utilities.extensions.dp
 import kotlinx.coroutines.*
-import org.threeten.bp.LocalDateTime
-import org.threeten.bp.LocalTime
+import java.time.LocalDateTime
+import java.time.LocalTime
 import kotlin.random.Random
 
 class LockScreenViewModel(

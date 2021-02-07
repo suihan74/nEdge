@@ -1,6 +1,6 @@
 package com.suihan74.utilities.extensions
 
-import org.threeten.bp.LocalTime
+import java.time.LocalTime
 
 /**
  * 時刻が`start`~`end`の間であるかを調べる

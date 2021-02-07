@@ -5,6 +5,9 @@
 
     <!-- レシーバからLockScreenActivityを起動するのに必要(API29以上) -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <!-- ネットワークアクセス: 広告表示 -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
         android:allowBackup="true"

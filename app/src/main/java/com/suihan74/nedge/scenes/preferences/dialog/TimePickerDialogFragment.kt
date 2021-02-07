@@ -11,7 +11,7 @@ import com.suihan74.nedge.R
 import com.suihan74.utilities.DialogListener
 import com.suihan74.utilities.fragment.withArguments
 import com.suihan74.utilities.lazyProvideViewModel
-import org.threeten.bp.LocalTime
+import java.time.LocalTime
 
 /**
  * 時刻選択ダイアログ

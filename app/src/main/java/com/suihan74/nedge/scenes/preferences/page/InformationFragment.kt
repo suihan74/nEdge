@@ -13,7 +13,7 @@ import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.suihan74.nedge.Application
 import com.suihan74.nedge.R
 import com.suihan74.nedge.databinding.FragmentInformationBinding
-import org.threeten.bp.LocalDateTime
+import java.time.LocalDateTime
 
 class InformationFragment : Fragment() {
     companion object {

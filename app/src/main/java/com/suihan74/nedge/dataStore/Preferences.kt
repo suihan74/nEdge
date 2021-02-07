@@ -4,7 +4,7 @@ import com.suihan74.nedge.models.MultipleNotificationsSolution
 import com.suihan74.nedge.models.UnknownNotificationSolution
 import com.suihan74.utilities.serialization.LocalTimeSerializer
 import kotlinx.serialization.Serializable
-import org.threeten.bp.LocalTime
+import java.time.LocalTime
 
 @Serializable
 data class Preferences(

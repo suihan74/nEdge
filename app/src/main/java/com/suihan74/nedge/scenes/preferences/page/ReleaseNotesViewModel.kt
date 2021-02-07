@@ -11,7 +11,7 @@ import com.suihan74.nedge.models.ReleaseNote
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.threeten.bp.LocalDate
+import java.time.LocalDate
 
 class ReleaseNotesViewModel(
     private val application: Application

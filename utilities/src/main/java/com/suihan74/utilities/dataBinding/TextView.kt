@@ -3,8 +3,8 @@ package com.suihan74.utilities.dataBinding
 import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.databinding.BindingAdapter
-import org.threeten.bp.LocalDateTime
-import org.threeten.bp.format.DateTimeFormatter
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 object TextViewBindingAdapters {
     @JvmStatic

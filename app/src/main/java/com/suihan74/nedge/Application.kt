@@ -11,7 +11,6 @@ import androidx.core.content.pm.PackageInfoCompat
 import androidx.datastore.createDataStore
 import androidx.room.Room
 import androidx.work.*
-import com.jakewharton.threetenabp.AndroidThreeTen
 import com.suihan74.nedge.dataStore.PreferencesSerializer
 import com.suihan74.nedge.database.AppDatabase
 import com.suihan74.nedge.receivers.BatteryStateReceiver
@@ -23,8 +22,8 @@ import com.suihan74.nedge.repositories.ScreenRepository
 import com.suihan74.nedge.workers.StartupConfirmationWorker
 import com.suihan74.utilities.VersionUtil
 import kotlinx.coroutines.*
-import org.threeten.bp.Duration
-import org.threeten.bp.LocalTime
+import java.time.Duration
+import java.time.LocalTime
 import java.util.concurrent.TimeUnit
 
 /**
@@ -139,9 +138,6 @@ class Application : android.app.Application() {
         // すべての処理に先駆けて初期化するべき項目
         _instance = this
         _coroutineScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
-
-        // initialize the timezone information
-        AndroidThreeTen.init(this)
 
         // レシーバ有効化
         screenReceiver.register(this)

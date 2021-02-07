@@ -1,7 +1,7 @@
 package com.suihan74.nedge.models
 
 import androidx.recyclerview.widget.DiffUtil
-import org.threeten.bp.LocalDate
+import java.time.LocalDate
 
 /**
  * アプリの更新履歴情報
