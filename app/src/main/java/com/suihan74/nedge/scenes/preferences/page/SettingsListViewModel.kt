@@ -136,7 +136,7 @@ data class SettingItem(
 ) {
     class DiffCallback : DiffUtil.ItemCallback<SettingItem>() {
         override fun areItemsTheSame(oldItem: SettingItem, newItem: SettingItem) =
-            oldItem.appName == newItem.appName
+            oldItem.entity.id == newItem.entity.id
 
         override fun areContentsTheSame(oldItem: SettingItem, newItem: SettingItem) =
             oldItem.entity == newItem.entity
