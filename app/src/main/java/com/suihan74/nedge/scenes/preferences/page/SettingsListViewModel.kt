@@ -139,8 +139,6 @@ data class SettingItem(
             oldItem.appName == newItem.appName
 
         override fun areContentsTheSame(oldItem: SettingItem, newItem: SettingItem) =
-            oldItem.entity.keyword == newItem.entity.keyword &&
-                    oldItem.entity.keywordMatchingType == newItem.entity.keywordMatchingType &&
-                    oldItem.entity.displayName == newItem.entity.displayName
+            oldItem.entity == newItem.entity
     }
 }
