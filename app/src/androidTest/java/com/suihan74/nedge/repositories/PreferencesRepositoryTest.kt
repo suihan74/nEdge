@@ -3,12 +3,16 @@ package com.suihan74.nedge.repositories
 import android.app.Notification
 import android.os.Bundle
 import android.service.notification.StatusBarNotification
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.whenever
 import com.suihan74.nedge.models.KeywordMatchingType
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import org.mockito.Mockito.`when`
+import org.junit.runner.RunWith
 
+@RunWith(AndroidJUnit4::class)
 class PreferencesRepositoryTest {
     @Test
     fun キーワードマッチング() {
@@ -27,14 +31,12 @@ class PreferencesRepositoryTest {
         }
 
         val mockNotification = mock<StatusBarNotification>().also {
-            `when`(it.notification).thenReturn(
-                Notification().apply {
-                    extras = Bundle().apply {
-                        putCharSequence(Notification.EXTRA_TITLE, "title")
-                        putCharSequence(Notification.EXTRA_TEXT, "text")
-                    }
+            whenever(it.notification) doReturn Notification().apply {
+                extras = Bundle().apply {
+                    putCharSequence(Notification.EXTRA_TITLE, "title")
+                    putCharSequence(Notification.EXTRA_TEXT, "text")
                 }
-            )
+            }
         }
 
         // タイトル一致
