@@ -24,6 +24,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
+import java.time.Instant
 
 class SettingEditorViewModel(
     private val application: Application,
@@ -151,7 +152,8 @@ class SettingEditorViewModel(
                         keyword = keyword.value.orEmpty(),
                         keywordMatchingType = keywordMatchingType.value ?: KeywordMatchingType.NONE,
                         displayName = displayName.value!!,
-                        setting = notificationSetting.value!!
+                        setting = notificationSetting.value!!,
+                        lastUpdated = Instant.now()
                     )
                 )
             }

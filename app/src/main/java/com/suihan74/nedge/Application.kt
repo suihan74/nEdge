@@ -9,10 +9,9 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.pm.PackageInfoCompat
 import androidx.datastore.createDataStore
-import androidx.room.Room
 import androidx.work.*
 import com.suihan74.nedge.dataStore.PreferencesSerializer
-import com.suihan74.nedge.database.AppDatabase
+import com.suihan74.nedge.database.createAppDatabase
 import com.suihan74.nedge.receivers.BatteryStateReceiver
 import com.suihan74.nedge.receivers.ScreenReceiver
 import com.suihan74.nedge.repositories.BatteryRepository
@@ -91,12 +90,7 @@ class Application : android.app.Application() {
     // ------ //
 
     /** データベースインスタンス */
-    private val db by lazy {
-        Room.databaseBuilder(
-            this,
-            AppDatabase::class.java, "app-db"
-        ).build()
-    }
+    private val db by lazy { createAppDatabase() }
 
     // ------ //
 

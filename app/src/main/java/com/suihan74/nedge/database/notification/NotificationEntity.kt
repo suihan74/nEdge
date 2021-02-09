@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.suihan74.nedge.models.KeywordMatchingType
 import com.suihan74.nedge.models.NotificationSetting
+import java.time.Instant
 
 @Entity
 data class NotificationEntity(
@@ -23,6 +24,9 @@ data class NotificationEntity(
 
     /** 通知表示設定 */
     val setting : NotificationSetting = NotificationSetting(),
+
+    /** 最終更新時刻 */
+    val lastUpdated : Instant = Instant.MIN,
 
     @PrimaryKey(autoGenerate = true)
     val id : Long = 0

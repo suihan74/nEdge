@@ -6,6 +6,7 @@ import com.suihan74.nedge.models.NotificationSetting
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import java.time.Instant
 
 class FieldConverter {
     @TypeConverter
@@ -28,5 +29,17 @@ class FieldConverter {
     @TypeConverter
     fun toNotificationSetting(json: String) : NotificationSetting {
         return Json.decodeFromString(json)
+    }
+
+    // ------ //
+
+    @TypeConverter
+    fun fromInstant(value: Instant) : Long {
+        return value.epochSecond
+    }
+
+    @TypeConverter
+    fun toInstant(epochSecond: Long) : Instant {
+        return Instant.ofEpochSecond(epochSecond)
     }
 }

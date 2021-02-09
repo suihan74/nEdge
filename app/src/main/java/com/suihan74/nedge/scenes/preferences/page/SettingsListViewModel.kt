@@ -139,6 +139,6 @@ data class SettingItem(
             oldItem.entity.id == newItem.entity.id
 
         override fun areContentsTheSame(oldItem: SettingItem, newItem: SettingItem) =
-            oldItem.entity == newItem.entity
+            oldItem.entity.lastUpdated == newItem.entity.lastUpdated
     }
 }
