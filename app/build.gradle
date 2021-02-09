@@ -3,6 +3,8 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'kotlinx-serialization'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
     id 'com.google.android.gms.oss-licenses-plugin'
 }
 
@@ -39,6 +41,11 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        debug {
+            firebaseCrashlytics {
+                mappingFileUploadEnabled false
+            }
+        }
     }
     flavorDimensions "mode"
     productFlavors {
@@ -71,6 +78,12 @@ dependencies {
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation "androidx.fragment:fragment-ktx:1.2.5"
+
+    // Firebase
+    // Import the Firebase BoM
+    implementation platform('com.google.firebase:firebase-bom:26.3.0')
+    implementation 'com.google.firebase:firebase-crashlytics-ktx'
+    implementation 'com.google.firebase:firebase-analytics-ktx'
 
     // ViewModel and LiveData
     def lifecycle_version = "2.2.0"
