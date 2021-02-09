@@ -15,7 +15,8 @@ android {
         applicationId "com.suihan74.nedge"
         minSdkVersion 23
         targetSdkVersion 29
-        versionCode 1_00_000_001
+        // (major[1])-(minor[2])-(fix[3])-(dev[2])-(build mode[1;it is added by productFlavors])
+        versionCode 1_00_000_05_0
         versionName "1.0.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -52,9 +53,11 @@ android {
         demo {
             dimension "mode"
             versionNameSuffix "-demo"
+            versionCode 0 + android.defaultConfig.versionCode
         }
         full {
             dimension "mode"
+            versionCode 1 + android.defaultConfig.versionCode
         }
     }
     compileOptions {
