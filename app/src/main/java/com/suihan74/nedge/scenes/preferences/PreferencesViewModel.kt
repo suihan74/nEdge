@@ -324,7 +324,7 @@ class PreferencesViewModel(
         val initialSelected = items.indexOf(clockStyle.value)
 
          AlertDialogFragment.Builder()
-            .setTitle("")
+            .setTitle(R.string.prefs_clock_style_desc)
             .setSingleChoiceItems(labels, initialSelected) { _, which ->
                 clockStyle.value = items[which]
             }
