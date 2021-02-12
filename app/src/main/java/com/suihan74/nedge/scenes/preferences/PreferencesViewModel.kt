@@ -8,6 +8,7 @@ import androidx.lifecycle.*
 import com.suihan74.nedge.Application
 import com.suihan74.nedge.R
 import com.suihan74.nedge.dataStore.Preferences
+import com.suihan74.nedge.models.ClockStyle
 import com.suihan74.nedge.models.MultipleNotificationsSolution
 import com.suihan74.nedge.models.UnknownNotificationSolution
 import com.suihan74.nedge.scenes.lockScreen.LockScreenActivity
@@ -21,7 +22,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
+import java.time.LocalDateTime
 import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 import kotlin.math.absoluteValue
 import kotlin.random.Random
 
@@ -70,6 +73,9 @@ class PreferencesViewModel(
         OFF
     }
 
+    /** 時刻の表示形式 */
+    val clockStyle = MutableLiveData<ClockStyle>()
+
     /** 複数通知の表示方法 */
     val multipleNotificationsSolution = MutableLiveData<MultipleNotificationsSolution>()
 
@@ -99,6 +105,7 @@ class PreferencesViewModel(
                     requiredBatteryLevel.value = it.requiredBatteryLevel
                     multipleNotificationsSolution.value = it.multipleNotificationsSolution
                     unknownNotificationSolution.value = it.unknownNotificationSolution
+                    clockStyle.value = it.clockStyle
                 }
             }
             .flowOn(Dispatchers.Main)
@@ -121,6 +128,7 @@ class PreferencesViewModel(
                     requiredBatteryLevel = requiredBatteryLevel.value!!,
                     multipleNotificationsSolution = multipleNotificationsSolution.value!!,
                     unknownNotificationSolution = unknownNotificationSolution.value!!,
+                    clockStyle = clockStyle.value!!
                 )
             }
             // 常駐タスクを再起動する
@@ -269,7 +277,7 @@ class PreferencesViewModel(
         val labels = solutions.map { it.textId }
         val initialSelected = solutions.indexOf(multipleNotificationsSolution.value)
 
-        val dialog = AlertDialogFragment.Builder()
+        AlertDialogFragment.Builder()
             .setTitle(R.string.prefs_multi_notices_solution_selection_desc)
             .setSingleChoiceItems(labels, initialSelected) { _, which ->
                 val solution = solutions[which]
@@ -277,9 +285,10 @@ class PreferencesViewModel(
                     multipleNotificationsSolution.value = solution
                 }
             }
+            .dismissOnClickItem(true)
             .setNegativeButton(R.string.dialog_cancel)
             .create()
-        dialog.show(fragmentManager, null)
+            .show(fragmentManager, null)
     }
 
     /**
@@ -290,7 +299,7 @@ class PreferencesViewModel(
         val labels = solutions.map { it.textId }
         val initialSelected = solutions.indexOf(unknownNotificationSolution.value)
 
-        val dialog = AlertDialogFragment.Builder()
+        AlertDialogFragment.Builder()
             .setTitle(R.string.prefs_unknown_notice_solution_selection_desc)
             .setSingleChoiceItems(labels, initialSelected) { _, which ->
                 val solution = solutions[which]
@@ -298,8 +307,29 @@ class PreferencesViewModel(
                     unknownNotificationSolution.value = solution
                 }
             }
+            .dismissOnClickItem(true)
             .setNegativeButton(R.string.dialog_cancel)
             .create()
-        dialog.show(fragmentManager, null)
+            .show(fragmentManager, null)
+    }
+
+    /**
+     * 時刻表示形式を選択するダイアログを開く
+     */
+    fun openClockStyleSelectionDialog(fragmentManager: FragmentManager) {
+        val now = LocalDateTime.now()
+        val items = ClockStyle.values()
+        val labels = items.map { now.format(DateTimeFormatter.ofPattern(it.pattern)) }
+        val initialSelected = items.indexOf(clockStyle.value)
+
+         AlertDialogFragment.Builder()
+            .setTitle("")
+            .setSingleChoiceItems(labels, initialSelected) { _, which ->
+                clockStyle.value = items[which]
+            }
+            .dismissOnClickItem(true)
+            .setNegativeButton(R.string.dialog_cancel)
+            .create()
+            .show(fragmentManager, null)
     }
 }

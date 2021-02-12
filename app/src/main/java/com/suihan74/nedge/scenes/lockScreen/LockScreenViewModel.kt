@@ -14,6 +14,7 @@ import android.widget.ImageView
 import androidx.lifecycle.*
 import com.suihan74.nedge.Application
 import com.suihan74.nedge.database.notification.NotificationEntity
+import com.suihan74.nedge.models.ClockStyle
 import com.suihan74.nedge.models.MultipleNotificationsSolution
 import com.suihan74.nedge.outline.OutlineDrawer
 import com.suihan74.utilities.extensions.between
@@ -55,6 +56,10 @@ class LockScreenViewModel(
 
     /** 表示しない終了時刻 */
     private var silentTimezoneEnd : LocalTime? = null
+
+    /** 時刻の表示形式 */
+    val clockStyle : LiveData<ClockStyle> by lazy { _clockStyle }
+    private val _clockStyle = MutableLiveData<ClockStyle>()
 
     /** バックライト最低レベルまで暗くするか */
     val lightOff : LiveData<Boolean> by lazy { _lightOff }
@@ -136,6 +141,7 @@ class LockScreenViewModel(
             switchNotificationsDuration = prefs.switchNotificationsDuration
             silentTimezoneStart = prefs.silentTimezoneStart
             silentTimezoneEnd = prefs.silentTimezoneEnd
+            _clockStyle.value = prefs.clockStyle
 
             // バッテリレベルが指定値を下回ったら消灯する
             batteryLevel.observe(lifecycleOwner, Observer {

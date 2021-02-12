@@ -66,6 +66,7 @@
     <string name="prefs_light_level_off_desc">Screen brightness on after going dark (minus: more dark)</string>
     <string name="prefs_light_level_on_desc">Screen brightness immediately after launch</string>
     <string name="prefs_use_system_light_level_on_desc">Use the system screen value</string>
+    <string name="prefs_clock_style_desc">Clock Format</string>
 
     <!-- SettingEditorFragment -->
     <string name="prefs_save">Save</string>

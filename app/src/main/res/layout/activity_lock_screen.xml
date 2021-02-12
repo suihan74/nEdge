@@ -36,8 +36,9 @@
                     android:id="@+id/clockTextView"
                     style="@style/ClockTextView"
                     dateTime="@{vm.currentTime}"
-                    format="@{`HH:mm`}"
+                    format="@{vm.clockStyle.pattern}"
                     android:textAlignment="center"
+                    android:lineSpacingMultiplier="0.88"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingHorizontal="16dp"
@@ -46,7 +47,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintVertical_chainStyle="packed"
-                    tools:text="12:45"/>
+                    tools:text="12\n45"/>
 
                 <TextView
                     android:id="@+id/dateTextView"

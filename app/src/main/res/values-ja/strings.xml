@@ -66,6 +66,7 @@
     <string name="prefs_light_level_off_desc">消灯後の画面の明るさ(マイナス値でさらに暗くする)</string>
     <string name="prefs_light_level_on_desc">ロック画面起動直後の画面の明るさ</string>
     <string name="prefs_use_system_light_level_on_desc">システムの値を使用</string>
+    <string name="prefs_clock_style_desc">時刻の表示形式</string>
 
     <!-- SettingEditorFragment -->
     <string name="prefs_save">Save</string>
