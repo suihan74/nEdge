@@ -6,10 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.viewModelScope
 import com.suihan74.nedge.databinding.FragmentGeneralPrefsBinding
 import com.suihan74.nedge.scenes.preferences.PreferencesActivity
 import com.suihan74.nedge.scenes.preferences.dataBinding.SliderBindingAdapters
 import com.suihan74.utilities.extensions.hideSoftInputMethod
+import kotlinx.coroutines.launch
 
 /**
  * 全般設定画面
@@ -61,7 +63,9 @@ class GeneralPrefsFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
-        viewModel.saveSettings()
+        viewModel.viewModelScope.launch {
+            viewModel.saveSettings()
+        }
     }
 
     override fun onDestroy() {

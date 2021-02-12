@@ -115,7 +115,7 @@ class PreferencesViewModel(
     /**
      * 編集したデータを保存する
      */
-    fun saveSettings() = viewModelScope.launch {
+    suspend fun saveSettings() {
         prefsMutex.withLock {
             prefRepo.updatePreferences {
                 Preferences(
@@ -226,6 +226,7 @@ class PreferencesViewModel(
      * デフォルト通知表示設定でプレビューを表示する
      */
     fun startPreview() = viewModelScope.launch {
+        saveSettings()
         val entity = prefRepo.getDefaultNotificationEntity()
         LockScreenActivity.startPreview(application, entity)
     }
