@@ -76,6 +76,7 @@
     <string name="prefs_clock_text_color_desc">時計部分の文字色</string>
     <string name="prefs_information_display_mode_desc">通知アプリ名・通知文表示方法</string>
     <string name="prefs_notification_line_color_desc">線の色</string>
+    <string name="prefs_apply_application_color_desc">サジェスト色を適用</string>
     <string name="prefs_line_width_desc">線の太さ</string>
     <string name="prefs_blur_size_desc">ブラー効果の強さ (0で無効化)</string>
     <string name="prefs_enabled_outlines_desc">輪郭線を表示する辺・角</string>

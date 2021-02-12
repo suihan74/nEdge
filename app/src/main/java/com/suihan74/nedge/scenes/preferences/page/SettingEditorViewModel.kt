@@ -8,6 +8,7 @@ import android.os.Build
 import android.util.Log
 import android.view.Window
 import androidx.annotation.IdRes
+import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.*
 import com.suihan74.nedge.Application
@@ -38,6 +39,10 @@ class SettingEditorViewModel(
     /** アプリ情報(デフォルト設定のときはnull) */
     val applicationInfo : LiveData<ApplicationInfo?> by lazy { _applicationInfo }
     private val _applicationInfo = MutableLiveData<ApplicationInfo?>()
+
+    /** アプリリソースに設定されている色 */
+    val applicationColor : LiveData<Int?> by lazy { _applicationColor }
+    private val _applicationColor = MutableLiveData<Int?>()
 
     /** 表示名 */
     val displayName = MutableLiveData<String>()
@@ -223,6 +228,12 @@ class SettingEditorViewModel(
                     bottomNotchType.value = notch.type
                 }
             }
+
+            applicationInfo.value?.let {
+                getApplicationIconColor(it)?.let { color ->
+                    _applicationColor.value = color
+                }
+            }
         }
 
         updateNotificationSetting()
@@ -346,6 +357,36 @@ class SettingEditorViewModel(
         fragmentManager: FragmentManager
     ) {
         observeNotchType(bottomNotchType, targetViewId, lifecycleOwner, fragmentManager)
+    }
+
+    // ------ //
+
+    /**
+     * 提案されたアプリカラーを輪郭色に適用する
+     */
+    fun applyApplicationColorToLineColor() = viewModelScope.launch(Dispatchers.Main) {
+        notificationColor.value = applicationColor.value ?: Color.WHITE
+    }
+
+    /**
+     * アプリアイコンから適当な色をサジェストする
+     */
+    private suspend fun getApplicationIconColor(applicationInfo: ApplicationInfo) : Int? = withContext(Dispatchers.Default) {
+        runCatching {
+            val packageManager = application.packageManager
+
+            val drawable = applicationInfo.loadIcon(packageManager)
+            val bitmap = drawable.toBitmap()
+
+            val leftEdge = bitmap.getPixel(10, drawable.intrinsicHeight / 2)
+            val leftColor = 0xff000000.toInt() or (leftEdge and 0x00ffffff)
+
+            if (leftColor == Color.WHITE) {
+                val center = bitmap.getPixel(drawable.intrinsicWidth / 2, drawable.intrinsicHeight / 2)
+                0xff000000.toInt() or (center and 0x00ffffff)
+            }
+            else leftColor
+        }.getOrNull()
     }
 
     // ------ //

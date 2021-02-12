@@ -76,6 +76,7 @@
     <string name="prefs_clock_text_color_desc">Clock Text Color</string>
     <string name="prefs_information_display_mode_desc">Notification message displaying mode</string>
     <string name="prefs_notification_line_color_desc">Line Color</string>
+    <string name="prefs_apply_application_color_desc">Apply App Color</string>
     <string name="prefs_line_width_desc">Line Thickness</string>
     <string name="prefs_blur_size_desc">Blur Level (0: disable blur)</string>
     <string name="prefs_enabled_outlines_desc">Edges and Corners for displaying outlines</string>
