@@ -10,6 +10,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.pm.PackageInfoCompat
 import androidx.datastore.createDataStore
 import androidx.work.*
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.suihan74.nedge.dataStore.PreferencesSerializer
 import com.suihan74.nedge.database.createAppDatabase
 import com.suihan74.nedge.receivers.BatteryStateReceiver
@@ -129,6 +130,13 @@ class Application : android.app.Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        // デバッグビルドではクラッシュレポートを送信しない
+        FirebaseCrashlytics.getInstance()
+            .setCrashlyticsCollectionEnabled(
+                BuildConfig.DEBUG.not()
+            )
+
         // すべての処理に先駆けて初期化するべき項目
         _instance = this
         _coroutineScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
