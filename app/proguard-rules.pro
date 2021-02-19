@@ -47,3 +47,8 @@
 -keep class * extends androidx.room.RoomDatabase
 -dontwarn androidx.room.paging.**
 ##--------------- End: Room ----------
+
+##--------------- Begin: Nend Ads ----------
+-keep class net.nend.android.** { *; }
+-dontwarn net.nend.android.**
+##--------------- Begin: Nend Ads ----------

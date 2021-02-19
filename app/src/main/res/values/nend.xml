@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Nend Ads for Testing -->
+    <string name="nendApiKey" translatable="false">c5cb8bc474345961c6e7a9778c947957ed8e1e4f</string>
+    <integer name="nendSpotId">3174</integer>
+</resources>

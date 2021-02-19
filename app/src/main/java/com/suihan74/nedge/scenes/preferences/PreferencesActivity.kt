@@ -1,16 +1,11 @@
 package com.suihan74.nedge.scenes.preferences
 
 import android.os.Bundle
-import android.util.DisplayMetrics
 import android.view.MotionEvent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdSize
-import com.google.android.gms.ads.AdView
-import com.google.android.gms.ads.MobileAds
 import com.suihan74.nedge.Application
 import com.suihan74.nedge.R
 import com.suihan74.nedge.database.notification.NotificationEntity
@@ -52,9 +47,6 @@ class PreferencesActivity : AppCompatActivity() {
             pager.adapter = PageStateAdapter(supportFragmentManager, lifecycle)
             pager.fakeDragBy(0.2f)
         }
-
-        // 広告を初期化
-        initializeAdView(binding)
     }
 
     // スクリーン輪郭線・ノッチ輪郭線の描画がウィンドウアタッチ後でないとできないため
@@ -142,39 +134,5 @@ class PreferencesActivity : AppCompatActivity() {
     /** 通知設定編集画面を閉じる */
     fun closeSettingEditor() {
         supportFragmentManager.popBackStackImmediate()
-    }
-
-    // ------ //
-
-    /** アダプティブバナー広告のサイズ */
-    private val adSize : AdSize get() {
-        val display = windowManager.defaultDisplay
-        val outMetrics = DisplayMetrics()
-        display.getMetrics(outMetrics)
-
-        val density = outMetrics.density
-        val adWidthPx = binding.adViewContainer.width.toFloat().let {
-            if (it == 0f) outMetrics.widthPixels.toFloat()
-            else it
-        }
-
-        val adWidth = (adWidthPx / density).toInt()
-        return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, adWidth)
-    }
-
-    /** 広告を初期化 */
-    private fun initializeAdView(binding: ActivityPreferencesBinding) {
-        MobileAds.initialize(this) {}
-
-        val adView = AdView(this)
-        binding.adViewContainer.addView(adView)
-        loadBannerAd(adView)
-    }
-
-    private fun loadBannerAd(adView: AdView) {
-        adView.adUnitId = getString(R.string.admob_unit_id)
-        adView.adSize = adSize
-        val adRequest = AdRequest.Builder().build()
-        adView.loadAd(adRequest)
     }
 }

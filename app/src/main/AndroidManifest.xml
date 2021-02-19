@@ -19,11 +19,6 @@
         android:fullBackupContent="true"
         android:theme="@style/Theme.Application" >
 
-        <!-- AdMob -->
-        <meta-data
-            android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="@string/admob_app_id"/>
-
         <!-- services -->
 
         <service

@@ -16,7 +16,7 @@ android {
         minSdkVersion 23
         targetSdkVersion 29
         // (major[1])-(minor[2])-(fix[3])-(dev[2])-(build mode[1;it is added by productFlavors])
-        versionCode 1_00_001_01_0
+        versionCode 1_00_001_02_0
         versionName "1.0.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -113,8 +113,8 @@ dependencies {
     // AndroidPhotoshopColorPicker
     implementation 'com.azeesoft.lib.colorpicker:colorpicker:1.0.8@aar'
 
-    // AdMob
-    implementation 'com.google.android.gms:play-services-ads:19.7.0'
+    // nend ads
+    implementation 'net.nend.android:nend-sdk:7.0.2'
 
     implementation project(":utilities")
 

@@ -71,6 +71,14 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_width="0dp"
             android:layout_height="wrap_content">
+
+            <net.nend.android.NendAdView
+                app:NendApiKey="@string/nendApiKey"
+                app:NendSpotId="@integer/nendSpotId"
+                app:NendAdjustSize="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
         </FrameLayout>
 
         <FrameLayout
