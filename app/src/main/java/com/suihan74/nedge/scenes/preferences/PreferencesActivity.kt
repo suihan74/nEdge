@@ -2,11 +2,11 @@ package com.suihan74.nedge.scenes.preferences
 
 import android.os.Bundle
 import android.view.MotionEvent
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
-import com.suihan74.nedge.Application
 import com.suihan74.nedge.R
 import com.suihan74.nedge.database.notification.NotificationEntity
 import com.suihan74.nedge.databinding.ActivityPreferencesBinding
@@ -15,17 +15,16 @@ import com.suihan74.nedge.databinding.ListItemPreferencesMenuBinding
 import com.suihan74.nedge.scenes.preferences.page.SettingEditorFragment
 import com.suihan74.utilities.BindingListAdapter
 import com.suihan74.utilities.extensions.hideSoftInputMethod
-import com.suihan74.utilities.lazyProvideViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 /**
  * 設定画面
  */
+@AndroidEntryPoint
 class PreferencesActivity : AppCompatActivity() {
 
-    val viewModel by lazyProvideViewModel {
-        PreferencesViewModel(Application.instance)
-    }
+    private val viewModel by viewModels<PreferencesViewModel>()
 
     private lateinit var binding: ActivityPreferencesBinding
 

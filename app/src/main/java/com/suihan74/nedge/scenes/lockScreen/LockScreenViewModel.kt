@@ -16,30 +16,36 @@ import com.suihan74.nedge.Application
 import com.suihan74.nedge.database.notification.NotificationEntity
 import com.suihan74.nedge.models.ClockStyle
 import com.suihan74.nedge.models.MultipleNotificationsSolution
+import com.suihan74.nedge.module.BatteryRepositoryQualifier
 import com.suihan74.nedge.outline.OutlineDrawer
+import com.suihan74.nedge.repositories.BatteryRepository
+import com.suihan74.nedge.repositories.NotificationRepository
+import com.suihan74.nedge.repositories.PreferencesRepository
 import com.suihan74.utilities.extensions.between
 import com.suihan74.utilities.extensions.dp
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import java.time.LocalDateTime
 import java.time.LocalTime
+import javax.inject.Inject
 import kotlin.random.Random
 
-class LockScreenViewModel(
-    private val application: Application
+@HiltViewModel
+class LockScreenViewModel @Inject constructor(
+    private val application: Application,
+
+    @BatteryRepositoryQualifier
+    private val batteryRepo : BatteryRepository,
+
+    private val notificationRepo : NotificationRepository,
+
+    private val prefRepo : PreferencesRepository
 ) : ViewModel() {
 
     enum class Extra {
         /** プレビューする設定ID */
         PREVIEW_ENTITY_ID
     }
-
-    // ------ //
-
-    private val batteryRepo = application.batteryRepository
-
-    private val notificationRepo = application.notificationRepository
-
-    private val prefRepo = application.preferencesRepository
 
     // ------ //
 

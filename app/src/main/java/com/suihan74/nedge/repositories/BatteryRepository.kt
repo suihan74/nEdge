@@ -8,11 +8,12 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 /**
  * バッテリに関する情報を扱うリポジトリ
  */
-class BatteryRepository {
+class BatteryRepository @Inject constructor() {
     /** 充電中かどうか */
     val batteryCharging = MutableLiveData<Boolean>()
 

@@ -8,11 +8,11 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.pm.PackageInfoCompat
-import androidx.datastore.createDataStore
 import androidx.work.*
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import com.suihan74.nedge.dataStore.PreferencesSerializer
-import com.suihan74.nedge.database.createAppDatabase
+import com.suihan74.nedge.database.AppDatabase
+import com.suihan74.nedge.module.AppDatabaseQualifier
+import com.suihan74.nedge.module.BatteryRepositoryQualifier
 import com.suihan74.nedge.receivers.BatteryStateReceiver
 import com.suihan74.nedge.receivers.ScreenReceiver
 import com.suihan74.nedge.repositories.BatteryRepository
@@ -21,14 +21,17 @@ import com.suihan74.nedge.repositories.PreferencesRepository
 import com.suihan74.nedge.repositories.ScreenRepository
 import com.suihan74.nedge.workers.StartupConfirmationWorker
 import com.suihan74.utilities.VersionUtil
+import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.*
 import java.time.Duration
 import java.time.LocalTime
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 /**
  * アプリ情報
  */
+@HiltAndroidApp
 class Application : android.app.Application() {
     companion object {
         private var _instance : Application? = null
@@ -37,9 +40,6 @@ class Application : android.app.Application() {
 
         /** 通知チャンネル: 通知テスト用 */
         private const val NOTIFICATION_CHANNEL_DUMMY = "DummyNotificationChannel"
-
-        /** 設定データストアの保存先ファイル名 */
-        private const val PREFERENCES_DATA_STORE_NAME = "settings.ds"
     }
 
     /** `WorkManager`で管理する一意タスクの管理名 */
@@ -50,48 +50,38 @@ class Application : android.app.Application() {
 
     // ------ //
 
+    @Inject
+    @AppDatabaseQualifier
+    lateinit var database : AppDatabase
+
+    // ------ //
+
     /** バッテリー関係の情報を扱うリポジトリ */
-    val batteryRepository by lazy {
-        BatteryRepository().also {
-            coroutineScope.launch {
-                it.setBatterLevel(this@Application)
-            }
-        }
-    }
+    @Inject
+    @BatteryRepositoryQualifier
+    lateinit var batteryRepository : BatteryRepository
 
     /** 通知を扱うリポジトリ */
-    val notificationRepository by lazy {
-        NotificationRepository()
-    }
+    @Inject
+    lateinit var notificationRepository : NotificationRepository
 
     /** 画面状態を扱うリポジトリ */
-    val screenRepository by lazy {
-        ScreenRepository().also {
-            coroutineScope.launch {
-                it.setScreenState(this@Application)
-            }
-        }
-    }
+    @Inject
+    lateinit var screenRepository : ScreenRepository
 
     /** アプリ設定を扱うリポジトリ */
+    @Inject
     lateinit var preferencesRepository : PreferencesRepository
 
     // ------ //
 
     /** 画面消灯を監視するレシーバ */
-    private val screenReceiver by lazy {
-        ScreenReceiver()
-    }
+    @Inject
+    lateinit var screenReceiver : ScreenReceiver
 
     /** バッテリ状態を監視するレシーバ */
-    private val batteryStateReceiver by lazy {
-        BatteryStateReceiver()
-    }
-
-    // ------ //
-
-    /** データベースインスタンス */
-    private val db by lazy { createAppDatabase() }
+    @Inject
+    lateinit var batteryStateReceiver : BatteryStateReceiver
 
     // ------ //
 
@@ -144,18 +134,6 @@ class Application : android.app.Application() {
         // レシーバ有効化
         screenReceiver.register(this)
         batteryStateReceiver.register(this)
-
-        // 設定リポジトリ初期化
-        runBlocking {
-            preferencesRepository = PreferencesRepository(
-                dataStore =
-                    createDataStore(
-                        fileName = PREFERENCES_DATA_STORE_NAME,
-                        serializer = PreferencesSerializer()
-                    ),
-                notificationDao = db.notificationDao()
-            )
-        }
 
         // アプリが使用する通知チャンネルを作成する
         createNotificationChannel(NOTIFICATION_CHANNEL_DUMMY)

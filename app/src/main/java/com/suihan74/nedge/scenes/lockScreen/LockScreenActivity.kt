@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.WindowManager
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.databinding.DataBindingUtil
@@ -21,9 +22,10 @@ import com.suihan74.nedge.database.notification.NotificationEntity
 import com.suihan74.nedge.databinding.ActivityLockScreenBinding
 import com.suihan74.utilities.exception.TaskFailureException
 import com.suihan74.utilities.extensions.whenTrue
-import com.suihan74.utilities.lazyProvideViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class LockScreenActivity : AppCompatActivity() {
     companion object {
         /**
@@ -74,9 +76,7 @@ class LockScreenActivity : AppCompatActivity() {
 
     // ------ //
 
-    private val viewModel by lazyProvideViewModel {
-        LockScreenViewModel(Application.instance)
-    }
+    private val viewModel by viewModels<LockScreenViewModel>()
 
     private lateinit var binding : ActivityLockScreenBinding
 

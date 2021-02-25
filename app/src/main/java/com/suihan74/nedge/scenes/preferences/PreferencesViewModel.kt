@@ -11,9 +11,11 @@ import com.suihan74.nedge.dataStore.Preferences
 import com.suihan74.nedge.models.ClockStyle
 import com.suihan74.nedge.models.MultipleNotificationsSolution
 import com.suihan74.nedge.models.UnknownNotificationSolution
+import com.suihan74.nedge.repositories.PreferencesRepository
 import com.suihan74.nedge.scenes.lockScreen.LockScreenActivity
 import com.suihan74.nedge.scenes.preferences.dialog.TimePickerDialogFragment
 import com.suihan74.utilities.fragment.AlertDialogFragment
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
@@ -25,14 +27,15 @@ import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+import javax.inject.Inject
 import kotlin.math.absoluteValue
 import kotlin.random.Random
 
-class PreferencesViewModel(
-    private val application: Application
+@HiltViewModel
+class PreferencesViewModel @Inject constructor(
+    private val application : Application,
+    private val prefRepo : PreferencesRepository
 ) : ViewModel() {
-
-    private val prefRepo = application.preferencesRepository
 
     /** 選択中のメニュー項目 */
     val selectedMenuItem = MutableLiveData(MenuItem.GENERAL)

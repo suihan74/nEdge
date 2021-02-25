@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.transition.Fade
 import androidx.transition.Slide
@@ -18,14 +19,17 @@ import com.suihan74.nedge.R
 import com.suihan74.nedge.database.notification.NotificationEntity
 import com.suihan74.nedge.databinding.FragmentSettingEditorBinding
 import com.suihan74.nedge.scenes.preferences.PreferencesActivity
+import com.suihan74.nedge.scenes.preferences.PreferencesViewModel
 import com.suihan74.nedge.scenes.preferences.dataBinding.SliderBindingAdapters
 import com.suihan74.utilities.extensions.hideSoftInputMethod
 import com.suihan74.utilities.lazyProvideViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 /**
  * 通知表示編集画面
  */
+@AndroidEntryPoint
 class SettingEditorFragment : Fragment() {
 
     companion object {
@@ -41,8 +45,7 @@ class SettingEditorFragment : Fragment() {
     private val preferencesActivity
         get() = requireActivity() as PreferencesActivity
 
-    private val preferencesViewModel
-        get() = preferencesActivity.viewModel
+    private val preferencesViewModel by activityViewModels<PreferencesViewModel>()
 
     // ------ //
 

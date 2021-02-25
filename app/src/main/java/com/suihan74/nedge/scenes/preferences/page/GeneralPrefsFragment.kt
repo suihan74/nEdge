@@ -6,16 +6,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.viewModelScope
 import com.suihan74.nedge.databinding.FragmentGeneralPrefsBinding
-import com.suihan74.nedge.scenes.preferences.PreferencesActivity
+import com.suihan74.nedge.scenes.preferences.PreferencesViewModel
 import com.suihan74.nedge.scenes.preferences.dataBinding.SliderBindingAdapters
 import com.suihan74.utilities.extensions.hideSoftInputMethod
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 /**
  * 全般設定画面
  */
+@AndroidEntryPoint
 class GeneralPrefsFragment : Fragment() {
     companion object {
         fun createInstance() = GeneralPrefsFragment()
@@ -23,11 +26,7 @@ class GeneralPrefsFragment : Fragment() {
 
     // ------ //
 
-    private val preferencesActivity
-        get() = requireActivity() as PreferencesActivity
-
-    private val viewModel
-        get() = preferencesActivity.viewModel
+    private val viewModel by activityViewModels<PreferencesViewModel>()
 
     // ------ //
 

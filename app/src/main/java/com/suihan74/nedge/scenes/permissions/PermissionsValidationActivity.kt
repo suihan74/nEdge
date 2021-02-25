@@ -1,11 +1,9 @@
 package com.suihan74.nedge.scenes.permissions
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.suihan74.nedge.databinding.ActivityPermissionsValidationBinding
-import com.suihan74.nedge.scenes.preferences.PreferencesActivity
 import com.suihan74.utilities.lazyProvideViewModel
 
 /**
@@ -35,7 +33,7 @@ class PermissionsValidationActivity : AppCompatActivity() {
         viewModel.onCreateActivity(this)
 
         if (allPermissionsAllowed(this)) {
-            launchContentsActivity()
+            viewModel.launchContentsActivity(this)
         }
         else {
             val binding = ActivityPermissionsValidationBinding.inflate(layoutInflater).also {
@@ -50,23 +48,5 @@ class PermissionsValidationActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         viewModel.refreshStates(this)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (allPermissionsAllowed(this)) {
-            launchContentsActivity()
-        }
-    }
-
-    // ------ //
-
-    /** アプリコンテンツ本体に遷移する */
-    fun launchContentsActivity() {
-        val intent = Intent(this, PreferencesActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
-        }
-        startActivity(intent)
     }
 }

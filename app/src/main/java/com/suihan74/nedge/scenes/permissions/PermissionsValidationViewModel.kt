@@ -104,7 +104,7 @@ class PermissionsValidationViewModel : ViewModel() {
     // ------ //
 
     /** アプリコンテンツ本体に遷移する */
-    private fun launchContentsActivity(activity: AppCompatActivity) {
+    fun launchContentsActivity(activity: AppCompatActivity) {
         val intent = Intent(activity, PreferencesActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
