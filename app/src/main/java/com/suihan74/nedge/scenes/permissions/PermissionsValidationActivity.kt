@@ -32,6 +32,7 @@ class PermissionsValidationActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel.onCreateActivity(this)
 
         if (allPermissionsAllowed(this)) {
             launchContentsActivity()
@@ -62,7 +63,7 @@ class PermissionsValidationActivity : AppCompatActivity() {
     // ------ //
 
     /** アプリコンテンツ本体に遷移する */
-    private fun launchContentsActivity() {
+    fun launchContentsActivity() {
         val intent = Intent(this, PreferencesActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
         }

@@ -7,12 +7,15 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.suihan74.nedge.receivers.DeviceAdminReceiver
+import com.suihan74.nedge.scenes.preferences.PreferencesActivity
 
 class PermissionsValidationViewModel : ViewModel() {
     /** ユーザーにパーミッションを手動で許可させる処理の合否を受け取るためのリクエストコード */
@@ -88,6 +91,26 @@ class PermissionsValidationViewModel : ViewModel() {
 
     // ------ //
 
+    private lateinit var requestPermissionLauncher : ActivityResultLauncher<Intent>
+
+    fun onCreateActivity(activity: AppCompatActivity) {
+        requestPermissionLauncher = activity.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (allPermissionsAllowed(activity)) {
+                launchContentsActivity(activity)
+            }
+        }
+    }
+
+    // ------ //
+
+    /** アプリコンテンツ本体に遷移する */
+    private fun launchContentsActivity(activity: AppCompatActivity) {
+        val intent = Intent(activity, PreferencesActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        activity.startActivity(intent)
+    }
+
     /**
      * 画面最前面(ロック画面よりも上)に表示するためのパーミッション要求
      */
@@ -96,15 +119,15 @@ class PermissionsValidationViewModel : ViewModel() {
             Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
             Uri.parse("package:${activity.packageName}")
         )
-        activity.startActivityForResult(intent, RequestCode.OVERLAY_PERMISSION.ordinal)
+        requestPermissionLauncher.launch(intent)
     }
 
     /**
      * 他のアプリが発した通知を取得するためのパーミッション要求
      */
     fun requestNotificationListenerPermission(activity: AppCompatActivity) {
-        val intent = Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS")
-        activity.startActivityForResult(intent, RequestCode.NOTIFICATION_LISTENER.ordinal)
+        val intent = Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
+        requestPermissionLauncher.launch(intent)
     }
 
     /**
@@ -120,6 +143,6 @@ class PermissionsValidationViewModel : ViewModel() {
                 componentName
             )
         }
-        activity.startActivityForResult(intent, RequestCode.DEVICE_POLICY_MANAGER.ordinal)
+        requestPermissionLauncher.launch(intent)
     }
 }
