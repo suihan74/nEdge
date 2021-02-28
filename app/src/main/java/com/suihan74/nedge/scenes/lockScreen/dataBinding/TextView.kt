@@ -35,9 +35,12 @@ object TextViewBindingAdapters {
                 entity?.displayName != null && !entity.isDefault -> entity.displayName
 
                 else -> {
-                    val pm = textView.context.packageManager
-                    val appInfo = pm.getApplicationInfo(sbn.packageName, 0)
-                    pm.getApplicationLabel(appInfo)
+                    val result = runCatching {
+                        val pm = textView.context.packageManager
+                        val appInfo = pm.getApplicationInfo(sbn.packageName, 0)
+                        pm.getApplicationLabel(appInfo)
+                    }
+                    result.getOrElse { "" }
                 }
             }
         }

@@ -47,7 +47,7 @@ class SettingsListViewModel(
 
                 settings.postValue(
                     it.filterNot { entity -> entity == defaultSettingEntity }
-                        .map { entity -> settingItem(entity) }
+                        .mapNotNull { entity -> settingItem(entity) }
                 )
             }
             .flowOn(Dispatchers.Default)
@@ -58,13 +58,17 @@ class SettingsListViewModel(
 
     private val packageManager by lazy { application.packageManager }
 
-    private fun settingItem(entity: NotificationEntity) : SettingItem {
-        val appInfo = packageManager.getApplicationInfo(entity.packageName, PackageManager.GET_META_DATA)
-        return SettingItem(
-            appName = packageManager.getApplicationLabel(appInfo).toString(),
-            appInfo = appInfo,
-            entity = entity
-        )
+    private fun settingItem(entity: NotificationEntity) : SettingItem? {
+        val result = runCatching {
+            val appInfo =
+                packageManager.getApplicationInfo(entity.packageName, PackageManager.GET_META_DATA)
+            SettingItem(
+                appName = packageManager.getApplicationLabel(appInfo).toString(),
+                appInfo = appInfo,
+                entity = entity
+            )
+        }
+        return result.getOrNull()
     }
 
     // ------ //

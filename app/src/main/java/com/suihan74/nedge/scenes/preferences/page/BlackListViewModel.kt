@@ -32,7 +32,7 @@ class BlackListViewModel(
         application.preferencesRepository.allBlackListEntitiesFlow
             .onEach {
                 settings.postValue(
-                    it.map { entity -> blackListItem(entity) }
+                    it.mapNotNull { entity -> blackListItem(entity) }
                 )
             }
             .flowOn(Dispatchers.Default)
@@ -43,13 +43,16 @@ class BlackListViewModel(
 
     private val packageManager by lazy { application.packageManager }
 
-    private fun blackListItem(entity: BlackListEntity) : BlackListItem {
-        val appInfo = packageManager.getApplicationInfo(entity.packageName, 0)
-        return BlackListItem(
-            appName = packageManager.getApplicationLabel(appInfo).toString(),
-            appInfo = appInfo,
-            entity = entity
-        )
+    private fun blackListItem(entity: BlackListEntity) : BlackListItem? {
+        val result = runCatching {
+            val appInfo = packageManager.getApplicationInfo(entity.packageName, 0)
+            BlackListItem(
+                appName = packageManager.getApplicationLabel(appInfo).toString(),
+                appInfo = appInfo,
+                entity = entity
+            )
+        }
+        return result.getOrNull()
     }
 
     // ------ //
