@@ -1,8 +1,11 @@
 package com.suihan74.utilities.extensions
 
+import android.app.Activity
 import android.content.Context
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+
+val View.activity : Activity? get() = context.activity
 
 /**
  * キーボードを隠して入力対象のビューをアンフォーカスする

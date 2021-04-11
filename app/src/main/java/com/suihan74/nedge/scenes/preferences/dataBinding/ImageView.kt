@@ -1,6 +1,5 @@
 package com.suihan74.nedge.scenes.preferences.dataBinding
 
-import android.app.Activity
 import android.content.pm.ApplicationInfo
 import android.graphics.*
 import android.util.Log
@@ -9,6 +8,7 @@ import androidx.databinding.BindingAdapter
 import com.suihan74.nedge.models.NotchSetting
 import com.suihan74.nedge.models.NotificationSetting
 import com.suihan74.nedge.outline.OutlineDrawer
+import com.suihan74.utilities.extensions.activity
 import com.suihan74.utilities.extensions.dp
 
 object ImageViewBindingAdapters {
@@ -24,7 +24,7 @@ object ImageViewBindingAdapters {
         }
 
         try {
-            val activity = imageView.context as? Activity ?: return
+            val activity = imageView.activity ?: return
             val outlineDrawer = OutlineDrawer(activity.window)
             outlineDrawer.draw(imageView, setting)
         }
