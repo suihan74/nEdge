@@ -398,7 +398,7 @@ class SettingEditorViewModel(
         notchType: MutableLiveData<NotchType>,
         fragmentManager: FragmentManager
     ) {
-        val notchTypes = NotchType.values().filter { it == NotchType.CORNER } // TODO: コーナーノッチは実装中
+        val notchTypes = NotchType.values().filterNot { it == NotchType.CORNER } // TODO: コーナーノッチは実装中
         val labels = notchTypes.map { it.textId }
         val initialSelected = notchTypes.indexOf(notchType.value)
 
