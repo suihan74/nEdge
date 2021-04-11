@@ -26,7 +26,7 @@ class PreferencesActivity : AppCompatActivity() {
 
     private val viewModel by viewModels<PreferencesViewModel>()
 
-    private lateinit var binding: ActivityPreferencesBinding
+    lateinit var binding: ActivityPreferencesBinding
 
     // ------ //
 
@@ -52,7 +52,7 @@ class PreferencesActivity : AppCompatActivity() {
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         lifecycleScope.launch {
-            viewModel.onAttachedToWindow(this@PreferencesActivity, window)
+            viewModel.onAttachedToWindow(this@PreferencesActivity)
         }
         binding.vm = viewModel
     }

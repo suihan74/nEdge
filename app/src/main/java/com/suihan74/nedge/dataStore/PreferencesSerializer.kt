@@ -17,13 +17,13 @@ class PreferencesSerializer(
     override val defaultValue: Preferences
         get() = Preferences()
 
-    override fun writeTo(t: Preferences, output: OutputStream) {
+    override suspend fun writeTo(t: Preferences, output: OutputStream) {
         val str = stringFormat.encodeToString(t)
         val bytes = str.encodeToByteArray()
         output.write(bytes)
     }
 
-    override fun readFrom(input: InputStream): Preferences {
+    override suspend fun readFrom(input: InputStream): Preferences {
         try {
             val bytes = input.readBytes()
             val str = bytes.decodeToString()

@@ -1,7 +1,7 @@
 package com.suihan74.nedge.module
 
 import android.content.Context
-import androidx.datastore.createDataStore
+import androidx.datastore.dataStore
 import androidx.room.Room
 import com.suihan74.nedge.Application
 import com.suihan74.nedge.dataStore.PreferencesSerializer
@@ -28,6 +28,11 @@ import javax.inject.Singleton
 object ApplicationModule {
     /** 設定データストアの保存先ファイル名 */
     private const val PREFERENCES_DATA_STORE_NAME = "settings.ds"
+
+    private val Context.dataStore by dataStore(
+        fileName = PREFERENCES_DATA_STORE_NAME,
+        serializer = PreferencesSerializer()
+    )
 
     // ------ //
 
@@ -63,10 +68,7 @@ object ApplicationModule {
         @ApplicationContext context: Context,
         @AppDatabaseQualifier database: AppDatabase
     ) = PreferencesRepository(
-        dataStore = context.createDataStore(
-            fileName = PREFERENCES_DATA_STORE_NAME,
-            serializer = PreferencesSerializer()
-        ),
+        dataStore = context.dataStore,
         notificationDao = database.notificationDao()
     )
 

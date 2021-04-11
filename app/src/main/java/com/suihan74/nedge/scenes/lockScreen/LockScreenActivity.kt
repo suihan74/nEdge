@@ -14,6 +14,9 @@ import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.motion.widget.MotionLayout
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import com.suihan74.nedge.Application
@@ -85,7 +88,6 @@ class LockScreenActivity : AppCompatActivity() {
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        overlapLockScreenAndKeepScreenOn()
 
         lifecycleScope.launch {
             viewModel.init(this@LockScreenActivity, intent)
@@ -98,6 +100,7 @@ class LockScreenActivity : AppCompatActivity() {
             it.vm = viewModel
             it.lifecycleOwner = this
         }
+        overlapLockScreenAndKeepScreenOn(binding)
 
         // 画面上部にスワイプして画面を終了する
         binding.motionLayout.also {
@@ -138,7 +141,7 @@ class LockScreenActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
             setShowWhenLocked(true)
             setTurnScreenOn(true)
-            val keyguardManager = getSystemService(Context.KEYGUARD_SERVICE) as? KeyguardManager
+            val keyguardManager = getSystemService(KeyguardManager::class.java)
             keyguardManager?.requestDismissKeyguard(this, null)
         }
         else {
@@ -153,21 +156,34 @@ class LockScreenActivity : AppCompatActivity() {
     /**
      * 常にフルスクリーンでロック画面より上に表示し，画面を完全に消灯しない
      */
-    private fun overlapLockScreenAndKeepScreenOn() {
+    private fun overlapLockScreenAndKeepScreenOn(binding: ActivityLockScreenBinding) {
         keepScreenOn()
 
-        window.decorView.let { decorView ->
-            val flags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-                    View.SYSTEM_UI_FLAG_FULLSCREEN or
-                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
-                    View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
-                    View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
-                    View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            WindowCompat.setDecorFitsSystemWindows(window, false)
+            WindowInsetsControllerCompat(window, binding.root).let { controller ->
+                controller.hide(
+                    WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.ime()
+                )
+                controller.systemBarsBehavior =
+                    WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            }
+        }
+        else {
+            @Suppress("DEPRECATION")
+            window.decorView.let { decorView ->
+                val flags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+                        View.SYSTEM_UI_FLAG_FULLSCREEN or
+                        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
+                        View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
+                        View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
+                        View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
 
-            decorView.systemUiVisibility = flags
-
-            decorView.setOnSystemUiVisibilityChangeListener {
                 decorView.systemUiVisibility = flags
+
+                decorView.setOnSystemUiVisibilityChangeListener {
+                    decorView.systemUiVisibility = flags
+                }
             }
         }
     }

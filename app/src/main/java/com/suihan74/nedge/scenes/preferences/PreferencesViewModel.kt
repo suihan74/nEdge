@@ -1,8 +1,12 @@
 package com.suihan74.nedge.scenes.preferences
 
+import android.os.Build
 import android.view.View
 import android.view.Window
 import androidx.annotation.MainThread
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.*
 import com.suihan74.nedge.Application
@@ -143,13 +147,13 @@ class PreferencesViewModel @Inject constructor(
 
     private var window : Window? = null
 
-    suspend fun onAttachedToWindow(owner: LifecycleOwner, window: Window) = withContext(Dispatchers.Main) {
-        this@PreferencesViewModel.window = window
-        showSystemUI()
+    suspend fun onAttachedToWindow(activity: PreferencesActivity) = withContext(Dispatchers.Main) {
+        this@PreferencesViewModel.window = activity.window
+        showSystemUI(activity)
 
         // 画面明度のプレビュー
-        previewLightLevel.observe(owner, Observer {
-            window.attributes = window.attributes.also { lp ->
+        previewLightLevel.observe(activity, Observer {
+            activity.window.attributes = activity.window.attributes.also { lp ->
                 lp.screenBrightness =
                     when {
                         // システム設定値(-1.0fよりも小さい値のとき)
@@ -164,16 +168,16 @@ class PreferencesViewModel @Inject constructor(
             }
         })
 
-        editingLightLevel.observe(owner, Observer {
+        editingLightLevel.observe(activity, Observer {
             when (it) {
                 EditingLightLevel.NONE ->
-                    observeScreenBrightness(owner, null)
+                    observeScreenBrightness(activity, null)
 
                 EditingLightLevel.ON ->
-                    observeScreenBrightness(owner, lightLevelOn)
+                    observeScreenBrightness(activity, lightLevelOn)
 
                 EditingLightLevel.OFF ->
-                    observeScreenBrightness(owner, lightLevelOff)
+                    observeScreenBrightness(activity, lightLevelOff)
 
                 else -> {}
             }
@@ -203,14 +207,27 @@ class PreferencesViewModel @Inject constructor(
     }
 
     /** ステータスバーとナビゲーションバーを隠してフルスクリーンにする */
-    fun hideSystemUI() {
-        window?.decorView?.systemUiVisibility =
-            View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-                    View.SYSTEM_UI_FLAG_FULLSCREEN or
-                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
-                    View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
-                    View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
-                    View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+    fun hideSystemUI(activity: PreferencesActivity) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            WindowCompat.setDecorFitsSystemWindows(activity.window, false)
+            WindowInsetsControllerCompat(activity.window, activity.binding.root).let { controller ->
+                controller.hide(
+                    WindowInsetsCompat.Type.systemBars()
+                )
+                controller.systemBarsBehavior =
+                    WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            }
+        }
+        else {
+            @Suppress("DEPRECATION")
+            activity.window.decorView.systemUiVisibility =
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+                        View.SYSTEM_UI_FLAG_FULLSCREEN or
+                        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
+                        View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
+                        View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
+                        View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+        }
     }
 
     /**
@@ -218,9 +235,18 @@ class PreferencesViewModel @Inject constructor(
      *
      * ステータスバーは背景を透過しフルスクリーンで表示したアクティビティに重ねて表示する
      */
-    fun showSystemUI() {
-        window?.decorView?.systemUiVisibility =
-            View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+    fun showSystemUI(activity: PreferencesActivity) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            WindowCompat.setDecorFitsSystemWindows(activity.window, true)
+            WindowInsetsControllerCompat(activity.window, activity.binding.root).show(
+                WindowInsetsCompat.Type.systemBars()
+            )
+        }
+        else {
+            @Suppress("DEPRECATION")
+            activity.window.decorView.systemUiVisibility =
+                View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+        }
     }
 
     // ------ //

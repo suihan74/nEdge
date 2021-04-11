@@ -16,6 +16,7 @@ import com.suihan74.nedge.R
 import com.suihan74.nedge.database.notification.NotificationEntity
 import com.suihan74.nedge.database.notification.isDefault
 import com.suihan74.nedge.models.*
+import com.suihan74.nedge.scenes.preferences.PreferencesActivity
 import com.suihan74.nedge.scenes.preferences.PreferencesViewModel
 import com.suihan74.nedge.scenes.preferences.dialog.ColorPickerDialogFragment
 import com.suihan74.nedge.scenes.preferences.notch.*
@@ -396,6 +397,7 @@ class SettingEditorViewModel(
      */
     private fun openNotchTypeSelectionDialog(
         notchType: MutableLiveData<NotchType>,
+        activity: PreferencesActivity,
         fragmentManager: FragmentManager
     ) {
         val notchTypes = NotchType.values().filterNot { it == NotchType.CORNER } // TODO: コーナーノッチは実装中
@@ -433,7 +435,7 @@ class SettingEditorViewModel(
             .create()
 
         dialog.setOnDismissListener {
-            preferencesViewModel.hideSystemUI()
+            preferencesViewModel.hideSystemUI(activity)
         }
 
         dialog.show(fragmentManager, null)
@@ -442,21 +444,21 @@ class SettingEditorViewModel(
     /**
      * ノッチタイプを選択するダイアログを開く
      */
-    fun openTopNotchTypeSelectionDialog(fragmentManager: FragmentManager) {
-        openNotchTypeSelectionDialog(topNotchType, fragmentManager)
+    fun openTopNotchTypeSelectionDialog(activity: PreferencesActivity, fragmentManager: FragmentManager) {
+        openNotchTypeSelectionDialog(topNotchType, activity, fragmentManager)
     }
 
     /**
      * ノッチタイプを選択するダイアログを開く
      */
-    fun openBottomNotchTypeSelectionDialog(fragmentManager: FragmentManager) {
-        openNotchTypeSelectionDialog(bottomNotchType, fragmentManager)
+    fun openBottomNotchTypeSelectionDialog(activity: PreferencesActivity, fragmentManager: FragmentManager) {
+        openNotchTypeSelectionDialog(bottomNotchType, activity, fragmentManager)
     }
 
     /**
      * 輪郭線の色を選択するダイアログを開く
      */
-    fun openOutlinesColorPickerDialog(fragmentManager: FragmentManager) {
+    fun openOutlinesColorPickerDialog(activity: PreferencesActivity, fragmentManager: FragmentManager) {
         val dialog = ColorPickerDialogFragment.createInstance(notificationColor.value ?: Color.WHITE)
         dialog.setOnColorPickedListener { _, value ->
             // alpha成分の編集は無視して必ず1.0にする
@@ -466,7 +468,7 @@ class SettingEditorViewModel(
             notificationColor.value = Color.argb(255, r, g, b)
         }
         dialog.setOnDismissListener {
-            preferencesViewModel.hideSystemUI()
+            preferencesViewModel.hideSystemUI(activity)
         }
         dialog.show(fragmentManager, null)
     }
@@ -474,7 +476,7 @@ class SettingEditorViewModel(
     /**
      * 通知アプリ名・通知文の表示モードを選択するダイアログを開く
      */
-    fun openInformationDisplayModeSelectionDialog(fragmentManager: FragmentManager) {
+    fun openInformationDisplayModeSelectionDialog(activity: PreferencesActivity, fragmentManager: FragmentManager) {
         val items = InformationDisplayMode.values()
         val labels = items.map { it.textId }
         val checkedItemIdx = items.indexOf(informationDisplayMode.value)
@@ -489,7 +491,7 @@ class SettingEditorViewModel(
             .create()
 
         dialog.setOnDismissListener {
-            preferencesViewModel.hideSystemUI()
+            preferencesViewModel.hideSystemUI(activity)
         }
 
         dialog.show(fragmentManager, null)

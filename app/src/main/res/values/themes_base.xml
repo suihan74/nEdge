@@ -13,7 +13,7 @@
         <item name="colorOnSecondary">@color/black</item>
         <!-- Customize your theme here. -->
         <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 
     <style name="Theme.Application.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar">
@@ -31,6 +31,8 @@
     <!-- ====== -->
 
     <style name="Base.Theme.PreferencesActivity">
+        <item name="android:windowTranslucentStatus">true</item>
+
         <item name="colorPrimary">@color/blue_700</item>
         <item name="colorOnPrimary">@color/white</item>
 

@@ -7,6 +7,10 @@
             type="com.suihan74.nedge.scenes.preferences.page.SettingEditorViewModel" />
 
         <variable
+            name="activity"
+            type="com.suihan74.nedge.scenes.preferences.PreferencesActivity" />
+
+        <variable
             name="fragmentManager"
             type="androidx.fragment.app.FragmentManager" />
     </data>
@@ -150,7 +154,7 @@
 
                 <Button
                     textId="@{vm.informationDisplayMode.textId}"
-                    android:onClick="@{() -> vm.openInformationDisplayModeSelectionDialog(fragmentManager)}"
+                    android:onClick="@{() -> vm.openInformationDisplayModeSelectionDialog(activity, fragmentManager)}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
@@ -208,7 +212,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="@id/pickOutlinesColorDesc"
                         android:backgroundTint="@{vm.notificationColor}"
-                        android:onClick="@{() -> vm.openOutlinesColorPickerDialog(fragmentManager)}"
+                        android:onClick="@{() -> vm.openOutlinesColorPickerDialog(activity, fragmentManager)}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
 
@@ -428,7 +432,7 @@
                     android:id="@+id/topNotchTypeSelectionButton"
                     android:contentDescription="@null"
                     src="@{vm.topNotchType.iconId}"
-                    android:onClick="@{() -> vm.openTopNotchTypeSelectionDialog(fragmentManager)}"
+                    android:onClick="@{() -> vm.openTopNotchTypeSelectionDialog(activity, fragmentManager)}"
                     android:foregroundGravity="center"
                     android:visibility="@{vm.topNotchEnabled}"
                     android:layout_width="128dp"
@@ -452,7 +456,7 @@
                     android:id="@+id/bottomNotchTypeSelectionButton"
                     android:contentDescription="@null"
                     src="@{vm.bottomNotchType.iconId}"
-                    android:onClick="@{() -> vm.openBottomNotchTypeSelectionDialog(fragmentManager)}"
+                    android:onClick="@{() -> vm.openBottomNotchTypeSelectionDialog(activity, fragmentManager)}"
                     android:foregroundGravity="center"
                     android:visibility="@{vm.bottomNotchEnabled}"
                     android:layout_width="128dp"

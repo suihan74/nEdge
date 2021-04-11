@@ -75,6 +75,7 @@ class SettingEditorFragment : Fragment() {
     ): View {
         val binding = FragmentSettingEditorBinding.inflate(inflater, container, false).also {
             it.vm = viewModel
+            it.activity = preferencesActivity
             it.fragmentManager = childFragmentManager
             it.lifecycleOwner = viewLifecycleOwner
         }
@@ -100,10 +101,10 @@ class SettingEditorFragment : Fragment() {
 
         val focusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
-                preferencesViewModel.showSystemUI()
+                preferencesViewModel.showSystemUI(preferencesActivity)
             }
             else {
-                preferencesViewModel.hideSystemUI()
+                preferencesViewModel.hideSystemUI(preferencesActivity)
             }
         }
 
@@ -141,7 +142,7 @@ class SettingEditorFragment : Fragment() {
 
     override fun onDetach() {
         super.onDetach()
-        preferencesViewModel.showSystemUI()
+        preferencesViewModel.showSystemUI(preferencesActivity)
     }
 
     override fun onDestroy() {
@@ -151,6 +152,6 @@ class SettingEditorFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        preferencesViewModel.hideSystemUI()
+        preferencesViewModel.hideSystemUI(preferencesActivity)
     }
 }
