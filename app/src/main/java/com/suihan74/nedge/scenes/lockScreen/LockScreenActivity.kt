@@ -188,13 +188,21 @@ class LockScreenActivity : AppCompatActivity() {
         }
     }
 
+    private fun activateVolumeControl() {
+    }
+
     /** 戻るボタンを無効化する */
     override fun onBackPressed() {
         // do nothing
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        return true
+        return when (keyCode) {
+            KeyEvent.KEYCODE_VOLUME_DOWN,
+            KeyEvent.KEYCODE_VOLUME_UP,
+            KeyEvent.KEYCODE_VOLUME_MUTE -> false
+            else -> true
+        }
     }
 
     override fun finish() {
