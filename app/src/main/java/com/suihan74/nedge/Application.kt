@@ -211,7 +211,7 @@ class Application : android.app.Application() {
         createNotificationChannel(NOTIFICATION_CHANNEL_DUMMY)
 
         val builder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_DUMMY)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.mipmap.ic_launcher_foreground)
             .setContentTitle("dummy")
             .setContentText(message)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
