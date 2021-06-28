@@ -59,11 +59,11 @@ android {
     compileOptions {
         // Flag to enable support for the Java 8+ APIs
         coreLibraryDesugaringEnabled true
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '11'
     }
     kapt {
         javacOptions {
@@ -128,7 +128,9 @@ dependencies {
     implementation "androidx.work:work-runtime-ktx:$work_version"
 
     // AndroidPhotoshopColorPicker
-    implementation 'com.azeesoft.lib.colorpicker:colorpicker:1.0.8@aar'
+//    implementation 'com.github.aziztitu:AndroidPhotoshopColorPicker:1.1'
+    implementation 'com.github.alexandre-g:AndroidPhotoshopColorPicker:1.2.4'
+//    implementation 'com.azeesoft.lib.colorpicker:colorpicker:1.0.8@aar'
 
     // nend ads
 //    implementation 'net.nend.android:nend-sdk:7.0.2'
