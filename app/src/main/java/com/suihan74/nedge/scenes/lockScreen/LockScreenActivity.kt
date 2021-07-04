@@ -14,11 +14,13 @@ import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.motion.widget.MotionLayout
+import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.suihan74.nedge.Application
 import com.suihan74.nedge.R
 import com.suihan74.nedge.database.notification.NotificationEntity
@@ -38,11 +40,17 @@ class LockScreenActivity : AppCompatActivity() {
          */
         suspend fun startWhenAvailable(context: Context, sbn: StatusBarNotification?) {
             if (LockScreenViewModel.checkNotifiable(sbn)) {
-                val intent = Intent(context, LockScreenActivity::class.java).also {
-                    it.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                runCatching {
+                    val intent = Intent(context, LockScreenActivity::class.java).also {
+                        it.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    }
+                    ContextCompat.startActivity(context, intent, null)
+                }.onSuccess {
+                    Log.i("Notification", sbn!!.packageName)
+                }.onFailure {
+                    Log.e("Notification", "failed to start LockScreenActivity:" + sbn!!.packageName)
+                    FirebaseCrashlytics.getInstance().recordException(it)
                 }
-                context.startActivity(intent)
-                Log.i("Notification", sbn!!.packageName)
             }
         }
 
