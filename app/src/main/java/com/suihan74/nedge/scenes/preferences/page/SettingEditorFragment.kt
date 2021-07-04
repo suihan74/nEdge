@@ -136,7 +136,7 @@ class SettingEditorFragment : Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         lifecycleScope.launch {
-            viewModel.getNotchRect(preferencesActivity.window)
+            viewModel.getNotchRect(preferencesActivity)
         }
     }
 

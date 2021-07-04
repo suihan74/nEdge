@@ -1,13 +1,16 @@
 package com.suihan74.nedge.scenes.preferences.page
 
+import android.app.Activity
 import android.content.pm.ApplicationInfo
 import android.graphics.Color
 import android.graphics.Point
 import android.graphics.Rect
+import android.hardware.display.DisplayManager
 import android.os.Build
 import android.util.Log
-import android.view.Window
+import android.view.Display
 import androidx.annotation.IdRes
+import androidx.core.content.getSystemService
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.*
@@ -288,20 +291,23 @@ class SettingEditorViewModel(
 
     // ------ //
 
-    suspend fun getNotchRect(window: Window) = withContext(Dispatchers.Main) {
+    suspend fun getNotchRect(activity: Activity) = withContext(Dispatchers.Main) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             val verticalCenter = Point().let {
-                window.windowManager.defaultDisplay.getSize(it)
+                val displayManager = activity.getSystemService<DisplayManager>()!!
+                val display = displayManager.getDisplay(Display.DEFAULT_DISPLAY)
+                display.getRealSize(it)
                 it.y * .5f
             }
-            val topRect = window.decorView.rootWindowInsets.displayCutout?.boundingRects?.firstOrNull {
+            val displayCutout = activity.window?.decorView?.rootWindowInsets?.displayCutout
+            val topRect = displayCutout?.boundingRects?.firstOrNull {
                 it.top < verticalCenter
             }
-            val bottomRect = window.decorView.rootWindowInsets.displayCutout?.boundingRects?.firstOrNull {
+            val bottomRect = displayCutout?.boundingRects?.firstOrNull {
                 it.top > verticalCenter
             }
 
-            notchRects.value = window.decorView.rootWindowInsets.displayCutout?.boundingRects.orEmpty()
+            notchRects.value = displayCutout?.boundingRects.orEmpty()
 
             topNotchEnabled.value = topRect != null
             bottomNotchEnabled.value = bottomRect != null
