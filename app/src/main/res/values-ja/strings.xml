@@ -11,6 +11,7 @@
     <!-- dialog -->
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">Cancel</string>
+    <string name="confirm_dialog_title">確認</string>
 
     <!-- direction -->
     <string name="top">上</string>
@@ -34,7 +35,8 @@
     <string name="permission_activity_desc">全てのパーミッションを許可することで&appName;が使用できるようになります。</string>
 
     <string name="permission_device_policy_manager_text">デバイス管理アプリとして登録</string>
-    <string name="permission_device_policy_manager_desc">&appName;側から画面消灯を行うために必要です。</string>
+    <string name="permission_device_policy_manager_desc">&appName;側から画面消灯を行うために必要です。\n&appName;をアンインストールする際はこの設定を解除する必要があります。</string>
+    <string name="permission_remove_device_policy_manager_desc">デバイス管理アプリ設定を解除します。よろしいですか？</string>
 
     <string name="permission_manage_overlay_text">他のアプリに重ねて描画できる</string>
     <string name="permission_manage_overlay_desc">&appName;をロック画面より前面に表示するために必要です。</string>

@@ -57,10 +57,22 @@
         android:id="@+id/showLicensesButton"
         android:text="@string/pref_information_licenses_desc"
         app:layout_constraintTop_toBottomOf="@id/copyright"
+        app:layout_constraintBottom_toBottomOf="@id/permissionsButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="24dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/permissionsButton"
+        android:text="@string/permission_activity_title"
+        app:layout_constraintTop_toBottomOf="@id/showLicensesButton"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="24dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

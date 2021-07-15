@@ -11,6 +11,7 @@
     <!-- dialog -->
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">Cancel</string>
+    <string name="confirm_dialog_title">Confirmation</string>
 
     <!-- direction -->
     <string name="top">Top</string>
@@ -33,8 +34,9 @@
     <string name="permission_activity_title">Permissions</string>
     <string name="permission_activity_desc">You need to enable all permissions for using &appName;.</string>
 
-    <string name="permission_device_policy_manager_text">register &appName; as device admin app</string>
-    <string name="permission_device_policy_manager_desc">This permission is required to turn off screen from &appName;.</string>
+    <string name="permission_device_policy_manager_text">register &appName; as a device admin app</string>
+    <string name="permission_device_policy_manager_desc">This permission is required to turn off screen from &appName;.\nIf you want to uninstall &appName;, you need to remove this permission.</string>
+    <string name="permission_remove_device_policy_manager_desc">Are you sure you want to remove the permission as a device admin app?</string>
 
     <string name="permission_manage_overlay_text">enable drawing &appName; on top of other apps</string>
     <string name="permission_manage_overlay_desc">This permission is required to overlay &appName; on the lock screen.</string>
