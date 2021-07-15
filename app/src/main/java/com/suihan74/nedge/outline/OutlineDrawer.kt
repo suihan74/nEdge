@@ -74,80 +74,14 @@ class OutlineDrawer(
         thickness: Float,
         notificationSetting: NotificationSetting
     ) {
-        notificationSetting.outlinesSetting.run {
-            val topCornerRadius = topCornerRadius.dp
-            val bottomCornerRadius = bottomCornerRadius.dp
-
-            val offset = thickness / 2
-            val left = offset
-            val top = offset + topEdgeOffset
-            val right = screenWidth - offset
-            val bottom = screenHeight - offset - bottomEdgeOffset
-
-            // top left corner
-            if (topLeftCornerEnabled) {
-                drawTopLeftCorner(path, thickness, notificationSetting)
-            }
-            else {
-                path.moveTo(left + topCornerRadius, top)
-            }
-
-            // top edge
-            if (topEdgeEnabled) {
-                drawTopOutLine(path, thickness, notificationSetting)
-            }
-            else {
-                path.moveTo(right - topCornerRadius, top)
-            }
-
-            // top right corner
-            if (topRightCornerEnabled) {
-                drawTopRightCorner(path, thickness, notificationSetting)
-            }
-            else {
-                path.moveTo(right, top + topCornerRadius)
-            }
-
-            // right edge
-            if (rightEdgeEnabled) {
-                path.lineTo(right, bottom - bottomCornerRadius)
-            }
-            else {
-                path.moveTo(right, bottom - bottomCornerRadius)
-            }
-
-            // bottom right corner
-            if (bottomRightCornerEnabled) {
-                path.arcTo(right - bottomCornerRadius * 2, bottom - bottomCornerRadius * 2, right, bottom, 0f, 90f, true)
-            }
-            else {
-                path.moveTo(right - bottomCornerRadius, bottom)
-            }
-
-            // bottom edge
-            if (bottomEdgeEnabled) {
-                drawBottomOutLine(path, thickness, notificationSetting)
-            }
-            else {
-                path.moveTo(left + bottomCornerRadius, bottom)
-            }
-
-            // bottom left corner
-            if (bottomLeftCornerEnabled) {
-                path.arcTo(left, bottom - bottomCornerRadius * 2, left + bottomCornerRadius * 2, bottom, 90f, 90f, true)
-            }
-            else {
-                path.moveTo(left, bottom - bottomCornerRadius)
-            }
-
-            // left edge
-            if (leftEdgeEnabled) {
-                path.lineTo(left, top + topCornerRadius)
-            }
-            else {
-                path.moveTo(left, top + topCornerRadius)
-            }
-        }
+        drawTopLeftCorner(path, thickness, notificationSetting)
+        drawTopOutLine(path, thickness, notificationSetting)
+        drawTopRightCorner(path, thickness, notificationSetting)
+        drawRightOutLine(path, thickness, notificationSetting)
+        drawBottomRightCorner(path, thickness, notificationSetting)
+        drawBottomOutLine(path, thickness, notificationSetting)
+        drawBottomLeftCorner(path, thickness, notificationSetting)
+        drawLeftOutline(path, thickness, notificationSetting)
 
         when (notificationSetting.topNotchSetting.type) {
             NotchType.PUNCH_HOLE -> {
@@ -172,14 +106,27 @@ class OutlineDrawer(
         thickness: Float,
         notificationSetting: NotificationSetting,
     ) {
-        val offset = thickness / 2
-        val top = offset + notificationSetting.outlinesSetting.topEdgeOffset
-        val right = screenWidth - offset
-        val topCornerRadius = notificationSetting.outlinesSetting.topCornerRadius.dp
+        notificationSetting.outlinesSetting.let {
+            val offset = thickness / 2
+            val top = offset + it.topEdgeOffset
+            val topCornerRadius = it.topCornerRadius.dp
+            val left =
+                if (topCornerRadius == 0f || !it.topLeftCornerEnabled) 0f
+                else offset + topCornerRadius
+            val right =
+                if (topCornerRadius == 0f || !it.topRightCornerEnabled) screenWidth.toFloat()
+                else screenWidth - offset - topCornerRadius
 
-        path.moveTo(offset + topCornerRadius, top)
-        drawTopNotch(path, thickness, topCornerRadius, notificationSetting.outlinesSetting.topEdgeOffset, notificationSetting.topNotchSetting)
-        path.lineTo(right - topCornerRadius, top)
+            if (it.topEdgeEnabled) {
+                path.moveTo(left, top)
+                drawTopNotch(path, thickness, topCornerRadius, it.topEdgeOffset, notificationSetting.topNotchSetting)
+                path.lineTo(right, top)
+            }
+            else {
+                path.moveTo(right, top)
+            }
+            path.rMoveTo(-offset, -offset)
+        }
     }
 
     /**
@@ -190,14 +137,80 @@ class OutlineDrawer(
         thickness: Float,
         notificationSetting: NotificationSetting
     ) {
-        val offset = thickness / 2
-        val bottom = screenHeight - offset - notificationSetting.outlinesSetting.bottomEdgeOffset
-        val right = screenWidth - offset
-        val bottomCornerRadius = notificationSetting.outlinesSetting.bottomCornerRadius.dp
+        notificationSetting.outlinesSetting.let {
+            val offset = thickness / 2
+            val bottom = screenHeight - offset - it.bottomEdgeOffset
+            val bottomCornerRadius = it.bottomCornerRadius.dp
+            val left =
+                if (bottomCornerRadius == 0f || !it.bottomLeftCornerEnabled) 0f
+                else offset + bottomCornerRadius
+            val right =
+                if (bottomCornerRadius == 0f || !it.bottomRightCornerEnabled) screenWidth.toFloat()
+                else screenWidth - offset - bottomCornerRadius
 
-        path.moveTo(right - bottomCornerRadius, bottom)
-        drawBottomNotch(path, thickness, bottomCornerRadius, notificationSetting.outlinesSetting.bottomEdgeOffset, notificationSetting.bottomNotchSetting)
-        path.lineTo(offset + bottomCornerRadius, bottom)
+            if (it.bottomEdgeEnabled) {
+                path.moveTo(right, bottom)
+                drawBottomNotch(path, thickness, bottomCornerRadius, it.bottomEdgeOffset, notificationSetting.bottomNotchSetting)
+                path.lineTo(left, bottom)
+            }
+            else {
+                path.moveTo(left, bottom)
+            }
+            path.rMoveTo(offset, offset)
+        }
+    }
+
+    /**
+     * 右辺の描画
+     */
+    private fun drawRightOutLine(
+        path: Path,
+        thickness: Float,
+        notificationSetting: NotificationSetting
+    ) {
+        notificationSetting.outlinesSetting.let {
+            val bottomCornerRadius = it.bottomCornerRadius.dp
+            val offset = thickness / 2
+            val bottomEdgeOffset = it.bottomEdgeOffset.toFloat()
+            val right = screenWidth - offset
+            val bottom =
+                if (bottomCornerRadius == 0f || !it.bottomRightCornerEnabled) screenHeight - bottomEdgeOffset
+                else screenHeight - offset - bottomEdgeOffset - bottomCornerRadius
+
+            if (it.rightEdgeEnabled) {
+                path.lineTo(right, bottom)
+            }
+            else {
+                path.moveTo(right, bottom)
+            }
+            path.rMoveTo(0f, -offset)
+        }
+    }
+
+    /**
+     * 左辺の描画
+     */
+    private fun drawLeftOutline(
+        path: Path,
+        thickness: Float,
+        notificationSetting: NotificationSetting
+    ) {
+        notificationSetting.outlinesSetting.let {
+            val topCornerRadius = it.topCornerRadius.dp
+            val offset = thickness / 2
+            val topEdgeOffset = it.topEdgeOffset.toFloat()
+            val top =
+                if (topCornerRadius == 0f || !it.topLeftCornerEnabled) topEdgeOffset
+                else offset + topEdgeOffset + topCornerRadius
+
+            if (it.leftEdgeEnabled) {
+                path.lineTo(offset, top)
+            }
+            else {
+                path.moveTo(offset, top)
+            }
+            path.rMoveTo(0f, offset)
+        }
     }
 
     private fun drawTopLeftCorner(
@@ -209,13 +222,24 @@ class OutlineDrawer(
 //            drawTopCornerNotch(path, thickness, notificationSetting.topNotchSetting)
 //        }
 //        else {
-            val topCornerRadius = notificationSetting.outlinesSetting.topCornerRadius.dp
+        notificationSetting.outlinesSetting.let {
+            val topCornerRadius = it.topCornerRadius.dp
+            if (topCornerRadius == 0f) {
+                return
+            }
             val left = thickness / 2
-            val top = left + notificationSetting.outlinesSetting.topEdgeOffset
+            val top = left + it.topEdgeOffset
             val right = left + topCornerRadius * 2f
             val bottom = top + topCornerRadius * 2f
-            path.arcTo(left, top, right, bottom, 180f, 90f, true)
-//        }
+
+            if (it.topLeftCornerEnabled) {
+                path.arcTo(left, top, right, bottom, 180f, 90f, true)
+            }
+            else {
+                path.moveTo(left, top)
+            }
+        }
+    //        }
     }
 
     private fun drawTopRightCorner(
@@ -227,14 +251,74 @@ class OutlineDrawer(
 //            drawTopCornerNotch(path, thickness, notificationSetting.topNotchSetting)
 //        }
 //        else {
-            val topCornerRadius = notificationSetting.outlinesSetting.topCornerRadius.dp
+        notificationSetting.outlinesSetting.let {
+            val topCornerRadius = it.topCornerRadius.dp
+            if (topCornerRadius == 0f) {
+                return
+            }
             val offset = thickness / 2
-            val top = offset + notificationSetting.outlinesSetting.topEdgeOffset
+            val top = offset + it.topEdgeOffset
             val bottom = top + topCornerRadius * 2
             val right = screenWidth - offset
             val left = right - topCornerRadius * 2
-            path.arcTo(left, top, right, bottom, 270f, 90f, true)
+
+            if (it.topRightCornerEnabled) {
+                path.arcTo(left, top, right, bottom, 270f, 90f, true)
+            }
+            else {
+                path.moveTo(right, top)
+            }
+        }
 //        }
+    }
+
+    private fun drawBottomRightCorner(
+        path: Path,
+        thickness: Float,
+        notificationSetting: NotificationSetting
+    ) {
+        notificationSetting.outlinesSetting.let {
+            val bottomCornerRadius = it.bottomCornerRadius.dp
+            if (bottomCornerRadius == 0f) {
+                return
+            }
+            val offset = thickness / 2
+            val bottom = screenHeight - offset - it.bottomEdgeOffset
+            val top = bottom - bottomCornerRadius * 2
+            val right = screenWidth - offset
+            val left = right - bottomCornerRadius * 2
+
+            if (it.bottomRightCornerEnabled) {
+                path.arcTo(left, top, right, bottom, 0f, 90f, true)
+            }
+            else {
+                path.moveTo(right, bottom)
+            }
+        }
+    }
+
+    private fun drawBottomLeftCorner(
+        path: Path,
+        thickness: Float,
+        notificationSetting: NotificationSetting
+    ) {
+        notificationSetting.outlinesSetting.let {
+            val bottomCornerRadius = it.bottomCornerRadius.dp
+            if (bottomCornerRadius == 0f) {
+                return
+            }
+            val offset = thickness / 2
+            val bottom = screenHeight - offset - it.bottomEdgeOffset
+            val top = bottom - bottomCornerRadius * 2
+            val right = offset + bottomCornerRadius * 2
+
+            if (it.bottomLeftCornerEnabled) {
+                path.arcTo(offset, top, right, bottom, 90f, 90f, true)
+            }
+            else {
+                path.moveTo(offset, bottom)
+            }
+        }
     }
 
     // ------ //
