@@ -111,10 +111,10 @@ class OutlineDrawer(
             val top = offset + it.topEdgeOffset
             val topCornerRadius = it.topCornerRadius.dp
             val left =
-                if (topCornerRadius == 0f || !it.topLeftCornerEnabled) 0f
+                if (topCornerRadius == 0f) 0f
                 else offset + topCornerRadius
             val right =
-                if (topCornerRadius == 0f || !it.topRightCornerEnabled) screenWidth.toFloat()
+                if (topCornerRadius == 0f) screenWidth.toFloat()
                 else screenWidth - offset - topCornerRadius
 
             if (it.topEdgeEnabled) {
@@ -142,10 +142,10 @@ class OutlineDrawer(
             val bottom = screenHeight - offset - it.bottomEdgeOffset
             val bottomCornerRadius = it.bottomCornerRadius.dp
             val left =
-                if (bottomCornerRadius == 0f || !it.bottomLeftCornerEnabled) 0f
+                if (bottomCornerRadius == 0f) 0f
                 else offset + bottomCornerRadius
             val right =
-                if (bottomCornerRadius == 0f || !it.bottomRightCornerEnabled) screenWidth.toFloat()
+                if (bottomCornerRadius == 0f) screenWidth.toFloat()
                 else screenWidth - offset - bottomCornerRadius
 
             if (it.bottomEdgeEnabled) {
@@ -174,7 +174,7 @@ class OutlineDrawer(
             val bottomEdgeOffset = it.bottomEdgeOffset.toFloat()
             val right = screenWidth - offset
             val bottom =
-                if (bottomCornerRadius == 0f || !it.bottomRightCornerEnabled) screenHeight - bottomEdgeOffset
+                if (bottomCornerRadius == 0f) screenHeight - bottomEdgeOffset
                 else screenHeight - offset - bottomEdgeOffset - bottomCornerRadius
 
             if (it.rightEdgeEnabled) {
@@ -200,7 +200,7 @@ class OutlineDrawer(
             val offset = thickness / 2
             val topEdgeOffset = it.topEdgeOffset.toFloat()
             val top =
-                if (topCornerRadius == 0f || !it.topLeftCornerEnabled) topEdgeOffset
+                if (topCornerRadius == 0f) topEdgeOffset
                 else offset + topEdgeOffset + topCornerRadius
 
             if (it.leftEdgeEnabled) {
@@ -236,7 +236,7 @@ class OutlineDrawer(
                 path.arcTo(left, top, right, bottom, 180f, 90f, true)
             }
             else {
-                path.moveTo(left, top)
+                path.moveTo(left + topCornerRadius, top)
             }
         }
     //        }
@@ -266,7 +266,7 @@ class OutlineDrawer(
                 path.arcTo(left, top, right, bottom, 270f, 90f, true)
             }
             else {
-                path.moveTo(right, top)
+                path.moveTo(right, top + topCornerRadius)
             }
         }
 //        }
@@ -292,7 +292,7 @@ class OutlineDrawer(
                 path.arcTo(left, top, right, bottom, 0f, 90f, true)
             }
             else {
-                path.moveTo(right, bottom)
+                path.moveTo(right - bottomCornerRadius, bottom)
             }
         }
     }
@@ -316,7 +316,7 @@ class OutlineDrawer(
                 path.arcTo(offset, top, right, bottom, 90f, 90f, true)
             }
             else {
-                path.moveTo(offset, bottom)
+                path.moveTo(offset, top + bottomCornerRadius)
             }
         }
     }
