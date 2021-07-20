@@ -35,6 +35,7 @@ class SplashActivity : AppCompatActivity() {
     /** パーミッション設定画面に遷移する */
     private fun launchPermissionsValidationActivity() {
         val intent = Intent(this, PermissionsValidationActivity::class.java).apply {
+            putExtra(PermissionsValidationActivity.EXTRA_BOOTSTRAP, true)
             flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
         startActivity(intent)

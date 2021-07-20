@@ -13,6 +13,7 @@ import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.suihan74.nedge.Application
 import com.suihan74.nedge.R
 import com.suihan74.nedge.databinding.FragmentInformationBinding
+import com.suihan74.nedge.scenes.permissions.PermissionsValidationActivity
 import java.time.LocalDateTime
 
 class InformationFragment : Fragment() {
@@ -54,6 +55,11 @@ class InformationFragment : Fragment() {
             val intent = Intent(activity, OssLicensesMenuActivity::class.java).apply {
                 putExtra("title", "Licenses")
             }
+            startActivity(intent)
+        }
+
+        binding.permissionsButton.setOnClickListener {
+            val intent = Intent(activity, PermissionsValidationActivity::class.java)
             startActivity(intent)
         }
 

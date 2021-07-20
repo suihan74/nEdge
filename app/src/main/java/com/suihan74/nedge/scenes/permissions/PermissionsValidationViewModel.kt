@@ -11,11 +11,14 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.getSystemService
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.suihan74.nedge.R
 import com.suihan74.nedge.receivers.DeviceAdminReceiver
 import com.suihan74.nedge.scenes.preferences.PreferencesActivity
+import com.suihan74.utilities.fragment.AlertDialogFragment
 
 class PermissionsValidationViewModel : ViewModel() {
     /** ユーザーにパーミッションを手動で許可させる処理の合否を受け取るためのリクエストコード */
@@ -93,9 +96,9 @@ class PermissionsValidationViewModel : ViewModel() {
 
     private lateinit var requestPermissionLauncher : ActivityResultLauncher<Intent>
 
-    fun onCreateActivity(activity: AppCompatActivity) {
+    fun onCreateActivity(activity: AppCompatActivity, launchAsBootstrap: Boolean) {
         requestPermissionLauncher = activity.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if (allPermissionsAllowed(activity)) {
+            if (launchAsBootstrap && allPermissionsAllowed(activity)) {
                 launchContentsActivity(activity)
             }
         }
@@ -136,13 +139,39 @@ class PermissionsValidationViewModel : ViewModel() {
      * 画面を明示的にロックするため
      */
     fun requestDevicePolicyManagerPermission(activity: AppCompatActivity) {
-        val intent = Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN).also {
-            val componentName = ComponentName(activity, DeviceAdminReceiver::class.java)
-            it.putExtra(
-                DevicePolicyManager.EXTRA_DEVICE_ADMIN,
-                componentName
-            )
+        if (devicePolicyManagerPermitted(activity)) {
+            removeDevicePolicyManagerPermission(activity)
         }
-        requestPermissionLauncher.launch(intent)
+        else {
+            val intent = Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN).also {
+                val componentName = ComponentName(activity, DeviceAdminReceiver::class.java)
+                it.putExtra(
+                    DevicePolicyManager.EXTRA_DEVICE_ADMIN,
+                    componentName
+                )
+            }
+            requestPermissionLauncher.launch(intent)
+        }
+    }
+
+    /**
+     * 端末管理アプリ設定を解除する
+     */
+    fun removeDevicePolicyManagerPermission(activity: AppCompatActivity) {
+        AlertDialogFragment.Builder()
+            .setTitle(R.string.confirm_dialog_title)
+            .setMessage(R.string.permission_remove_device_policy_manager_desc)
+            .setPositiveButton(R.string.dialog_ok) { f ->
+                runCatching {
+                    val componentName =
+                        ComponentName(f.requireActivity(), DeviceAdminReceiver::class.java)
+                    val dpm = activity.getSystemService<DevicePolicyManager>()
+                    dpm?.removeActiveAdmin(componentName)
+                    _devicePolicyManagerState.value = false
+                }
+            }
+            .setNegativeButton(R.string.dialog_cancel)
+            .create()
+            .show(activity.supportFragmentManager, null)
     }
 }

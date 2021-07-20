@@ -72,7 +72,6 @@
             android:id="@+id/devicePolicyManagerButton"
             style="@style/Widget.MaterialComponents.Button.Icon"
             android:onClick="@{() -> vm.requestDevicePolicyManagerPermission(activity)}"
-            android:enabled="@{!vm.devicePolicyManagerState}"
             iconState="@{vm.devicePolicyManagerState}"
             iconTrue="@{@drawable/ic_check}"
             iconFalse="@{@drawable/ic_edit}"

@@ -12,6 +12,13 @@ import com.suihan74.utilities.lazyProvideViewModel
 class PermissionsValidationActivity : AppCompatActivity() {
     companion object {
         /**
+         * 起動時の自動実行であるかのフラグ
+         *
+         * extra value type: boolean
+         */
+        const val EXTRA_BOOTSTRAP = "EXTRA_BOOTSTRAP"
+
+        /**
          * アプリの実行に必要なすべてのパーミッションが許可されているか確認する
          *
          * @return true: 全てのパーミッションが許可されている
@@ -30,9 +37,11 @@ class PermissionsValidationActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.onCreateActivity(this)
+        val launchAsBootstrap = intent.getBooleanExtra(EXTRA_BOOTSTRAP, false)
 
-        if (allPermissionsAllowed(this)) {
+        viewModel.onCreateActivity(this, launchAsBootstrap)
+
+        if (launchAsBootstrap && allPermissionsAllowed(this)) {
             viewModel.launchContentsActivity(this)
         }
         else {

@@ -17,8 +17,8 @@ android {
         minSdkVersion 23
         targetSdkVersion 30
         // (major[1])-(minor[2])-(fix[3])-(dev[2])-(build mode[1;it is added by productFlavors])
-        versionCode 1_00_006_00_0
-        versionName "1.0.6"
+        versionCode 1_00_007_01_0
+        versionName "1.0.7"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
