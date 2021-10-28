@@ -41,15 +41,14 @@ class ApplicationSelectionDialogFragment : DialogFragment() {
     // ------ //
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val lifecycleOwner = parentFragment?.viewLifecycleOwner ?: requireActivity()
         val binding = DialogApplicationSelectionBinding.inflate(
             LayoutInflater.from(requireContext()),
             null,
             false
         ).also {
             it.vm = viewModel
-            it.lifecycleOwner = lifecycleOwner
-            initializeRecyclerView(it, lifecycleOwner)
+            it.lifecycleOwner = this
+            initializeRecyclerView(it, this)
         }
 
         binding.searchEditText.also { editText ->
