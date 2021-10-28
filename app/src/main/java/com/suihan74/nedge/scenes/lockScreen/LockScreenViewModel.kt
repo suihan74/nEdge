@@ -185,9 +185,15 @@ class LockScreenViewModel @Inject constructor(
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) defaultMarginBottom
             else {
                 val screenHeight =
-                    with(Point()) {
-                        window.decorView.display.getRealSize(this)
-                        this.y
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        window.windowManager.currentWindowMetrics.bounds.height()
+                    }
+                    else {
+                        with(Point()) {
+                            @Suppress("deprecation")
+                            window.decorView.display.getRealSize(this)
+                            this.y
+                        }
                     }
 
                 val rect = window.decorView.rootWindowInsets.displayCutout?.boundingRects?.firstOrNull {

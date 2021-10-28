@@ -20,7 +20,6 @@ import com.suihan74.utilities.extensions.hideSoftInputMethod
 import com.suihan74.utilities.lazyProvideViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.*
 
 class ApplicationSelectionDialogFragment : DialogFragment() {
 
@@ -137,10 +136,10 @@ class ApplicationSelectionDialogFragment : DialogFragment() {
                 _filteredApplications.postValue(apps.orEmpty())
             }
             else {
-                val q = query.toLowerCase(Locale.getDefault())
+                val q = query.lowercase()
                 _filteredApplications.postValue(
                     apps.orEmpty().filter { item ->
-                        item.appName.toLowerCase(Locale.getDefault()).contains(q)
+                        item.appName.lowercase().contains(q)
                     }
                 )
             }

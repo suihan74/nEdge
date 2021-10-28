@@ -1,5 +1,6 @@
 package com.suihan74.utilities
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -80,6 +81,7 @@ class BindingListAdapter<ItemT, BindingT : ViewDataBinding>(
 
     // ------ //
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -104,7 +106,7 @@ class BindingListAdapter<ItemT, BindingT : ViewDataBinding>(
                     onLongClickItem != null
                 }
 
-                it.itemView.setOnTouchListener { view, motionEvent ->
+                it.itemView.setOnTouchListener { _, motionEvent ->
                     onTouchItem?.invoke(binding, motionEvent) ?: false
                 }
             }

@@ -128,7 +128,7 @@ class PermissionsValidationViewModel : ViewModel() {
     /**
      * 他のアプリが発した通知を取得するためのパーミッション要求
      */
-    fun requestNotificationListenerPermission(activity: AppCompatActivity) {
+    fun requestNotificationListenerPermission() {
         val intent = Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
         requestPermissionLauncher.launch(intent)
     }
