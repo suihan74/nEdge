@@ -3,6 +3,7 @@ package com.suihan74.nedge.database.notification
 import androidx.room.TypeConverter
 import com.suihan74.nedge.models.KeywordMatchingType
 import com.suihan74.nedge.models.NotificationSetting
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -21,11 +22,13 @@ class FieldConverter {
 
     // ------ //
 
+    @OptIn(ExperimentalSerializationApi::class)
     @TypeConverter
     fun fromNotificationSetting(value: NotificationSetting) : String {
         return Json.encodeToString(value)
     }
 
+    @OptIn(ExperimentalSerializationApi::class)
     @TypeConverter
     fun toNotificationSetting(json: String) : NotificationSetting {
         return Json.decodeFromString(json)

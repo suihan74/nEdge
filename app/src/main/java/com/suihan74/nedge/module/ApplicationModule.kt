@@ -18,6 +18,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import javax.inject.Qualifier
@@ -41,6 +42,7 @@ object ApplicationModule {
 
     // ------ //
 
+    @DelicateCoroutinesApi
     @Singleton
     @Provides
     @BatteryRepositoryQualifier
@@ -53,6 +55,7 @@ object ApplicationModule {
     @Provides
     fun provideNotificationRepository() = NotificationRepository()
 
+    @DelicateCoroutinesApi
     @Singleton
     @Provides
     fun provideScreenRepository(@ApplicationContext context: Context) =

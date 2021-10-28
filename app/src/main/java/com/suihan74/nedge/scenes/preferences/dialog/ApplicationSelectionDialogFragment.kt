@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
@@ -20,7 +19,7 @@ import com.suihan74.utilities.extensions.hideSoftInputMethod
 import com.suihan74.utilities.lazyProvideViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.*
+import kotlinx.coroutines.withContext
 
 class ApplicationSelectionDialogFragment : DialogFragment() {
 
@@ -41,15 +40,14 @@ class ApplicationSelectionDialogFragment : DialogFragment() {
     // ------ //
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val lifecycleOwner = parentFragment?.viewLifecycleOwner ?: requireActivity()
         val binding = DialogApplicationSelectionBinding.inflate(
-            LayoutInflater.from(requireContext()),
+            layoutInflater,
             null,
             false
         ).also {
             it.vm = viewModel
-            it.lifecycleOwner = lifecycleOwner
-            initializeRecyclerView(it, lifecycleOwner)
+            it.lifecycleOwner = this
+            initializeRecyclerView(it, this)
         }
 
         binding.searchEditText.also { editText ->
@@ -104,9 +102,11 @@ class ApplicationSelectionDialogFragment : DialogFragment() {
         private val _filteredApplications = MutableLiveData<List<ApplicationItem>>()
 
         /** 検索クエリ */
-        val searchQuery = MutableLiveData<String>().also { it ->
+        val searchQuery = MutableLiveData<String>().also {
             it.observeForever { query ->
-                createList(query, applications.value)
+                viewModelScope.launch {
+                    createList(query, applications.value)
+                }
             }
         }
 
@@ -133,15 +133,15 @@ class ApplicationSelectionDialogFragment : DialogFragment() {
             }
         }
 
-        private fun createList(query: String?, apps: List<ApplicationItem>?) = viewModelScope.launch(Dispatchers.Default) {
+        private suspend fun createList(query: String?, apps: List<ApplicationItem>?) = withContext(Dispatchers.Default) {
             if (query.isNullOrBlank()) {
                 _filteredApplications.postValue(apps.orEmpty())
             }
             else {
-                val q = query.toLowerCase(Locale.getDefault())
+                val q = query.lowercase()
                 _filteredApplications.postValue(
                     apps.orEmpty().filter { item ->
-                        item.appName.toLowerCase(Locale.getDefault()).contains(q)
+                        item.appName.lowercase().contains(q)
                     }
                 )
             }

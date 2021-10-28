@@ -124,7 +124,7 @@
             android:id="@+id/notificationListenerButton"
             style="@style/Widget.MaterialComponents.Button.Icon"
             android:text="@string/permission_notification_listener_text"
-            android:onClick="@{() -> vm.requestNotificationListenerPermission(activity)}"
+            android:onClick="@{() -> vm.requestNotificationListenerPermission()}"
             iconState="@{vm.notificationListenerState}"
             iconTrue="@{@drawable/ic_check}"
             iconFalse="@{@drawable/ic_edit}"

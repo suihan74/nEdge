@@ -19,8 +19,16 @@ class OutlineDrawer(
 ) {
     /** 画面サイズ */
     private val displayRealSize : Point by lazy {
-        Point().also {
-            window.decorView.display.getRealSize(it)
+        Point().also { p ->
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                window.windowManager.currentWindowMetrics.bounds.also { bounds ->
+                    p.set(bounds.width(), bounds.height())
+                }
+            }
+            else {
+                @Suppress("deprecation")
+                window.decorView.display.getRealSize(p)
+            }
         }
     }
 
@@ -247,10 +255,11 @@ class OutlineDrawer(
         thickness: Float,
         notificationSetting: NotificationSetting,
     ) {
-//        if (notificationSetting.topNotchSetting.type == NotchType.CORNER) {
-//            drawTopCornerNotch(path, thickness, notificationSetting.topNotchSetting)
-//        }
-//        else {
+        if (notificationSetting.topNotchSetting.type == NotchType.CORNER) {
+            drawTopCornerNotch(path, thickness, notificationSetting.topNotchSetting)
+            return
+        }
+
         notificationSetting.outlinesSetting.let {
             val topCornerRadius = it.topCornerRadius.dp
             if (topCornerRadius == 0f) {

@@ -9,8 +9,8 @@ import android.hardware.display.DisplayManager
 import android.os.Build
 import android.util.Log
 import android.view.Display
+import android.view.WindowManager
 import androidx.annotation.IdRes
-import androidx.core.content.getSystemService
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.*
@@ -293,12 +293,21 @@ class SettingEditorViewModel(
 
     suspend fun getNotchRect(activity: Activity) = withContext(Dispatchers.Main) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            val verticalCenter = Point().let {
-                val displayManager = activity.getSystemService<DisplayManager>()!!
-                val display = displayManager.getDisplay(Display.DEFAULT_DISPLAY)
-                display.getRealSize(it)
-                it.y * .5f
-            }
+            val verticalCenter =
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    val windowManager = activity.getSystemService(WindowManager::class.java)
+                    windowManager.currentWindowMetrics.bounds.height() * .5f
+                }
+                else {
+                    Point().let {
+                        val displayManager = activity.getSystemService(DisplayManager::class.java)
+                        val display = displayManager.getDisplay(Display.DEFAULT_DISPLAY)
+                        @Suppress("deprecation")
+                        display.getRealSize(it)
+                        it.y * .5f
+                    }
+                }
+
             val displayCutout = activity.window?.decorView?.rootWindowInsets?.displayCutout
             val topRect = displayCutout?.boundingRects?.firstOrNull {
                 it.top < verticalCenter

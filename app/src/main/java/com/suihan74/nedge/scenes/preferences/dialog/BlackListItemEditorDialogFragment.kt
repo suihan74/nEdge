@@ -45,7 +45,7 @@ class BlackListItemEditorDialogFragment : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val binding = DialogBlackListItemEditorBinding.inflate(layoutInflater, null, false).also {
             it.vm = viewModel
-            it.lifecycleOwner = parentFragment?.viewLifecycleOwner ?: requireActivity()
+            it.lifecycleOwner = this
         }
 
         return AlertDialog.Builder(requireContext())
