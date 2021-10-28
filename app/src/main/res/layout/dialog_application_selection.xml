@@ -19,6 +19,7 @@
             style="@style/TextInputLayout.OutlinedBox"
             android:hint="@string/prefs_settings_list_search_hint"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/recyclerView"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintWidth_percent="0.9"
@@ -42,13 +43,15 @@
             android:id="@+id/recyclerView"
             style="@style/RecyclerView.Linear"
             applications="@{vm.filteredApplications}"
+            app:layout_constraintHeight_default="wrap"
             app:layout_constraintTop_toBottomOf="@id/searchTextInputLayout"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="4dp"
             android:minHeight="64dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_width="0dp"
+            android:layout_height="0dp"/>
 
         <ProgressBar
             android:visibility="@{vm.applications}"
