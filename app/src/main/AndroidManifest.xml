@@ -9,6 +9,14 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
+    <queries>
+        <package android:name="com.suihan74.nedge"/>
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
+    </queries>
+
     <application
         android:allowBackup="true"
         android:name=".Application"
@@ -23,6 +31,7 @@
 
         <service
             android:name=".services.NotificationService"
+            android:exported="false"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
             <intent-filter>
                 <action android:name="android.service.notification.NotificationListenerService" />
@@ -34,6 +43,7 @@
         <!-- 起動画面 -->
         <activity
             android:name=".scenes.splash.SplashActivity"
+            android:exported="true"
             android:launchMode="singleTask">
 
             <intent-filter>
@@ -48,6 +58,7 @@
             android:name=".scenes.permissions.PermissionsValidationActivity"
             android:theme="@style/Theme.PermissionsValidationActivity"
             android:screenOrientation="sensorPortrait"
+            android:exported="false"
             android:launchMode="singleTask">
         </activity>
 
@@ -59,6 +70,7 @@
             android:screenOrientation="sensorPortrait"
             android:lockTaskMode="if_whitelisted"
             android:launchMode="singleTask"
+            android:exported="true"
             android:noHistory="true">
 
             <intent-filter>
@@ -73,6 +85,7 @@
             android:theme="@style/Theme.PreferencesActivity"
             android:windowSoftInputMode="adjustPan"
             android:screenOrientation="sensorPortrait"
+            android:exported="true"
             android:launchMode="singleTask">
         </activity>
 
@@ -82,6 +95,7 @@
             android:name=".receivers.DeviceAdminReceiver"
             android:label="@string/app_name"
             android:description="@string/device_admin_desc"
+            android:exported="false"
             android:permission="android.permission.BIND_DEVICE_ADMIN">
             <meta-data android:name="android.app.device_admin"
                 android:resource="@xml/device_admin" />
