@@ -51,7 +51,7 @@
     <!-- Preferences Menus -->
     <string name="prefs_menu_label_generals">General</string>
     <string name="prefs_menu_label_notification_settings">Notifications</string>
-    <string name="prefs_menu_label_black_list">Black List</string>
+    <string name="prefs_menu_label_black_list">Exclusion Settings</string>
     <string name="prefs_menu_label_information">App Info</string>
     <string name="prefs_menu_label_release_notes">Release Notes</string>
 
@@ -122,7 +122,7 @@
 
     <!-- SettingsListFragment -->
     <string name="prefs_settings_list_default_setting_text">Default Settings</string>
-    <string name="prefs_settings_list_search_hint">Search items</string>
+    <string name="prefs_settings_list_search_hint">Keywords</string>
 
     <string name="prefs_settings_list_item_menu_edit">Edit</string>
     <string name="prefs_settings_list_item_menu_preview">Preview</string>
