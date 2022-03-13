@@ -87,3 +87,7 @@ lint/tmp/
 
 # assets
 assets/
+
+.idea/misc.xml
+
+.idea/deploymentTargetDropDown.xml
