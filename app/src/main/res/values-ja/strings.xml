@@ -168,4 +168,6 @@
     <string name="keyword_matching_type_none">無効</string>
     <string name="keyword_matching_type_include">含む</string>
     <string name="keyword_matching_type_exclude">含まない</string>
+    <string name="prefs_app_enabled_desc">nEdgeの有効状態</string>
+    <string name="prefs_app_enabled_button_text">nEdgeを利用して通知を表示する</string>
 </resources>

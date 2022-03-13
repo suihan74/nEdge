@@ -10,6 +10,13 @@ import java.time.LocalTime
 @Serializable
 data class Preferences(
     /**
+     * 有効状態
+     *
+     * true: 通知で起動する
+     * false: 起動しない
+     */
+    val enabled : Boolean = true,
+    /**
      * 画面を暗くした後の時のライトレベル
      *
      * -1.0f ~ 1.0f

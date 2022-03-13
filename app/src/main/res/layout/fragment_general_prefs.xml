@@ -66,7 +66,21 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="48dp"
+                android:text="@string/prefs_app_enabled_desc" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:text="@string/prefs_app_enabled_button_text"
+                android:textColor="@color/preferencesTextColor"
+                android:checked="@={vm.enabled}"
+                android:paddingHorizontal="6dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:text="@string/prefs_silent_timezone_desc" />
 
             <androidx.constraintlayout.widget.ConstraintLayout

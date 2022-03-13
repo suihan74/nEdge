@@ -58,6 +58,8 @@
     <!-- GeneralPrefsFragment -->
     <string name="prefs_preview_button_text">Preview</string>
     <string name="prefs_notify_button_text">Notify after 5sec</string>
+    <string name="prefs_app_enabled_desc">Enabled Status</string>
+    <string name="prefs_app_enabled_button_text">Launch nEdge at notification</string>
     <string name="prefs_silent_timezone_desc">Silent timezone</string>
     <string name="prefs_silent_timezone_separator">~</string>
     <string name="prefs_light_off_interval_desc">Waiting time for the screen to go dark (0: always bright)</string>

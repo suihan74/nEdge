@@ -46,6 +46,9 @@ class PreferencesViewModel @Inject constructor(
 
     // ------ //
 
+    /** nEdgeを利用する */
+    val enabled = MutableLiveData<Boolean>()
+
     /** ロック画面起動直後の画面の明るさ */
     val lightLevelOn = MutableLiveData<Float>()
 
@@ -103,6 +106,7 @@ class PreferencesViewModel @Inject constructor(
         prefRepo.preferencesFlow
             .onEach {
                 prefsMutex.withLock {
+                    enabled.value = it.enabled
                     lightLevelOn.value = it.lightLevelOn
                     lightLevelOff.value = it.lightLevelOff
                     useSystemLightLevelOn.value = it.useSystemLightLevelOn
@@ -126,6 +130,7 @@ class PreferencesViewModel @Inject constructor(
         prefsMutex.withLock {
             prefRepo.updatePreferences {
                 Preferences(
+                    enabled = enabled.value!!,
                     lightLevelOff = lightLevelOff.value!!,
                     lightLevelOn = lightLevelOn.value!!,
                     useSystemLightLevelOn = useSystemLightLevelOn.value!!,

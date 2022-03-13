@@ -399,6 +399,11 @@ class LockScreenViewModel @Inject constructor(
 
             val prefs = prefRepo.preferences()
 
+            // 通知を行わない
+            if (!prefs.enabled) {
+                return false
+            }
+
             // バッテリレベルが指定値未満
             val batteryLevel = batteryRepo.batteryLevel.value ?: 0
             val requiredBatteryLevel = prefs.requiredBatteryLevel
