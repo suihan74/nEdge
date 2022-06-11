@@ -61,19 +61,15 @@ class LockScreenActivity : AppCompatActivity() {
          *
          * @throws TaskFailureException::class
          */
-        fun start(app: Application) : Boolean {
-            return try {
-                app.notificationRepository.statusBarNotifications.value.isNullOrEmpty().not().whenTrue {
+        suspend fun start(app: Application) : Boolean =
+            app.notificationRepository.statusBarNotifications.value?.let { sbnList ->
+                LockScreenViewModel.checkNotifiable(sbnList).whenTrue {
                     val intent = Intent(app, LockScreenActivity::class.java).also {
                         it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
                     }
                     app.startActivity(intent)
                 }
-            }
-            catch (e: Throwable) {
-                throw TaskFailureException(cause = e)
-            }
-        }
+            } ?: false
 
         /** プレビュー用に`LockScreenActivity`を開く */
         fun startPreview(context: Context, entity: NotificationEntity) {

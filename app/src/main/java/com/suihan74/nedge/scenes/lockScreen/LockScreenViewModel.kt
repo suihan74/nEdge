@@ -385,22 +385,24 @@ class LockScreenViewModel @Inject constructor(
          *
          * @return 遷移できる: true, 遷移できない: false
          */
-        suspend fun checkNotifiable(sbn: StatusBarNotification?) : Boolean {
+        suspend fun checkNotifiable(sbn: StatusBarNotification?) : Boolean =
+            sbn?.let { checkNotifiable(listOf(sbn)) } ?: false
+
+        suspend fun checkNotifiable(sbnList: List<StatusBarNotification>) : Boolean {
             val app = Application.instance
             val prefRepo = app.preferencesRepository
             val batteryRepo = app.batteryRepository
             val screenRepo = app.screenRepository
             val notificationRepo = app.notificationRepository
-
-            // 通知が不正, 画面が点いている
-            if (sbn?.notification == null || screenRepo.screenOn.value == true) {
-                return false
-            }
-
             val prefs = prefRepo.preferences()
 
             // 通知を行わない
             if (!prefs.enabled) {
+                return false
+            }
+
+            // 通知が不正, 画面が点いている
+            if (sbnList.all { it.notification == null } || screenRepo.screenOn.value == true) {
                 return false
             }
 
@@ -417,7 +419,7 @@ class LockScreenViewModel @Inject constructor(
             }
 
             // 無視する通知
-            return notificationRepo.validateNotification(sbn, prefRepo, prefs)
+            return sbnList.any { notificationRepo.validateNotification(it, prefRepo, prefs) }
         }
     }
 }

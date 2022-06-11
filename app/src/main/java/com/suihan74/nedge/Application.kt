@@ -27,6 +27,7 @@ import java.time.Duration
 import java.time.LocalTime
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import kotlin.math.absoluteValue
 
 /**
  * アプリ情報
@@ -169,16 +170,12 @@ class Application : android.app.Application() {
             return
         }
 
-        val now = LocalTime.now()
-        val duration = when {
-            now < startAt -> Duration.between(now, startAt)
-            startAt > now -> Duration.between(startAt, now)
-            else -> Duration.ZERO
-        }
-
         // 毎日「通知しない時間帯」終了時にロック画面を起動するか確認する
         val request = PeriodicWorkRequestBuilder<StartupConfirmationWorker>(1, TimeUnit.DAYS)
-            .setInitialDelay(duration.toMillis(), TimeUnit.MILLISECONDS)
+            .setInitialDelay(
+                Duration.between(LocalTime.now(), startAt).toMillis().absoluteValue,
+                TimeUnit.MILLISECONDS
+            )
             .build()
 
         WorkManager.getInstance(this)
