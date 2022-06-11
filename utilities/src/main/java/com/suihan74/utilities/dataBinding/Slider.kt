@@ -1,11 +1,11 @@
 package com.suihan74.utilities.dataBinding
 
+import android.annotation.SuppressLint
 import androidx.databinding.BindingAdapter
 import androidx.databinding.InverseBindingAdapter
 import androidx.databinding.InverseBindingListener
 import com.google.android.material.slider.Slider
 import java.lang.ref.WeakReference
-import java.util.*
 import kotlin.math.max
 import kotlin.math.min
 
@@ -25,11 +25,13 @@ object SliderBindingAdapters {
         }
 
         slider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
+            @SuppressLint("RestrictedApi")
             override fun onStartTrackingTouch(slider: Slider) {
                 editingStates.add(WeakReference(slider))
                 editingAttrChanged?.onChange()
             }
 
+            @SuppressLint("RestrictedApi")
             override fun onStopTrackingTouch(slider: Slider) {
                 editingStates.removeAll { wRef ->
                     wRef.get().let {
