@@ -1,14 +1,23 @@
 package com.suihan74.nedge
 
+import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Log
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.pm.PackageInfoCompat
-import androidx.work.*
+import androidx.work.Data
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.Worker
+import androidx.work.WorkerParameters
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.suihan74.nedge.database.AppDatabase
 import com.suihan74.nedge.module.AppDatabaseQualifier
@@ -22,11 +31,16 @@ import com.suihan74.nedge.repositories.ScreenRepository
 import com.suihan74.nedge.workers.StartupConfirmationWorker
 import com.suihan74.utilities.VersionUtil
 import dagger.hilt.android.HiltAndroidApp
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import java.time.Duration
 import java.time.LocalTime
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import kotlin.math.absoluteValue
 
 /**
  * アプリ情報
@@ -169,22 +183,18 @@ class Application : android.app.Application() {
             return
         }
 
-        val now = LocalTime.now()
-        val duration = when {
-            now < startAt -> Duration.between(now, startAt)
-            startAt > now -> Duration.between(startAt, now)
-            else -> Duration.ZERO
-        }
-
         // 毎日「通知しない時間帯」終了時にロック画面を起動するか確認する
         val request = PeriodicWorkRequestBuilder<StartupConfirmationWorker>(1, TimeUnit.DAYS)
-            .setInitialDelay(duration.toMillis(), TimeUnit.MILLISECONDS)
+            .setInitialDelay(
+                Duration.between(LocalTime.now(), startAt).toMillis().absoluteValue,
+                TimeUnit.MILLISECONDS
+            )
             .build()
 
         WorkManager.getInstance(this)
             .enqueueUniquePeriodicWork(
                 WorkTag.PERIODIC_STARTUP_CONFIRMATION.name,
-                ExistingPeriodicWorkPolicy.REPLACE,
+                ExistingPeriodicWorkPolicy.CANCEL_AND_REENQUEUE,
                 request
             )
     }
@@ -217,6 +227,20 @@ class Application : android.app.Application() {
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
 
         with(NotificationManagerCompat.from(this)) {
+            if (ActivityCompat.checkSelfPermission(
+                    applicationContext,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return
+            }
             notify(id, builder.build())
         }
     }

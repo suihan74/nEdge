@@ -5,6 +5,7 @@ import android.app.admin.DevicePolicyManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.graphics.Rect
 import android.net.Uri
 import android.provider.Settings
 import androidx.activity.result.ActivityResultLauncher
@@ -81,6 +82,9 @@ class PermissionsValidationViewModel : ViewModel() {
     val devicePolicyManagerState: LiveData<Boolean> by lazy { _devicePolicyManagerState }
     private val _devicePolicyManagerState = MutableLiveData<Boolean>()
 
+    val statusBarHeight : LiveData<Int> by lazy { _statusBarHeight }
+    private val _statusBarHeight = MutableLiveData(0)
+
     // ------ //
 
     /**
@@ -102,6 +106,12 @@ class PermissionsValidationViewModel : ViewModel() {
                 launchContentsActivity(activity)
             }
         }
+    }
+
+    fun onWindowFocusChanged(activity: AppCompatActivity) {
+        val rect = Rect()
+        activity.window.decorView.getWindowVisibleDisplayFrame(rect)
+        _statusBarHeight.value = rect.top
     }
 
     // ------ //

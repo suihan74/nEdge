@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.suihan74.nedge">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <!-- レシーバからLockScreenActivityを起動するのに必要(API29以上) -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <!-- ネットワークアクセス: 広告表示 -->
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <!-- 広告ID -->
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID"/>
 
     <queries>
         <package android:name="com.suihan74.nedge"/>
@@ -25,7 +27,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:fullBackupContent="true"
-        android:theme="@style/Theme.Application" >
+        tools:ignore="LockedOrientationActivity"
+        android:theme="@style/Theme.Application"
+        android:dataExtractionRules="@xml/data_extraction_rules">
 
         <!-- services -->
 

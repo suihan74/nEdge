@@ -21,6 +21,7 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.serialization.ExperimentalSerializationApi
 import javax.inject.Qualifier
 import javax.inject.Singleton
 
@@ -30,6 +31,7 @@ object ApplicationModule {
     /** 設定データストアの保存先ファイル名 */
     private const val PREFERENCES_DATA_STORE_NAME = "settings.ds"
 
+    @OptIn(ExperimentalSerializationApi::class)
     private val Context.dataStore by dataStore(
         fileName = PREFERENCES_DATA_STORE_NAME,
         serializer = PreferencesSerializer()

@@ -1,3 +1,19 @@
+import org.gradle.api.initialization.resolve.RepositoriesMode
+
 include ':utilities'
 include ':app'
 rootProject.name = "nEdge"
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        maven {
+            url 'https://jitpack.io'
+        }
+        maven {
+            url 'https://fan-adn.github.io/nendSDK-Android-lib/library'
+        }
+    }
+}
