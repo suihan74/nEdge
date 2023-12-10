@@ -1,41 +1,31 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
-    ext.kotlin_version = "1.6.21"
+    ext {
+        hilt_version = '2.47'
+        kotlin_version = "1.9.10"
+    }
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.2.0'
+        classpath 'com.android.tools.build:gradle:8.2.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
-        classpath 'com.google.android.gms:oss-licenses-plugin:0.10.5'
-        classpath 'com.google.gms:google-services:4.3.10'
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.0'
-        classpath 'com.google.dagger:hilt-android-gradle-plugin:2.41'
+        classpath 'com.google.android.gms:oss-licenses-plugin:0.10.6'
+        classpath 'com.google.gms:google-services:4.4.0'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.9'
+        classpath "com.google.dagger:hilt-android-gradle-plugin:$hilt_version"
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
 }
-
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
-        maven {
-            url "https://jitpack.io"
-        }
-    }
-
-    // experimentalApiを使用する
-    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
-        kotlinOptions {
-            freeCompilerArgs += '-Xopt-in=kotlin.RequiresOptIn'
-        }
-    }
+plugins {
+    id 'org.jetbrains.kotlin.android' version '1.9.10' apply false
+    id 'com.google.devtools.ksp' version '1.9.10-1.0.13' apply false
 }
 
-task clean(type: Delete) {
+tasks.register('clean', Delete) {
     delete rootProject.buildDir
 }

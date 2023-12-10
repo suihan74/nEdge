@@ -1,14 +1,23 @@
 package com.suihan74.nedge
 
+import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Log
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.pm.PackageInfoCompat
-import androidx.work.*
+import androidx.work.Data
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.Worker
+import androidx.work.WorkerParameters
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.suihan74.nedge.database.AppDatabase
 import com.suihan74.nedge.module.AppDatabaseQualifier
@@ -22,7 +31,11 @@ import com.suihan74.nedge.repositories.ScreenRepository
 import com.suihan74.nedge.workers.StartupConfirmationWorker
 import com.suihan74.utilities.VersionUtil
 import dagger.hilt.android.HiltAndroidApp
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import java.time.Duration
 import java.time.LocalTime
 import java.util.concurrent.TimeUnit
@@ -181,7 +194,7 @@ class Application : android.app.Application() {
         WorkManager.getInstance(this)
             .enqueueUniquePeriodicWork(
                 WorkTag.PERIODIC_STARTUP_CONFIRMATION.name,
-                ExistingPeriodicWorkPolicy.REPLACE,
+                ExistingPeriodicWorkPolicy.CANCEL_AND_REENQUEUE,
                 request
             )
     }
@@ -214,6 +227,20 @@ class Application : android.app.Application() {
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
 
         with(NotificationManagerCompat.from(this)) {
+            if (ActivityCompat.checkSelfPermission(
+                    applicationContext,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return
+            }
             notify(id, builder.build())
         }
     }
