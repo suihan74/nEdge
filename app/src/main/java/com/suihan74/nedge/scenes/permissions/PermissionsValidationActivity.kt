@@ -54,6 +54,11 @@ class PermissionsValidationActivity : AppCompatActivity() {
         }
     }
 
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        viewModel.onWindowFocusChanged(this)
+    }
+
     override fun onResume() {
         super.onResume()
         viewModel.refreshStates(this)
