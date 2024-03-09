@@ -11,7 +11,12 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.Window
 import android.widget.ImageView
-import androidx.lifecycle.*
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.suihan74.nedge.Application
 import com.suihan74.nedge.database.notification.NotificationEntity
 import com.suihan74.nedge.models.ClockStyle
@@ -24,7 +29,12 @@ import com.suihan74.nedge.repositories.PreferencesRepository
 import com.suihan74.utilities.extensions.between
 import com.suihan74.utilities.extensions.dp
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
 import java.time.LocalTime
 import javax.inject.Inject
@@ -130,12 +140,12 @@ class LockScreenViewModel @Inject constructor(
             }
         })
 
-        statusBarNotifications.observe(lifecycleOwner, Observer {
+        statusBarNotifications.observe(lifecycleOwner) {
             viewModelScope.launch {
                 switchNoticeJob?.cancelAndJoin()
                 switchNoticeJob = launchNotificationsSwitching()
             }
-        })
+        }
 
         prefRepo.preferences().let { prefs ->
             _lightLevelOn.value = prefs.lightLevelOn
@@ -150,11 +160,11 @@ class LockScreenViewModel @Inject constructor(
             _clockStyle.value = prefs.clockStyle
 
             // バッテリレベルが指定値を下回ったら消灯する
-            batteryLevel.observe(lifecycleOwner, Observer {
+            batteryLevel.observe(lifecycleOwner) {
                 if (it < prefs.requiredBatteryLevel) {
                     sleep()
                 }
-            })
+            }
         }
 
         // 時刻更新開始
@@ -206,11 +216,11 @@ class LockScreenViewModel @Inject constructor(
 
         // 輪郭線の描画
         val outlineDrawer = OutlineDrawer(window)
-        notificationEntity.observe(owner, Observer {
+        notificationEntity.observe(owner) {
             if (it?.setting != null) {
                 outlineDrawer.draw(edgeImageView, it.setting)
             }
-        })
+        }
     }
 
     /** 強制的にロックして消灯する */
@@ -336,7 +346,7 @@ class LockScreenViewModel @Inject constructor(
         owner: LifecycleOwner,
         window: Window
     ) = withContext(Dispatchers.Main) {
-        lightOff.observe(owner, Observer { lightOff ->
+        lightOff.observe(owner) { lightOff ->
             window.attributes = window.attributes.also { lp ->
                 lp.screenBrightness =
                     when {
@@ -350,12 +360,12 @@ class LockScreenViewModel @Inject constructor(
                         else -> calcBrightness(lightLevelOn.value)
                     }
             }
-        })
+        }
 
         // 新たな通知を受け取ったら画面を点灯する
-        statusBarNotifications.observe(owner, Observer {
+        statusBarNotifications.observe(owner) {
             _lightOff.value = false
-        })
+        }
     }
 
     private fun calcBrightness(value: Float?) : Float {

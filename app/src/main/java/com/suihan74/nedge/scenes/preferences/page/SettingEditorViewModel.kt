@@ -13,16 +13,26 @@ import android.view.WindowManager
 import androidx.annotation.IdRes
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.*
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.suihan74.nedge.Application
 import com.suihan74.nedge.R
 import com.suihan74.nedge.database.notification.NotificationEntity
 import com.suihan74.nedge.database.notification.isDefault
-import com.suihan74.nedge.models.*
+import com.suihan74.nedge.models.InformationDisplayMode
+import com.suihan74.nedge.models.KeywordMatchingType
+import com.suihan74.nedge.models.NotchSetting
+import com.suihan74.nedge.models.NotchType
+import com.suihan74.nedge.models.NotificationSetting
+import com.suihan74.nedge.models.OutlinesSetting
 import com.suihan74.nedge.scenes.preferences.PreferencesActivity
 import com.suihan74.nedge.scenes.preferences.PreferencesViewModel
 import com.suihan74.nedge.scenes.preferences.dialog.ColorPickerDialogFragment
-import com.suihan74.nedge.scenes.preferences.notch.*
+import com.suihan74.nedge.scenes.preferences.notch.NotchPosition
+import com.suihan74.nedge.scenes.preferences.notch.createSettingFragment
 import com.suihan74.utilities.fragment.AlertDialogFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -37,7 +47,7 @@ class SettingEditorViewModel(
 ) : ViewModel() {
 
     /** 編集対象のエンティティ */
-    val targetEntity : LiveData<NotificationEntity> by lazy { _targetEntity }
+    private val targetEntity : LiveData<NotificationEntity> by lazy { _targetEntity }
     private val _targetEntity = MutableLiveData<NotificationEntity>()
 
     /** アプリ情報(デフォルト設定のときはnull) */
@@ -345,12 +355,12 @@ class SettingEditorViewModel(
                 else -> throw IllegalArgumentException()
             }
 
-        notchType.observe(lifecycleOwner, Observer {
+        notchType.observe(lifecycleOwner) {
             val fragment = it.createSettingFragment(notchPosition)
             fragmentManager.beginTransaction()
                 .replace(targetViewId, fragment)
                 .commit()
-        })
+        }
     }
 
     /**
@@ -415,7 +425,7 @@ class SettingEditorViewModel(
         activity: PreferencesActivity,
         fragmentManager: FragmentManager
     ) {
-        val notchTypes = NotchType.values().filterNot { it == NotchType.CORNER } // TODO: コーナーノッチは実装中
+        val notchTypes = NotchType.entries.filterNot { it == NotchType.CORNER } // TODO: コーナーノッチは実装中
         val labels = notchTypes.map { it.textId }
         val initialSelected = notchTypes.indexOf(notchType.value)
 
@@ -492,7 +502,7 @@ class SettingEditorViewModel(
      * 通知アプリ名・通知文の表示モードを選択するダイアログを開く
      */
     fun openInformationDisplayModeSelectionDialog(activity: PreferencesActivity, fragmentManager: FragmentManager) {
-        val items = InformationDisplayMode.values()
+        val items = InformationDisplayMode.entries
         val labels = items.map { it.textId }
         val checkedItemIdx = items.indexOf(informationDisplayMode.value)
 

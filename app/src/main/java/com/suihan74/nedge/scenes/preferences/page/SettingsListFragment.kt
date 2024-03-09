@@ -81,7 +81,7 @@ class SettingsListFragment : Fragment() {
             viewModel.openSettingItemMenuDialog(it.item!!, childFragmentManager)
         }
 
-        viewModel.settings.observe(viewLifecycleOwner, {
+        viewModel.settings.observe(viewLifecycleOwner) {
             adapter.submit(
                 items = it,
                 header = { parent ->
@@ -98,6 +98,6 @@ class SettingsListFragment : Fragment() {
                     binding.root
                 }
             )
-        })
+        }
     }
 }

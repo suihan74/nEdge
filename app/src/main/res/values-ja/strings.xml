@@ -70,6 +70,9 @@
     <string name="prefs_use_system_light_level_on_desc">システムの値を使用</string>
     <string name="prefs_clock_style_desc">時刻の表示形式</string>
 
+    <string name="denied_notification_permission">通知権限リクエストが拒否されました。ダミー通知は送信されません。</string>
+
+
     <!-- SettingEditorFragment -->
     <string name="prefs_save">Save</string>
     <string name="prefs_cancel">Cancel</string>

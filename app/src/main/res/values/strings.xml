@@ -72,6 +72,8 @@
     <string name="prefs_use_system_light_level_on_desc">Use the system screen value</string>
     <string name="prefs_clock_style_desc">Clock Format</string>
 
+    <string name="denied_notification_permission">Notification permission request denied. cannot to send the dummy notification.</string>
+
     <!-- SettingEditorFragment -->
     <string name="prefs_save">Save</string>
     <string name="prefs_cancel">Cancel</string>

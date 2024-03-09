@@ -42,6 +42,7 @@ import java.time.LocalTime
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.math.absoluteValue
+import kotlin.random.Random
 
 /**
  * アプリ情報
@@ -204,7 +205,24 @@ class Application : android.app.Application() {
 
     // ------ //
 
-    fun notifyDummy(delay: Long, id: Int, message: String) {
+    fun notifyDummy(delay: Long = 5L, permissionRequest: (()->Unit)? = null) {
+        val id = Random.nextInt().absoluteValue
+        val message = "dummy-$id"
+
+        val permission =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                ActivityCompat.checkSelfPermission(
+                    applicationContext,
+                    Manifest.permission.POST_NOTIFICATIONS
+                )
+            }
+            else PackageManager.PERMISSION_GRANTED
+
+        if (permissionRequest != null && permission != PackageManager.PERMISSION_GRANTED) {
+            permissionRequest()
+            return
+        }
+
         val params = Data.Builder()
             .putInt(DummyNotifyWorker.Arg.ID.name, id)
             .putString(DummyNotifyWorker.Arg.MESSAGE.name, message)
@@ -220,7 +238,7 @@ class Application : android.app.Application() {
     }
 
     /** ダミーの通知を発生させる */
-    private fun notifyDummyImpl(id: Int, message: String) {
+    private fun notifyDummyImpl(id: Int, message: String, ) {
         createNotificationChannel(NOTIFICATION_CHANNEL_DUMMY)
 
         val builder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_DUMMY)
@@ -233,18 +251,10 @@ class Application : android.app.Application() {
             if (ActivityCompat.checkSelfPermission(
                     applicationContext,
                     Manifest.permission.POST_NOTIFICATIONS
-                ) != PackageManager.PERMISSION_GRANTED
+                ) == PackageManager.PERMISSION_GRANTED
             ) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
-                return
+                notify(id, builder.build())
             }
-            notify(id, builder.build())
         }
     }
 
