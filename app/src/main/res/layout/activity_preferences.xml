@@ -66,19 +66,21 @@
 
         <FrameLayout
             android:id="@+id/adViewContainer"
+            app:layout_constraintTop_toBottomOf="@id/motionLayout"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_width="0dp"
             android:layout_height="wrap_content">
 
-            <net.nend.android.NendAdView
-                app:NendApiKey="@string/nendApiKey"
-                app:NendSpotId="@integer/nendSpotId"
-                app:NendAdjustSize="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
+            <com.google.android.gms.ads.AdView
+                xmlns:ads="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/adView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                ads:adSize="BANNER"
+                ads:adUnitId="ca-app-pub-9867568193412486/1838290118">
+            </com.google.android.gms.ads.AdView>
         </FrameLayout>
 
         <FrameLayout

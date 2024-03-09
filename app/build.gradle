@@ -132,8 +132,8 @@ dependencies {
     implementation 'com.github.alexandre-g:AndroidPhotoshopColorPicker:1.2.4'
 //    implementation 'com.azeesoft.lib.colorpicker:colorpicker:1.0.8@aar'
 
-    // nend ads
-    implementation 'net.nend.android:nend-sdk:10.0.0'
+    // AdMob
+    implementation "com.google.android.gms:play-services-ads:22.6.0"
     implementation 'com.google.android.gms:play-services-ads-identifier:18.0.1'
     implementation 'androidx.preference:preference-ktx:1.2.1'
 

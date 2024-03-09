@@ -18,6 +18,7 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import com.google.android.gms.ads.MobileAds
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.suihan74.nedge.database.AppDatabase
 import com.suihan74.nedge.module.AppDatabaseQualifier
@@ -140,6 +141,8 @@ class Application : android.app.Application() {
             .setCrashlyticsCollectionEnabled(
                 BuildConfig.DEBUG.not()
             )
+
+        MobileAds.initialize(this)
 
         // すべての処理に先駆けて初期化するべき項目
         _instance = this

@@ -1,14 +1,27 @@
 package com.suihan74.nedge.scenes.preferences
 
+import android.Manifest
 import android.os.Build
 import android.view.View
 import android.view.Window
+import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.ActivityResultRegistry
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.MainThread
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.*
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.suihan74.nedge.Application
 import com.suihan74.nedge.R
 import com.suihan74.nedge.dataStore.Preferences
@@ -32,8 +45,6 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
-import kotlin.math.absoluteValue
-import kotlin.random.Random
 
 @HiltViewModel
 class PreferencesViewModel @Inject constructor(
@@ -150,6 +161,16 @@ class PreferencesViewModel @Inject constructor(
 
     // ------ //
 
+    fun onCreateActivity(
+        activityResultRegistry: ActivityResultRegistry?,
+        lifecycle: Lifecycle?
+    ) {
+        lifecycleObserver = LifecycleObserver(activityResultRegistry!!)
+        lifecycle?.addObserver(lifecycleObserver)
+    }
+
+    // ------ //
+
     private var window : Window? = null
 
     suspend fun onAttachedToWindow(activity: PreferencesActivity) = withContext(Dispatchers.Main) {
@@ -157,7 +178,7 @@ class PreferencesViewModel @Inject constructor(
         showSystemUI(activity)
 
         // 画面明度のプレビュー
-        previewLightLevel.observe(activity, Observer {
+        previewLightLevel.observe(activity) {
             activity.window.attributes = activity.window.attributes.also { lp ->
                 lp.screenBrightness =
                     when {
@@ -171,9 +192,9 @@ class PreferencesViewModel @Inject constructor(
                         else -> 0.01f + (1.0f - 0.01f) * it
                     }
             }
-        })
+        }
 
-        editingLightLevel.observe(activity, Observer {
+        editingLightLevel.observe(activity) {
             when (it) {
                 EditingLightLevel.NONE ->
                     observeScreenBrightness(activity, null)
@@ -186,7 +207,7 @@ class PreferencesViewModel @Inject constructor(
 
                 else -> {}
             }
-        })
+        }
     }
 
     private var previewLightLevelObserver : Observer<Float>? = null
@@ -269,8 +290,7 @@ class PreferencesViewModel @Inject constructor(
      * テスト用のダミー通知を発生させる
      */
     fun notifyDummy() {
-        val id = Random.nextInt().absoluteValue
-        application.notifyDummy(5, id, "dummy-$id")
+        application.notifyDummy { lifecycleObserver.launchPermissionRequest() }
     }
 
     /**
@@ -308,7 +328,7 @@ class PreferencesViewModel @Inject constructor(
      * 複数通知切替え方法を選択するダイアログを開く
      */
     fun openMultipleNotificationsSolutionSelectionDialog(fragmentManager: FragmentManager) {
-        val solutions = MultipleNotificationsSolution.values()
+        val solutions = MultipleNotificationsSolution.entries
         val labels = solutions.map { it.textId }
         val initialSelected = solutions.indexOf(multipleNotificationsSolution.value)
 
@@ -330,7 +350,7 @@ class PreferencesViewModel @Inject constructor(
      * 設定登録されていない通知の処理方法を選択するダイアログを開く
      */
     fun openUnknownNotificationSolutionSelectionDialog(fragmentManager: FragmentManager) {
-        val solutions = UnknownNotificationSolution.values()
+        val solutions = UnknownNotificationSolution.entries
         val labels = solutions.map { it.textId }
         val initialSelected = solutions.indexOf(unknownNotificationSolution.value)
 
@@ -353,7 +373,7 @@ class PreferencesViewModel @Inject constructor(
      */
     fun openClockStyleSelectionDialog(fragmentManager: FragmentManager) {
         val now = LocalDateTime.now()
-        val items = ClockStyle.values()
+        val items = ClockStyle.entries
         val labels = items.map { now.format(DateTimeFormatter.ofPattern(it.pattern)) }
         val initialSelected = items.indexOf(clockStyle.value)
 
@@ -366,5 +386,41 @@ class PreferencesViewModel @Inject constructor(
             .setNegativeButton(R.string.dialog_cancel)
             .create()
             .show(fragmentManager, null)
+    }
+
+    // ------ //
+
+    private lateinit var lifecycleObserver : LifecycleObserver
+
+    inner class LifecycleObserver(
+        private val registry : ActivityResultRegistry
+    ) : DefaultLifecycleObserver {
+        private lateinit var requestNotifyPermissionLauncher : ActivityResultLauncher<String>
+
+        override fun onCreate(owner: LifecycleOwner) {
+            requestNotifyPermissionLauncher = registry.register(
+                "RequestNotifyPermissionLauncher",
+                owner,
+                ActivityResultContracts.RequestPermission()
+            ) { isGranted ->
+                if (isGranted) {
+                    application.notifyDummy()
+                }
+                else {
+                    // todo
+                    Toast.makeText(
+                        application,
+                        application.getString(R.string.denied_notification_permission),
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        }
+
+        fun launchPermissionRequest() {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                requestNotifyPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
     }
 }

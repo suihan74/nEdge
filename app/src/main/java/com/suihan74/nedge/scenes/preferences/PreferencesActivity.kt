@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.ads.AdRequest
 import com.suihan74.nedge.R
 import com.suihan74.nedge.database.notification.NotificationEntity
 import com.suihan74.nedge.databinding.ActivityPreferencesBinding
@@ -33,10 +34,16 @@ class PreferencesActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        viewModel.onCreateActivity(activityResultRegistry, lifecycle)
+
         binding = ActivityPreferencesBinding.inflate(layoutInflater).also {
             it.lifecycleOwner = this
         }
         setContentView(binding.root)
+
+        // 広告初期化
+        val adRequest = AdRequest.Builder().build()
+        binding.adView.loadAd(adRequest)
 
         // ページ選択メニュー
         initializeMenu(binding)
@@ -81,7 +88,7 @@ class PreferencesActivity : AppCompatActivity() {
                 }
 
                 submit(
-                    items = MenuItem.values().toList(),
+                    items = MenuItem.entries.toList(),
                     header = { parent ->
                         ListHeaderPreferencesMenuBinding.inflate(layoutInflater, parent, false).root.also {
                             it.setOnClickListener {}
