@@ -48,6 +48,9 @@ data class Preferences(
     @Serializable(with = LocalTimeSerializer::class)
     val silentTimezoneEnd : LocalTime = LocalTime.of(7, 0),
 
+    /** 一定時間経過後終了する(ミリ秒) */
+    val terminationInterval : Long = 0L,
+
     /** 指定値未満のバッテリレベルでは通知を表示しない */
     val requiredBatteryLevel : Int = 15,
 

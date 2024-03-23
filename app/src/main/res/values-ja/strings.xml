@@ -60,7 +60,8 @@
     <string name="prefs_notify_button_text">5秒後に通知する</string>
     <string name="prefs_silent_timezone_desc">通知を行わない時間帯</string>
     <string name="prefs_silent_timezone_separator">~</string>
-    <string name="prefs_light_off_interval_desc">画面を暗くするまでの待機秒数(0で暗くしない)</string>
+    <string name="prefs_light_off_interval_desc">画面を暗くするまでの待機秒数(0: 暗くしない)</string>
+    <string name="prefs_termination_interval_desc">nEdgeを終了するまでの待機秒数(0: 終了しない)</string>
     <string name="prefs_light_off_interval_hint">秒数</string>
     <string name="prefs_required_battery_level_desc">バッテリ充電量が指定値未満のとき通知を行わない(0で常に通知)</string>
     <string name="prefs_multi_notices_solution_selection_desc">複数通知の表示方法</string>

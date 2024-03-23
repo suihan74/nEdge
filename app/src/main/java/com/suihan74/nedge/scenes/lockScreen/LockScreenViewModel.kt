@@ -11,11 +11,13 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.Window
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.suihan74.nedge.Application
 import com.suihan74.nedge.database.notification.NotificationEntity
@@ -130,17 +132,17 @@ class LockScreenViewModel @Inject constructor(
 
     // ------ //
 
-    suspend fun init(lifecycleOwner: LifecycleOwner, intent: Intent) = withContext(Dispatchers.Main.immediate) {
+    suspend fun init(activity: AppCompatActivity, intent: Intent) = withContext(Dispatchers.Main.immediate) {
         var switchNoticeJob : Job? = null
 
-        currentNotice.observe(lifecycleOwner, Observer {
+        currentNotice.observe(activity, Observer {
             if (it == null) return@Observer
             viewModelScope.launch(Dispatchers.Main.immediate) {
                 _notificationEntity.value = prefRepo.getNotificationEntityOrDefault(it)
             }
         })
 
-        statusBarNotifications.observe(lifecycleOwner) {
+        statusBarNotifications.observe(activity) {
             viewModelScope.launch {
                 switchNoticeJob?.cancelAndJoin()
                 switchNoticeJob = launchNotificationsSwitching()
@@ -160,9 +162,19 @@ class LockScreenViewModel @Inject constructor(
             _clockStyle.value = prefs.clockStyle
 
             // バッテリレベルが指定値を下回ったら消灯する
-            batteryLevel.observe(lifecycleOwner) {
+            batteryLevel.observe(activity) {
                 if (it < prefs.requiredBatteryLevel) {
                     sleep()
+                }
+            }
+
+            //
+            prefs.terminationInterval.let { interval ->
+                if (interval > 0L) {
+                    activity.lifecycleScope.launch {
+                        delay(interval)
+                        activity.finish()
+                    }
                 }
             }
         }

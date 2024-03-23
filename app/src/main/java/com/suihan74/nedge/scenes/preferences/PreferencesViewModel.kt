@@ -78,6 +78,9 @@ class PreferencesViewModel @Inject constructor(
     /** ライト消灯までの待機時間(秒数で編集してミリ秒で保存する) */
     val lightOffInterval = MutableLiveData<Long>()
 
+    /** 一定時間経過後にnEdgeを終了する */
+    val terminationInterval = MutableLiveData<Long>()
+
     /** 通知を行わない時間帯(開始時刻) */
     val silentTimezoneStart = MutableLiveData<LocalTime>()
 
@@ -122,6 +125,7 @@ class PreferencesViewModel @Inject constructor(
                     lightLevelOff.value = it.lightLevelOff
                     useSystemLightLevelOn.value = it.useSystemLightLevelOn
                     lightOffInterval.value = it.lightOffInterval / 1_000L
+                    terminationInterval.value = it.terminationInterval / 1_000L
                     silentTimezoneStart.value = it.silentTimezoneStart
                     silentTimezoneEnd.value = it.silentTimezoneEnd
                     requiredBatteryLevel.value = it.requiredBatteryLevel
@@ -146,6 +150,7 @@ class PreferencesViewModel @Inject constructor(
                     lightLevelOn = lightLevelOn.value!!,
                     useSystemLightLevelOn = useSystemLightLevelOn.value!!,
                     lightOffInterval = lightOffInterval.value!! * 1_000L,
+                    terminationInterval = terminationInterval.value!! * 1_000L,
                     silentTimezoneStart = silentTimezoneStart.value!!,
                     silentTimezoneEnd = silentTimezoneEnd.value!!,
                     requiredBatteryLevel = requiredBatteryLevel.value!!,

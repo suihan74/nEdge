@@ -136,6 +136,7 @@
                 android:valueTo="100" />
 
             <TextView
+                android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/prefs_light_off_interval_desc" />
@@ -143,6 +144,24 @@
             <com.suihan74.utilities.view.UnFocusableEditText
                 android:id="@+id/lightOffIntervalEditText"
                 android:text="@={vm.lightOffInterval}"
+                android:hint="@string/prefs_light_off_interval_hint"
+                android:inputType="numberDecimal"
+                android:imeOptions="actionDone"
+                android:singleLine="true"
+                android:importantForAutofill="no"
+                android:minWidth="128dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/prefs_termination_interval_desc" />
+
+            <com.suihan74.utilities.view.UnFocusableEditText
+                android:id="@+id/terminationIntervalEditText"
+                android:text="@={vm.terminationInterval}"
                 android:hint="@string/prefs_light_off_interval_hint"
                 android:inputType="numberDecimal"
                 android:imeOptions="actionDone"
@@ -180,6 +199,7 @@
                 android:valueTo="1.0" />
 
             <TextView
+                android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/prefs_light_level_off_desc" />
@@ -212,7 +232,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="10dp"
                 android:text="@string/prefs_multi_notices_solution_selection_desc" />
 
             <Button

@@ -63,6 +63,7 @@
     <string name="prefs_silent_timezone_desc">Silent timezone</string>
     <string name="prefs_silent_timezone_separator">~</string>
     <string name="prefs_light_off_interval_desc">Waiting time for the screen to go dark (0: always bright)</string>
+    <string name="prefs_termination_interval_desc">Waiting time for nEdge to terminate (0: keep running)</string>
     <string name="prefs_light_off_interval_hint">Seconds</string>
     <string name="prefs_required_battery_level_desc">Required battery level in order to launch (0: regardless of battery level)</string>
     <string name="prefs_multi_notices_solution_selection_desc">The solution to display multiple notifications</string>
