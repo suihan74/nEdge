@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.WindowManager
+import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.motion.widget.MotionLayout
@@ -130,6 +131,10 @@ class LockScreenActivity : AppCompatActivity() {
                 }
             })
         }
+
+        onBackPressedDispatcher.addCallback(this, true) {
+            // 戻るボタンを潰す
+        }
     }
 
     // ノッチ情報の取得はウィンドウアタッチ後でないとできない
@@ -193,11 +198,6 @@ class LockScreenActivity : AppCompatActivity() {
     }
 
     private fun activateVolumeControl() {
-    }
-
-    /** 戻るボタンを無効化する */
-    override fun onBackPressed() {
-        // do nothing
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
