@@ -37,6 +37,7 @@
                     style="@style/ClockTextView"
                     dateTime="@{vm.currentTime}"
                     format="@{vm.clockStyle.pattern}"
+                    textSize="@{vm.clockTextSize}"
                     android:textAlignment="center"
                     android:lineSpacingMultiplier="0.88"
                     android:layout_width="wrap_content"

@@ -57,6 +57,9 @@ data class Preferences(
     /** 時刻の表示形式 */
     val clockStyle: ClockStyle = ClockStyle.SINGLE_LINE,
 
+    /** 時刻のフォントサイズ */
+    val clockTextSize: Float = 56f,
+
     /** 複数通知がある場合の対処方法 */
     val multipleNotificationsSolution : MultipleNotificationsSolution = MultipleNotificationsSolution.SWITCH_IN_ORDER,
 

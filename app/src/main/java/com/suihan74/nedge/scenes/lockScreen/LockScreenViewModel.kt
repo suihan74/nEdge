@@ -79,6 +79,10 @@ class LockScreenViewModel @Inject constructor(
     val clockStyle : LiveData<ClockStyle> by lazy { _clockStyle }
     private val _clockStyle = MutableLiveData<ClockStyle>()
 
+    /** 時計のフォントサイズ */
+    val clockTextSize : LiveData<Float> by lazy { _clockTextSize }
+    private val _clockTextSize = MutableLiveData<Float>()
+
     /** バックライト最低レベルまで暗くするか */
     val lightOff : LiveData<Boolean> by lazy { _lightOff }
     private val _lightOff = MutableLiveData<Boolean>().also { liveData ->
@@ -160,6 +164,7 @@ class LockScreenViewModel @Inject constructor(
             silentTimezoneStart = prefs.silentTimezoneStart
             silentTimezoneEnd = prefs.silentTimezoneEnd
             _clockStyle.value = prefs.clockStyle
+            _clockTextSize.value = prefs.clockTextSize
 
             // バッテリレベルが指定値を下回ったら消灯する
             batteryLevel.observe(activity) {

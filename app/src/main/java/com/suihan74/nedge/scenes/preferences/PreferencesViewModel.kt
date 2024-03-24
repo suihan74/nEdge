@@ -100,6 +100,9 @@ class PreferencesViewModel @Inject constructor(
     /** 時刻の表示形式 */
     val clockStyle = MutableLiveData<ClockStyle>()
 
+    /** 時刻のフォントサイズ */
+    val clockTextSize = MutableLiveData<Float>()
+
     /** 複数通知の表示方法 */
     val multipleNotificationsSolution = MutableLiveData<MultipleNotificationsSolution>()
 
@@ -132,6 +135,7 @@ class PreferencesViewModel @Inject constructor(
                     multipleNotificationsSolution.value = it.multipleNotificationsSolution
                     unknownNotificationSolution.value = it.unknownNotificationSolution
                     clockStyle.value = it.clockStyle
+                    clockTextSize.value = it.clockTextSize
                 }
             }
             .flowOn(Dispatchers.Main)
@@ -156,7 +160,8 @@ class PreferencesViewModel @Inject constructor(
                     requiredBatteryLevel = requiredBatteryLevel.value!!,
                     multipleNotificationsSolution = multipleNotificationsSolution.value!!,
                     unknownNotificationSolution = unknownNotificationSolution.value!!,
-                    clockStyle = clockStyle.value!!
+                    clockStyle = clockStyle.value!!,
+                    clockTextSize = clockTextSize.value!!
                 )
             }
             // 常駐タスクを再起動する

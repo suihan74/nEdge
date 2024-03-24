@@ -232,6 +232,20 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:text="@string/prefs_clock_text_size_desc" />
+
+            <com.google.android.material.slider.Slider
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:value="@={vm.clockTextSize}"
+                android:stepSize="1"
+                android:valueFrom="24"
+                android:valueTo="128" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="@string/prefs_multi_notices_solution_selection_desc" />
 

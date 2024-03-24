@@ -1,6 +1,7 @@
 package com.suihan74.nedge.scenes.lockScreen.dataBinding
 
 import android.service.notification.StatusBarNotification
+import android.util.TypedValue
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.suihan74.nedge.database.notification.NotificationEntity
@@ -71,5 +72,14 @@ object TextViewBindingAdapters {
                     }
                 } ?: ""
         }
+    }
+
+    /**
+     * フォントサイズをデータバインディングで設定する
+     */
+    @JvmStatic
+    @BindingAdapter("textSize")
+    fun setTextSize(textView: TextView, value: Float) {
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, value)
     }
 }

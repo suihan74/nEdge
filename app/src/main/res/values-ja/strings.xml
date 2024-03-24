@@ -70,7 +70,7 @@
     <string name="prefs_light_level_on_desc">ロック画面起動直後の画面の明るさ</string>
     <string name="prefs_use_system_light_level_on_desc">システムの値を使用</string>
     <string name="prefs_clock_style_desc">時刻の表示形式</string>
-
+    <string name="prefs_clock_text_size_desc">時刻のフォントサイズ</string>
     <string name="denied_notification_permission">通知権限リクエストが拒否されました。ダミー通知は送信されません。</string>
 
 
