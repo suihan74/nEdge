@@ -61,6 +61,7 @@
         <item name="android:textColorSecondary">@color/gray_300</item>
         <item name="textColorAlertDialogListItem">@color/gray_300</item>
         <item name="android:windowBackground">@color/preferencesBackgroundColor</item>
+        <item name="android:background">@color/preferencesBackgroundColor</item>
 
         <item name="android:windowMinWidthMajor">90%</item>
         <item name="android:windowMinWidthMinor">90%</item>
@@ -93,6 +94,8 @@
         <item name="colorAccent">@color/blue_700</item>
         <!-- 直接入力モード時のAM/PM選択用スピナの"▼"ボタンの色を設定する -->
         <item name="android:spinnerStyle">@style/TimePickerDialogSpinnerStyle</item>
+
+        <item name="android:background">@color/preferencesBackgroundColor</item>
     </style>
 
     <!-- ====== -->
