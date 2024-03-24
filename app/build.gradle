@@ -93,7 +93,7 @@ dependencies {
 
     // Firebase
     // Import the Firebase BoM
-    implementation platform('com.google.firebase:firebase-bom:32.7.3')
+    implementation platform('com.google.firebase:firebase-bom:32.8.0')
     implementation 'com.google.firebase:firebase-crashlytics-ktx'
     implementation 'com.google.firebase:firebase-analytics-ktx'
 
@@ -135,7 +135,7 @@ dependencies {
 //    implementation 'com.azeesoft.lib.colorpicker:colorpicker:1.0.8@aar'
 
     // AdMob
-    implementation "com.google.android.gms:play-services-ads:22.6.0"
+    implementation "com.google.android.gms:play-services-ads:23.0.0"
     implementation 'com.google.android.gms:play-services-ads-identifier:18.0.1'
     implementation 'androidx.preference:preference-ktx:1.2.1'
 
