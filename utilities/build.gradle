@@ -6,19 +6,17 @@ plugins {
 }
 
 kotlin {
-    jvmToolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
-    }
+    jvmToolchain(21)
     sourceSets.configureEach {
         languageSettings.optIn("kotlin.RequiresOptIn")
     }
 }
 
 android {
-    compileSdk 34
+    compileSdk 36
     defaultConfig {
         minSdk 23
-        targetSdk 34
+        targetSdk 36
     }
     buildTypes {
         release {
