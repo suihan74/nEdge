@@ -15,7 +15,6 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -101,7 +100,7 @@ class PreferencesViewModel @Inject constructor(
     val clockStyle = MutableLiveData<ClockStyle>()
 
     /** 時刻のフォントサイズ */
-    val clockTextSize = MutableLiveData<Float>()
+    val clockTextSize = MutableLiveData<Float>(24f)
 
     /** 複数通知の表示方法 */
     val multipleNotificationsSolution = MutableLiveData<MultipleNotificationsSolution>()
