@@ -17,44 +17,43 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
-        <com.google.android.material.slider.Slider
-            android:id="@+id/widthAdjustmentSlider"
-            android:valueFrom="-1.0"
-            android:valueTo="0.5"
-            android:stepSize="0.002"
-            android:value="@={vm.widthAdjustment}"
-            editing="@={vm.editing}"
+        <com.suihan74.nedge.scenes.preferences.SliderWithButtons
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            editing="@={vm.editing}"
+            value="@={vm.widthAdjustment}"
+            stepSize="@{0.002f}"
+            valueFrom="@{-1.0f}"
+            valueTo="@{0.5f}" />
 
         <TextView
             android:text="@string/prefs_water_drop_notch_height_adjustment_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
-        <com.google.android.material.slider.Slider
+        <com.suihan74.nedge.scenes.preferences.SliderWithButtons
             android:id="@+id/heightAdjustmentSlider"
-            android:valueFrom="0.0"
-            android:valueTo="25.0"
-            android:stepSize="0.2"
-            android:value="@={vm.heightAdjustment}"
-            editing="@={vm.editing}"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            editing="@={vm.editing}"
+            value="@={vm.heightAdjustment}"
+            stepSize="@{0.2f}"
+            valueFrom="@{0.0f}"
+            valueTo="@{25.0f}" />
 
         <TextView
             android:text="@string/prefs_water_drop_notch_radius_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
-        <com.google.android.material.slider.Slider
-            android:valueFrom="0.0"
-            android:valueTo="60.0"
-            android:stepSize="0.2"
-            android:value="@={vm.majorRadius}"
-            editing="@={vm.editing}"
+        <com.suihan74.nedge.scenes.preferences.SliderWithButtons
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            editing="@={vm.editing}"
+            value="@={vm.majorRadius}"
+            stepSize="@{0.2f}"
+            valueFrom="@{0.0f}"
+            valueTo="@{60.0f}" />
 
     </LinearLayout>
 </layout>
