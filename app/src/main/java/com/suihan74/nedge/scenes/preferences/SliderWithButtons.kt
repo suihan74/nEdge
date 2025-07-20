@@ -75,6 +75,7 @@ class SliderWithButtons : ConstraintLayout {
         ) {
             view.binding.slider.addOnChangeListener { _, _, _ ->
                 valueAttrChanged?.onChange()
+                intValueAttrChanged?.onChange()
             }
 
             view.binding.slider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
@@ -119,7 +120,9 @@ class SliderWithButtons : ConstraintLayout {
                 pow(
                     10,
                     stepSize?.let {
-                        val s = floor(log10(it)).toInt()
+                        val s =
+                            if (it > floor(it)) floor(log10(it - floor(it))).toInt()
+                            else floor(log10(it)).toInt()
                         if (s >= 0) 0
                         else abs(s)
                     } ?: 0
@@ -133,6 +136,7 @@ class SliderWithButtons : ConstraintLayout {
                 val v = (it * scale).toInt().toFloat()
                 slider.value = max(min(v, slider.valueTo), slider.valueFrom)
             }
+            Log.i("slider", "${slider.value}")
 
             /*
             if (value != null && view.binding.slider.value != value) {
