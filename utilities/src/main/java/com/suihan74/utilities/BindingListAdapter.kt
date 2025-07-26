@@ -18,7 +18,7 @@ import com.suihan74.utilities.extensions.alsoAs
  * DataBindingを使用しているリストアイテムを扱うための汎用アダプタ
  */
 class BindingListAdapter<ItemT, BindingT : ViewDataBinding>(
-    @LayoutRes private val itemLayoutId : Int,
+    @param:LayoutRes private val itemLayoutId : Int,
     private val lifecycleOwner: LifecycleOwner,
     diffCallback : DiffUtil.ItemCallback<ItemT>,
     private val bind : (binding: BindingT, item: ItemT)->Unit

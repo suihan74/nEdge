@@ -46,7 +46,7 @@ import kotlin.random.Random
 class LockScreenViewModel @Inject constructor(
     private val application: Application,
 
-    @BatteryRepositoryQualifier
+    @param:BatteryRepositoryQualifier
     private val batteryRepo : BatteryRepository,
 
     private val notificationRepo : NotificationRepository,

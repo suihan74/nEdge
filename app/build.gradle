@@ -87,9 +87,9 @@ dependencies {
 
     // Firebase
     // Import the Firebase BoM
-    implementation platform('com.google.firebase:firebase-bom:32.8.0')
-    implementation 'com.google.firebase:firebase-crashlytics-ktx'
-    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation platform('com.google.firebase:firebase-bom:34.0.0')
+    implementation 'com.google.firebase:firebase-crashlytics'
+    implementation 'com.google.firebase:firebase-analytics'
 
     // Hilt
     implementation "com.google.dagger:hilt-android:$hilt_version"
@@ -98,10 +98,10 @@ dependencies {
     ksp "androidx.hilt:hilt-compiler:1.2.0"
 
     // ViewModel and LiveData
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.1"
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.9.1"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.2"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.9.2"
 //   kapt "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-common-java8:2.9.1"
+    implementation "androidx.lifecycle:lifecycle-common-java8:2.9.2"
     testImplementation "androidx.arch.core:core-testing:2.2.0"
 
     // Preferences DataStore (SharedPreferences like APIs)
@@ -128,7 +128,7 @@ dependencies {
 //    implementation 'com.azeesoft.lib.colorpicker:colorpicker:1.0.8@aar'
 
     // AdMob
-    implementation "com.google.android.gms:play-services-ads:24.4.0"
+    implementation "com.google.android.gms:play-services-ads:24.5.0"
     implementation 'com.google.android.gms:play-services-ads-identifier:18.2.0'
     implementation 'androidx.preference:preference-ktx:1.2.1'
 
@@ -145,5 +145,5 @@ dependencies {
     androidTestImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
 
     // show licenses
-    implementation 'com.google.android.gms:play-services-oss-licenses:17.0.1'
+    implementation 'com.google.android.gms:play-services-oss-licenses:17.2.1'
 }

@@ -8,8 +8,8 @@ import com.suihan74.nedge.R
  * ノッチの種類
  */
 enum class NotchType(
-    @StringRes val textId : Int,
-    @DrawableRes val iconId : Int,
+    @param:StringRes val textId : Int,
+    @param:DrawableRes val iconId : Int,
 ) {
     /** ノッチ無し */
     NONE(R.string.notch_type_none, 0),

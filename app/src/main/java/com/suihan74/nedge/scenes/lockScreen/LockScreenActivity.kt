@@ -15,7 +15,6 @@ import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.motion.widget.MotionLayout
-import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -45,7 +44,7 @@ class LockScreenActivity : AppCompatActivity() {
                     val intent = Intent(context, LockScreenActivity::class.java).also {
                         it.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                     }
-                    ContextCompat.startActivity(context, intent, null)
+                    context.startActivity(intent)
                 }.onSuccess {
                     Log.i("Notification", sbn!!.packageName)
                 }.onFailure {

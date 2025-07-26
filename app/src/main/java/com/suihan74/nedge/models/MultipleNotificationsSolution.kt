@@ -7,7 +7,7 @@ import com.suihan74.nedge.R
  * 複数通知がある場合の処理方法
  */
 enum class MultipleNotificationsSolution(
-    @StringRes val textId : Int
+    @param:StringRes val textId : Int
 ) {
     /** 最新一件のみ表示 */
     LATEST(R.string.multi_notices_solution_latest),

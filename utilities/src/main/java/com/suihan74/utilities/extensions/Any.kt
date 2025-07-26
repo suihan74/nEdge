@@ -52,25 +52,24 @@ inline fun <T> T.onNot(
 
 /** 与えられた型のときだけ実行するlet */
 @OptIn(ExperimentalContracts::class)
-@Suppress("UNCHECKED_CAST")
-inline fun <reified T, R> Any?.letAs(crossinline block: (T) -> R) : R? {
+inline fun <reified T, R> Any?.letAs(crossinline block: (T) -> R): R? {
     contract {
-        callsInPlace(block, InvocationKind.EXACTLY_ONCE)
+        callsInPlace(block, InvocationKind.AT_MOST_ONCE)
     }
 
-    return if (this is T) block(this as T)
+    return if (this is T) block(this)
     else null
 }
 
 /** 与えられた型のときだけ実行するalso */
 @OptIn(ExperimentalContracts::class)
-inline fun <reified T> Any?.alsoAs(crossinline block: (T) -> Unit) : T? {
+inline fun <reified T> Any?.alsoAs(crossinline block: (T) -> Unit): T? {
     contract {
-        callsInPlace(block, InvocationKind.EXACTLY_ONCE)
+        callsInPlace(block, InvocationKind.AT_MOST_ONCE)
     }
 
     return if (this is T) {
-        block(this as T)
+        block(this)
         this
     }
     else null

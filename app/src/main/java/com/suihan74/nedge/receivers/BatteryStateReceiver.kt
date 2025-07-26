@@ -14,7 +14,7 @@ import javax.inject.Inject
  * 充電状態の変化，バッテリ残量の変化を監視する
  */
 class BatteryStateReceiver @Inject constructor(
-    @BatteryRepositoryQualifier private val batteryRepository: BatteryRepository
+    @param:BatteryRepositoryQualifier private val batteryRepository: BatteryRepository
 ) : BroadcastReceiver() {
 
     /** システムにレシーバを登録 */
