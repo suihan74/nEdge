@@ -130,8 +130,15 @@
 
     <string name="prefs_settings_list_item_menu_edit">編集</string>
     <string name="prefs_settings_list_item_menu_preview">プレビュー</string>
+    <string name="prefs_settings_list_item_menu_copy_from_default">形状をデフォルトに合わせる</string>
     <string name="prefs_settings_list_item_menu_copy">同じ設定で新規作成</string>
     <string name="prefs_settings_list_item_menu_delete">削除</string>
+
+    <string name="prefs_settings_list_copy_shapes_description">デフォルト設定から形状をコピーします。よろしいですか？</string>
+    <string name="prefs_settings_list_copy_shapes_success">デフォルト設定から形状をコピーしました</string>
+    <string name="prefs_settings_list_copy_shapes_failure">形状コピーに失敗しました</string>
+
+    <string name="pref_default_setting_menu_copy_shapes_to_items">全ての設定にデフォルト設定の形状をコピーする</string>
 
     <!-- InformationFragment -->
     <string name="pref_information_release_notes_desc">更新履歴</string>

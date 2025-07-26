@@ -8,8 +8,11 @@ import com.suihan74.nedge.database.notification.NotificationDao
 import com.suihan74.nedge.database.notification.NotificationEntity
 import com.suihan74.nedge.models.KeywordMatchingType
 import com.suihan74.utilities.extensions.contains
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.withContext
+import java.time.Instant
 
 /**
  * アプリ設定を扱うリポジトリ
@@ -80,6 +83,59 @@ class PreferencesRepository(
 
     suspend fun getNotificationEntityOrDefault(sbn: StatusBarNotification) : NotificationEntity {
         return getNotificationEntityOrNull(sbn) ?: notificationDao.getDefaultEntity()
+    }
+
+    // ------ //
+
+    /**
+     * 形状データを他の設定にコピーする
+     *
+     * 他の条件やカラーなどは元々のものを引き継ぐ
+     */
+    suspend fun copyShapes(
+        from: NotificationEntity,
+        to: NotificationEntity
+    ) = withContext(Dispatchers.Default) {
+        updateNotificationEntity(
+            to.copy(
+                lastUpdated = Instant.now(),
+                setting = to.setting.copy(
+                    thickness = from.setting.thickness,
+                    blurSize = from.setting.blurSize,
+                    outlinesSetting = to.setting.outlinesSetting.copy(
+                        topCornerRadius = from.setting.outlinesSetting.topCornerRadius,
+                        bottomCornerRadius = from.setting.outlinesSetting.bottomCornerRadius,
+                        topEdgeOffset = from.setting.outlinesSetting.topEdgeOffset,
+                        bottomEdgeOffset = from.setting.outlinesSetting.bottomEdgeOffset
+                    ),
+                    topNotchSetting = from.setting.topNotchSetting,
+                    bottomNotchSetting = from.setting.bottomNotchSetting
+                )
+            )
+        )
+    }
+
+    /**
+     * 形状データをデフォルトのもので上書きする
+     *
+     * 他の条件やカラーなどは元々のものを引き継ぐ
+     */
+    suspend fun copyShapesFromDefault(entity: NotificationEntity) = withContext(Dispatchers.Default) {
+        val defaultEntity = notificationDao.getDefaultEntity()
+        copyShapes(from = defaultEntity, to = entity)
+    }
+
+    /**
+     * 複数の設定の形状データをデフォルトのもので上書きする
+     *
+     * 他の条件やカラーなどは元々のものを引き継ぐ
+     */
+    suspend fun copyShapesFromDefault(entities: List<NotificationEntity>) = withContext(Dispatchers.Default) {
+        if (entities.isEmpty()) return@withContext
+        val defaultEntity = notificationDao.getDefaultEntity()
+        for (entity in entities) {
+            copyShapes(from = defaultEntity, to = entity)
+        }
     }
 
     // ------ //

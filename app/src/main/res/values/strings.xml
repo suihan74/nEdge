@@ -131,8 +131,15 @@
 
     <string name="prefs_settings_list_item_menu_edit">Edit</string>
     <string name="prefs_settings_list_item_menu_preview">Preview</string>
+    <string name="prefs_settings_list_item_menu_copy_from_default">Copy shapes from default</string>
     <string name="prefs_settings_list_item_menu_copy">Create a copy</string>
     <string name="prefs_settings_list_item_menu_delete">Delete</string>
+
+    <string name="prefs_settings_list_copy_shapes_description">Are you sure you want to copy shapes from default settings?</string>
+    <string name="prefs_settings_list_copy_shapes_success">Completed copying shapes from default settings</string>
+    <string name="prefs_settings_list_copy_shapes_failure">Failed to copy shapes</string>
+
+    <string name="pref_default_setting_menu_copy_shapes_to_items">Copy shapes to all settings</string>
 
     <!-- InformationFragment -->
     <string name="pref_information_release_notes_desc">ReleaseNote</string>

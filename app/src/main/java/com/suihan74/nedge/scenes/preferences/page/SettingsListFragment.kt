@@ -91,6 +91,10 @@ class SettingsListFragment : Fragment() {
                             preferencesActivity.openSettingEditor(entity)
                         }
                     }
+                    binding.mainLayout.setOnLongClickListener {
+                        viewModel.openDefaultSettingMenuDialog(childFragmentManager)
+                        true
+                    }
                     binding.root
                 },
                 footer = { parent ->
