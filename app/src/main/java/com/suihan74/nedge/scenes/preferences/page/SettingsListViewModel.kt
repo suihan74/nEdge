@@ -2,6 +2,7 @@ package com.suihan74.nedge.scenes.preferences.page
 
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
+import android.widget.Toast
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -73,6 +74,47 @@ class SettingsListViewModel(
 
     // ------ //
 
+    fun openDefaultSettingMenuDialog(fragmentManager: FragmentManager) {
+        val items = listOf<Pair<Int, (AlertDialogFragment)->Unit>>(
+            R.string.pref_default_setting_menu_copy_shapes_to_items to { f ->
+                AlertDialogFragment.Builder()
+                    .setTitle(R.string.confirm_dialog_title)
+                    .setMessage(R.string.prefs_settings_list_copy_shapes_description)
+                    .setNegativeButton(R.string.dialog_cancel)
+                    .setPositiveButton(R.string.dialog_ok) { f ->
+                        viewModelScope.launch(Dispatchers.Main) {
+                            runCatching {
+                                val entities = settings.value.orEmpty().map { it.entity }
+                                application.preferencesRepository.copyShapesFromDefault(entities)
+                                Toast.makeText(
+                                    application.applicationContext,
+                                    R.string.prefs_settings_list_copy_shapes_success,
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }.onFailure {
+                                Toast.makeText(
+                                    application.applicationContext,
+                                    R.string.prefs_settings_list_copy_shapes_failure,
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+                    }
+                    .create()
+                    .show(fragmentManager, null)
+            }
+        )
+
+        AlertDialogFragment.Builder()
+            .setTitle(R.string.prefs_settings_list_default_setting_text)
+            .setNegativeButton(R.string.dialog_cancel)
+            .setItems(items.map { it.first }) { f, which ->
+                items[which].second(f)
+            }
+            .create()
+            .show(fragmentManager, null)
+    }
+
     /** 設定項目に対するメニューを表示 */
     fun openSettingItemMenuDialog(item: SettingItem, fragmentManager: FragmentManager) {
         val items = listOf<Pair<Int, (AlertDialogFragment)->Unit>>(
@@ -83,6 +125,32 @@ class SettingsListViewModel(
             },
             R.string.prefs_settings_list_item_menu_preview to {
                 LockScreenActivity.startPreview(application, item.entity)
+            },
+            R.string.prefs_settings_list_item_menu_copy_from_default to {
+                AlertDialogFragment.Builder()
+                    .setTitle(R.string.confirm_dialog_title)
+                    .setMessage(R.string.prefs_settings_list_copy_shapes_description)
+                    .setNegativeButton(R.string.dialog_cancel)
+                    .setPositiveButton(R.string.dialog_ok) { f ->
+                        viewModelScope.launch(Dispatchers.Main) {
+                            runCatching {
+                                application.preferencesRepository.copyShapesFromDefault(item.entity)
+                                Toast.makeText(
+                                    application.applicationContext,
+                                    R.string.prefs_settings_list_copy_shapes_success,
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }.onFailure {
+                                Toast.makeText(
+                                    application.applicationContext,
+                                    R.string.prefs_settings_list_copy_shapes_failure,
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+                    }
+                    .create()
+                    .show(fragmentManager, null)
             },
             R.string.prefs_settings_list_item_menu_copy to { f ->
                 createNewNotificationSetting(f.parentFragmentManager, item.entity.setting)
@@ -97,15 +165,14 @@ class SettingsListViewModel(
             },
         )
 
-        val dialog = AlertDialogFragment.Builder()
+        AlertDialogFragment.Builder()
             .setTitle(item.appName)
             .setNegativeButton(R.string.dialog_cancel)
             .setItems(items.map { it.first }) { f, which ->
                 items[which].second(f)
             }
             .create()
-
-        dialog.show(fragmentManager, null)
+            .show(fragmentManager, null)
     }
 
     /**

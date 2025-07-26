@@ -110,7 +110,7 @@ class Application : android.app.Application() {
     /** アプリのバージョン名 */
     val versionName: String by lazy {
         val packageInfo = packageManager.getPackageInfo(packageName, 0)
-        packageInfo.versionName
+        packageInfo.versionName!!
     }
 
     /** アプリのメジャーバージョン */

@@ -7,6 +7,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import com.google.android.material.slider.Slider
 import com.suihan74.nedge.scenes.preferences.PreferencesViewModel
+import com.suihan74.nedge.scenes.preferences.SliderWithButtons
 
 object SliderBindingAdapters {
     data class LightLevelStateCache(
@@ -16,7 +17,7 @@ object SliderBindingAdapters {
         val lifecycle: Lifecycle
     )
 
-    private val lightLevelStates = HashMap<Slider, LightLevelStateCache>()
+    private val lightLevelStates = HashMap<SliderWithButtons, LightLevelStateCache>()
 
     /** Lifecycleに紐づいた`Slider`の情報を除去する */
     fun onTerminateLifecycle(owner: LifecycleOwner) {
@@ -32,7 +33,7 @@ object SliderBindingAdapters {
     @JvmStatic
     @BindingAdapter("state", "onState", "offState", "lifecycle")
     fun bindLightLevel(
-        slider: Slider,
+        slider: SliderWithButtons,
         state: PreferencesViewModel.EditingLightLevel?,
         onState: PreferencesViewModel.EditingLightLevel?,
         offState: PreferencesViewModel.EditingLightLevel?,
@@ -49,24 +50,24 @@ object SliderBindingAdapters {
 
     @JvmStatic
     @InverseBindingAdapter(attribute = "state")
-    fun bindLightLevelInverse(slider: Slider) : PreferencesViewModel.EditingLightLevel? {
+    fun bindLightLevelInverse(slider: SliderWithButtons) : PreferencesViewModel.EditingLightLevel? {
         return lightLevelStates[slider]?.current
     }
 
     @JvmStatic
     @BindingAdapter("stateAttrChanged")
-    fun bindLightLevelListeners(slider: Slider, stateAttrChanged: InverseBindingListener?) {
-        slider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
+    fun bindLightLevelListeners(view: SliderWithButtons, stateAttrChanged: InverseBindingListener?) {
+        view.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
             override fun onStartTrackingTouch(slider: Slider) {
-                lightLevelStates[slider]?.let {
-                    lightLevelStates[slider] = it.copy(current = it.onState)
+                lightLevelStates[view]?.let {
+                    lightLevelStates[view] = it.copy(current = it.onState)
                 }
                 stateAttrChanged?.onChange()
             }
 
             override fun onStopTrackingTouch(slider: Slider) {
-                lightLevelStates[slider]?.let {
-                    lightLevelStates[slider] = it.copy(current = it.offState)
+                lightLevelStates[view]?.let {
+                    lightLevelStates[view] = it.copy(current = it.offState)
                 }
                 stateAttrChanged?.onChange()
             }

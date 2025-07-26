@@ -164,26 +164,26 @@
                     android:layout_marginTop="10dp"
                     android:text="@string/prefs_line_width_desc" />
 
-                <com.google.android.material.slider.Slider
+                <com.suihan74.nedge.scenes.preferences.SliderWithButtons
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:stepSize="0.1"
-                    android:value="@={vm.lineThickness}"
-                    android:valueFrom="0.0"
-                    android:valueTo="10.0" />
+                    stepSize="@{0.1f}"
+                    value="@={vm.lineThickness}"
+                    valueFrom="@{0.0f}"
+                    valueTo="@{10.0f}" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/prefs_blur_size_desc" />
 
-                <com.google.android.material.slider.Slider
+                <com.suihan74.nedge.scenes.preferences.SliderWithButtons
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:stepSize="0.1"
-                    android:value="@={vm.blurSize}"
-                    android:valueFrom="0.0"
-                    android:valueTo="50.0" />
+                    stepSize="@{0.1f}"
+                    value="@={vm.blurSize}"
+                    valueFrom="@{0.0f}"
+                    valueTo="@{50.0f}" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -372,54 +372,54 @@
                     android:layout_marginTop="10dp"
                     android:text="@string/prefs_top_corner_radius_desc" />
 
-                <com.google.android.material.slider.Slider
-                    editing="@={vm.editingTopCornerRadius}"
+                <com.suihan74.nedge.scenes.preferences.SliderWithButtons
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:stepSize="0.5"
-                    android:value="@={vm.topCornerRadius}"
-                    android:valueFrom="0.0"
-                    android:valueTo="100.0" />
+                    editing="@={vm.editingTopCornerRadius}"
+                    stepSize="@{0.5f}"
+                    value="@={vm.topCornerRadius}"
+                    valueFrom="@{0.0f}"
+                    valueTo="@{100.0f}" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/prefs_bottom_corner_radius_desc" />
 
-                <com.google.android.material.slider.Slider
-                    editing="@={vm.editingBottomCornerRadius}"
+                <com.suihan74.nedge.scenes.preferences.SliderWithButtons
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:stepSize="0.5"
-                    android:value="@={vm.bottomCornerRadius}"
-                    android:valueFrom="0.0"
-                    android:valueTo="100.0" />
+                    editing="@={vm.editingBottomCornerRadius}"
+                    stepSize="@{0.5f}"
+                    value="@={vm.bottomCornerRadius}"
+                    valueFrom="@{0.0f}"
+                    valueTo="@{100.0f}" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@{@string/prefs_edge_offset_desc(@string/top)}" />
 
-                <com.google.android.material.slider.Slider
+                <com.suihan74.nedge.scenes.preferences.SliderWithButtons
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:stepSize="1"
                     intValue="@={vm.topEdgeOffset}"
-                    android:valueFrom="0"
-                    android:valueTo="500" />
+                    stepSize="@{1}"
+                    valueFrom="@{0}"
+                    valueTo="@{500}" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@{@string/prefs_edge_offset_desc(@string/bottom)}" />
 
-                <com.google.android.material.slider.Slider
+                <com.suihan74.nedge.scenes.preferences.SliderWithButtons
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:stepSize="1"
                     intValue="@={vm.bottomEdgeOffset}"
-                    android:valueFrom="0"
-                    android:valueTo="500" />
+                    stepSize="@{1}"
+                    valueFrom="@{0}"
+                    valueTo="@{500}" />
 
                 <TextView
                     android:layout_width="wrap_content"

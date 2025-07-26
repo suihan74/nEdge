@@ -5,14 +5,18 @@ import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
 import com.suihan74.nedge.R
-import com.suihan74.nedge.scenes.preferences.page.*
+import com.suihan74.nedge.scenes.preferences.page.BlackListFragment
+import com.suihan74.nedge.scenes.preferences.page.GeneralPrefsFragment
+import com.suihan74.nedge.scenes.preferences.page.InformationFragment
+import com.suihan74.nedge.scenes.preferences.page.ReleaseNotesFragment
+import com.suihan74.nedge.scenes.preferences.page.SettingsListFragment
 
 /**
  * 設定画面ページ遷移用メニュー項目
  */
 enum class MenuItem(
-    @StringRes val labelId : Int,
-    @DrawableRes val iconId : Int,
+    @param:StringRes val labelId : Int,
+    @param:DrawableRes val iconId : Int,
     val fragment : ()->Fragment
 ) {
     GENERAL(

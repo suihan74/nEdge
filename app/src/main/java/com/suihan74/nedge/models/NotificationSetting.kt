@@ -29,10 +29,10 @@ data class NotificationSetting (
     val outlinesSetting: OutlinesSetting = OutlinesSetting(),
 
     /** 画面上部ノッチ描画設定 */
-    val topNotchSetting: NotchSetting = NotchSetting.createInstance(NotchType.NONE),
+    val topNotchSetting: NotchSetting = NotchSetting.None,
 
     /** 画面下部ノッチ描画設定 */
-    val bottomNotchSetting: NotchSetting = NotchSetting.createInstance(NotchType.NONE),
+    val bottomNotchSetting: NotchSetting = NotchSetting.None,
 
     /** 通知内容を表示する */
     val informationDisplayMode : InformationDisplayMode = InformationDisplayMode.FULL,

@@ -10,7 +10,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 enum class InformationDisplayMode(
     val code: Int,
-    @StringRes val textId: Int
+    @param:StringRes val textId: Int
 ) {
     /** 何も表示しない */
     NONE(0, R.string.information_display_mode_none),

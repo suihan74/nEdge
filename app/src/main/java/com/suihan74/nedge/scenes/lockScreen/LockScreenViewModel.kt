@@ -46,7 +46,7 @@ import kotlin.random.Random
 class LockScreenViewModel @Inject constructor(
     private val application: Application,
 
-    @BatteryRepositoryQualifier
+    @param:BatteryRepositoryQualifier
     private val batteryRepo : BatteryRepository,
 
     private val notificationRepo : NotificationRepository,
@@ -139,20 +139,6 @@ class LockScreenViewModel @Inject constructor(
     suspend fun init(activity: AppCompatActivity, intent: Intent) = withContext(Dispatchers.Main.immediate) {
         var switchNoticeJob : Job? = null
 
-        currentNotice.observe(activity, Observer {
-            if (it == null) return@Observer
-            viewModelScope.launch(Dispatchers.Main.immediate) {
-                _notificationEntity.value = prefRepo.getNotificationEntityOrDefault(it)
-            }
-        })
-
-        statusBarNotifications.observe(activity) {
-            viewModelScope.launch {
-                switchNoticeJob?.cancelAndJoin()
-                switchNoticeJob = launchNotificationsSwitching()
-            }
-        }
-
         prefRepo.preferences().let { prefs ->
             _lightLevelOn.value = prefs.lightLevelOn
             _lightLevelOff.value = prefs.lightLevelOff
@@ -181,6 +167,20 @@ class LockScreenViewModel @Inject constructor(
                         activity.finish()
                     }
                 }
+            }
+        }
+
+        currentNotice.observe(activity, Observer {
+            if (it == null) return@Observer
+            viewModelScope.launch(Dispatchers.Main.immediate) {
+                _notificationEntity.value = prefRepo.getNotificationEntityOrDefault(it)
+            }
+        })
+
+        statusBarNotifications.observe(activity) {
+            viewModelScope.launch {
+                switchNoticeJob?.cancelAndJoin()
+                switchNoticeJob = launchNotificationsSwitching()
             }
         }
 

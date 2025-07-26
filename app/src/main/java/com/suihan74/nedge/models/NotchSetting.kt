@@ -32,6 +32,8 @@ sealed class NotchSetting(
 
             NotchType.CORNER -> CornerNotchSetting(rect!!)
         }
+
+        val None = createInstance(NotchType.NONE)
     }
 }
 

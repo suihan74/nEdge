@@ -11,24 +11,22 @@ plugins {
 }
 
 kotlin {
-    jvmToolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
-    }
+    jvmToolchain(21)
     sourceSets.configureEach {
         languageSettings.optIn("kotlin.RequiresOptIn")
     }
 }
 
 android {
-    compileSdk 34
+    compileSdk 36
 
     defaultConfig {
         applicationId "com.suihan74.nedge"
         minSdk 23
-        targetSdk 34
+        targetSdk 36
         // (major[1])-(minor[2])-(fix[3])-(dev[2])-(build mode[1;it is added by productFlavors])
-        versionCode 1_00_014_02_0
-        versionName "1.0.14"
+        versionCode 1_00_015_00_0
+        versionName "1.0.15"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -74,58 +72,53 @@ android {
     namespace 'com.suihan74.nedge'
 }
 
-kapt {
-    correctErrorTypes true
-}
-
 dependencies {
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.4'
-    implementation 'org.objenesis:objenesis:3.2'
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.5'
+    implementation 'org.objenesis:objenesis:3.4'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
-    implementation 'androidx.core:core-ktx:1.12.0'
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'com.google.android.material:material:1.11.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation "androidx.fragment:fragment-ktx:1.6.2"
+    implementation 'androidx.core:core-ktx:1.16.0'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
+    implementation 'com.google.android.material:material:1.12.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
+    implementation "androidx.fragment:fragment-ktx:1.8.8"
 
     // Firebase
     // Import the Firebase BoM
-    implementation platform('com.google.firebase:firebase-bom:32.8.0')
-    implementation 'com.google.firebase:firebase-crashlytics-ktx'
-    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation platform('com.google.firebase:firebase-bom:34.0.0')
+    implementation 'com.google.firebase:firebase-crashlytics'
+    implementation 'com.google.firebase:firebase-analytics'
 
     // Hilt
     implementation "com.google.dagger:hilt-android:$hilt_version"
-    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
+    ksp "com.google.dagger:hilt-android-compiler:$hilt_version"
     implementation "androidx.hilt:hilt-work:1.2.0"
-    kapt "androidx.hilt:hilt-compiler:1.2.0"
+    ksp "androidx.hilt:hilt-compiler:1.2.0"
 
     // ViewModel and LiveData
-    implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0"
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.7.0"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.2"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.9.2"
 //   kapt "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-common-java8:2.7.0"
+    implementation "androidx.lifecycle:lifecycle-common-java8:2.9.2"
     testImplementation "androidx.arch.core:core-testing:2.2.0"
 
     // Preferences DataStore (SharedPreferences like APIs)
-    implementation "androidx.datastore:datastore-preferences:1.0.0"
+    implementation "androidx.datastore:datastore-preferences:1.1.7"
 
     // serialization
-    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.0.1"
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0"
 
     // Room
-    def room_version = "2.6.1"
+    def room_version = "2.7.2"
     implementation "androidx.room:room-runtime:$room_version"
     ksp "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
     testImplementation "androidx.room:room-testing:$room_version"
 
     // WorkManager
-    def work_version = "2.9.0"
+    def work_version = "2.10.2"
     implementation "androidx.work:work-runtime:$work_version"
     implementation "androidx.work:work-runtime-ktx:$work_version"
 
@@ -135,8 +128,8 @@ dependencies {
 //    implementation 'com.azeesoft.lib.colorpicker:colorpicker:1.0.8@aar'
 
     // AdMob
-    implementation "com.google.android.gms:play-services-ads:23.0.0"
-    implementation 'com.google.android.gms:play-services-ads-identifier:18.0.1'
+    implementation "com.google.android.gms:play-services-ads:24.5.0"
+    implementation 'com.google.android.gms:play-services-ads-identifier:18.2.0'
     implementation 'androidx.preference:preference-ktx:1.2.1'
 
     implementation project(":utilities")
@@ -152,5 +145,5 @@ dependencies {
     androidTestImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
 
     // show licenses
-    implementation 'com.google.android.gms:play-services-oss-licenses:17.0.1'
+    implementation 'com.google.android.gms:play-services-oss-licenses:17.2.1'
 }

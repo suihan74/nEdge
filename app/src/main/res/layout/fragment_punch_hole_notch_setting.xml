@@ -17,70 +17,70 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
-        <com.google.android.material.slider.Slider
-            android:valueFrom="0.0"
-            android:valueTo="1.0"
-            android:stepSize="0.001"
-            android:value="@={vm.cx}"
-            editing="@={vm.editing}"
+        <com.suihan74.nedge.scenes.preferences.SliderWithButtons
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            editing="@={vm.editing}"
+            value="@={vm.cx}"
+            stepSize="@{0.001f}"
+            valueFrom="@{0.0f}"
+            valueTo="@{1.0f}" />
 
         <TextView
             android:text="@string/prefs_punch_hole_notch_cy_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
-        <com.google.android.material.slider.Slider
-            android:valueFrom="0.0"
-            android:valueTo="1.0"
-            android:stepSize="0.0001"
-            android:value="@={vm.cy}"
-            editing="@={vm.editing}"
+        <com.suihan74.nedge.scenes.preferences.SliderWithButtons
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            editing="@={vm.editing}"
+            value="@={vm.cy}"
+            stepSize="@{0.0001f}"
+            valueFrom="@{0.0f}"
+            valueTo="@{1.0f}" />
 
         <TextView
             android:text="@string/prefs_punch_hole_notch_radius_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
-        <com.google.android.material.slider.Slider
-            android:valueFrom="0.0"
-            android:valueTo="40.0"
-            android:stepSize="0.2"
-            android:value="@={vm.radius}"
-            editing="@={vm.editing}"
+        <com.suihan74.nedge.scenes.preferences.SliderWithButtons
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            editing="@={vm.editing}"
+            value="@={vm.radius}"
+            stepSize="@{0.2f}"
+            valueFrom="@{0.0f}"
+            valueTo="@{40.0f}" />
 
         <TextView
             android:text="@string/prefs_punch_hole_horizontal_edge_size_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
-        <com.google.android.material.slider.Slider
-            android:valueFrom="0.0"
-            android:valueTo="100.0"
-            android:stepSize="0.5"
-            android:value="@={vm.horizontalEdgeSize}"
-            editing="@={vm.editing}"
+        <com.suihan74.nedge.scenes.preferences.SliderWithButtons
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            editing="@={vm.editing}"
+            value="@={vm.horizontalEdgeSize}"
+            stepSize="@{0.5f}"
+            valueFrom="@{0.0f}"
+            valueTo="@{100.0f}" />
 
         <TextView
             android:text="@string/prefs_punch_hole_vertical_edge_size_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
-        <com.google.android.material.slider.Slider
-            android:valueFrom="0.0"
-            android:valueTo="100.0"
-            android:stepSize="0.5"
-            android:value="@={vm.verticalEdgeSize}"
-            editing="@={vm.editing}"
+        <com.suihan74.nedge.scenes.preferences.SliderWithButtons
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            editing="@={vm.editing}"
+            value="@={vm.verticalEdgeSize}"
+            stepSize="@{0.5f}"
+            valueFrom="@{0.0f}"
+            valueTo="@{100.0f}" />
 
     </LinearLayout>
 </layout>

@@ -17,85 +17,85 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
-        <com.google.android.material.slider.Slider
-            android:valueFrom="-0.7"
-            android:valueTo="0.7"
-            android:stepSize="0.01"
-            android:value="@={vm.majorWidthAdjustment}"
-            editing="@={vm.editing}"
+        <com.suihan74.nedge.scenes.preferences.SliderWithButtons
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            editing="@={vm.editing}"
+            value="@={vm.majorWidthAdjustment}"
+            stepSize="@{0.01f}"
+            valueFrom="@{-0.7f}"
+            valueTo="@{0.7f}" />
 
         <TextView
             android:text="@string/prefs_corner_notch_minor_width_adjustment_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
-        <com.google.android.material.slider.Slider
-            android:valueFrom="-0.7"
-            android:valueTo="0.7"
-            android:stepSize="0.01"
-            android:value="@={vm.minorWidthAdjustment}"
-            editing="@={vm.editing}"
+        <com.suihan74.nedge.scenes.preferences.SliderWithButtons
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            editing="@={vm.editing}"
+            value="@={vm.minorWidthAdjustment}"
+            stepSize="@{0.01f}"
+            valueFrom="@{-0.7f}"
+            valueTo="@{0.7f}" />
 
         <TextView
             android:text="@string/prefs_corner_notch_height_adjustment_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
-        <com.google.android.material.slider.Slider
+        <com.suihan74.nedge.scenes.preferences.SliderWithButtons
             android:id="@+id/heightAdjustmentSlider"
-            android:valueFrom="-1.0"
-            android:valueTo="1.0"
-            android:stepSize="0.01"
-            android:value="@={vm.heightAdjustment}"
-            editing="@={vm.editing}"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            editing="@={vm.editing}"
+            value="@={vm.heightAdjustment}"
+            stepSize="@{0.01f}"
+            valueFrom="@{-1.0f}"
+            valueTo="@{1.0f}" />
 
         <TextView
             android:text="@string/prefs_corner_notch_major_radius_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
-        <com.google.android.material.slider.Slider
-            android:valueFrom="0.0"
-            android:valueTo="50.0"
-            android:stepSize="0.2"
-            android:value="@={vm.majorRadius}"
-            editing="@={vm.editing}"
+        <com.suihan74.nedge.scenes.preferences.SliderWithButtons
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            editing="@={vm.editing}"
+            value="@={vm.majorRadius}"
+            stepSize="@{0.2f}"
+            valueFrom="@{0.0f}"
+            valueTo="@{50.0f}" />
 
         <TextView
             android:text="@string/prefs_corner_notch_minor_radius_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
-        <com.google.android.material.slider.Slider
-            android:valueFrom="0.0"
-            android:valueTo="50.0"
-            android:stepSize="0.2"
-            android:value="@={vm.minorRadius}"
-            editing="@={vm.editing}"
+        <com.suihan74.nedge.scenes.preferences.SliderWithButtons
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            editing="@={vm.editing}"
+            value="@={vm.minorRadius}"
+            stepSize="@{0.2f}"
+            valueFrom="@{0.0f}"
+            valueTo="@{50.0f}" />
 
         <TextView
             android:text="@string/prefs_corner_notch_middle_radius_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
-        <com.google.android.material.slider.Slider
-            android:valueFrom="0.0"
-            android:valueTo="50.0"
-            android:stepSize="0.2"
-            android:value="@={vm.middleRadius}"
-            editing="@={vm.editing}"
+        <com.suihan74.nedge.scenes.preferences.SliderWithButtons
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            editing="@={vm.editing}"
+            value="@={vm.middleRadius}"
+            stepSize="@{0.2f}"
+            valueFrom="@{0.0f}"
+            valueTo="@{50.0f}" />
 
     </LinearLayout>
 </layout>
