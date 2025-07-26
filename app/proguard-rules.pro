@@ -48,7 +48,14 @@
 -dontwarn androidx.room.paging.**
 ##--------------- End: Room ----------
 
-##--------------- Begin: Nend Ads ----------
--keep class net.nend.android.** { *; }
--dontwarn net.nend.android.**
-##--------------- Begin: Nend Ads ----------
+-keep class com.suihan74.utilities.BindingListAdapter { *; }
+-keep class com.suihan74.utilities.ViewModelFactory { *; }
+-keep class com.suihan74.utilities.dataBinding.** { *; }
+-keep class com.suihan74.utilities.extensions.ViewKt { *; }
+-keep class com.suihan74.utilities.dataBinding.ViewKt { *; }
+-keep class com.suihan74.utilities.fragment.AlertDialogFragment$Builder { *; }
+-keep class com.suihan74.utilities.fragment.AlertDialogFragment { *; }
+-keep class com.suihan74.utilities.serialization.LocalTimeSerializer { *; }
+-keep class com.suihan74.utilities.serialization.RectSerializer { *; }
+-keep class com.suihan74.utilities.view.UnFocusableEditText { *; }
+-keep class com.suihan74.utilities.view.UnFocusableTextInputEditText { *; }
